@@ -17,9 +17,9 @@
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>NSExtension</key>
@@ -55,7 +55,7 @@
 			<key>Image</key>
 			<string>ToolbarItemIcon.pdf</string>
 			<key>Label</key>
-			<string>Your Button</string>
+			<string>Nightshift</string>
 		</dict>
 		<key>SFSafariWebsiteAccess</key>
 		<dict>
@@ -69,8 +69,8 @@
 		</dict>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2020 Aleksei Maslakov. All rights reserved.</string>
+	<string>Copyright © 2026 Fly Media LLC. Original work © 2020 Aleksei Maslakov.</string>
 	<key>NSHumanReadableDescription</key>
-	<string>Nighshift enables dark mode for websites</string>
+	<string>Nightshift enables dark mode for websites.</string>
 </dict>
 </plist>

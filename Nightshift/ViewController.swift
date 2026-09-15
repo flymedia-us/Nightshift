@@ -11,6 +11,8 @@ import SafariServices.SFSafariApplication
 
 class ViewController: NSViewController {
 
+    private static let extensionIdentifier = "com.FlyMedia.Nightshift.Extension"
+
     @IBOutlet var appNameLabel: NSTextField!
     
     override func viewDidLoad() {
@@ -19,7 +21,7 @@ class ViewController: NSViewController {
     }
 
     @IBAction func openSafariExtensionPreferences(_ sender: AnyObject?) {
-        SFSafariApplication.showPreferencesForExtension(withIdentifier: "com.fdooch.Nightshift-Extension") { error in
+        SFSafariApplication.showPreferencesForExtension(withIdentifier: Self.extensionIdentifier) { error in
             if let _ = error {
                 // Insert code to inform the user that something went wrong.
             }

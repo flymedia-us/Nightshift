@@ -1,34 +1,48 @@
 # Nightshift
 
-This Safari extension applies darkmode for websites
+Nightshift is a macOS Safari extension that applies a dark appearance to websites. This Fly Media fork is based on [unmade/Nightshift](https://github.com/unmade/Nightshift) and is being prepared for a modernized release.
 
-![preview](https://i.imgur.com/rX5letn.png)
+The current implementation uses CSS filters to invert page colors while restoring images and video. Dark mode can be enabled or disabled per site.
 
-## Overview
+## Local development
 
-This extension utilizes CSS [filter](https://developer.mozilla.org/en-US/docs/Web/CSS/filter) 
-property. It inverts the whole page. Images and videos are inverted back. Due to this, some colors may then be inaccurate. 
+Requirements:
 
-You can enable/disable dark mode per site basis.
+- macOS 15 or later
+- Xcode 26 or later
+- [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`)
 
-Thanks to [@yep](https://github.com/yep), you can now [download](https://apps.apple.com/de/app/nightshift-dark-mode/id1561604170) it from the App Store
+Generate the Xcode project and verify an unsigned debug build:
 
-## Install
-
-I don't have a Developer ID and can't distribute macOS apps, so the best
-way is to build it yourself.
-
-Moreover, Safari Extensions seems to be broken in macOS Catalina. You 
-might not be able to enable extension in prefenrences. One workaround
-is to boot your mac in Safe Mode, enable it, then boot normally.
-
-## How to enable extension manually
-
-If you see the following message:
-
-```
-Safari detected an app or service that interfered with clicking
+```sh
+make build
 ```
 
-then you can try to enable it manually. Please refer to this [guide](https://forums.macrumors.com/threads/manually-enable-safari-14-extensions.2261573/?post=29059377#post-29059377).
+To open the generated project in Xcode:
 
+```sh
+make open
+```
+
+Select the **Nightshift** scheme and your Fly Media development team, then build and run. In Safari, open **Settings → Extensions** and enable Nightshift.
+
+The checked-in `Nightshift.xcodeproj` is generated from [`project.yml`](project.yml). Update `project.yml` when changing targets or build settings, then run `make setup` to regenerate the project.
+
+## Repository setup
+
+- `origin` — Fly Media fork: `git@github.com:flymedia-us/Nightshift.git`
+- `upstream` — original project: `https://github.com/unmade/Nightshift.git`
+
+Fetch future upstream changes with:
+
+```sh
+git fetch upstream
+```
+
+## Modernization status
+
+This first setup pass preserves the original Safari App Extension architecture and raises the deployment target so it builds on the current toolchain. A later pass should evaluate migration to a Safari Web Extension, replace the legacy storyboard/XIB shell, refresh the visual identity, and add automated tests.
+
+## License
+
+Nightshift is available under the MIT License. See [`LICENSE`](LICENSE). The original copyright and license notice are retained.
