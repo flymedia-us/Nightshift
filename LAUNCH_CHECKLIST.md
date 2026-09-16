@@ -34,7 +34,7 @@
 - [ ] Confirm export compliance; the app declares no non-exempt encryption
 - [ ] Confirm Digital Services Act trader status and required contact details
 - [ ] Verify agreements, tax, and banking status in App Store Connect
-- [ ] Publish the marketing, support, and privacy URLs from `flymedia-us/apps`
+- [x] Publish the marketing, support, and privacy URLs from `flymedia-us/apps`
 - [ ] Produce and upload the Mac screenshot set
 - [ ] Archive, validate, and upload the signed App Store build
 - [ ] Distribute a TestFlight build to internal testers
