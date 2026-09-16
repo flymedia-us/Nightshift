@@ -8,7 +8,7 @@ options:
 
 settings:
   base:
-    CURRENT_PROJECT_VERSION: "3"
+    CURRENT_PROJECT_VERSION: "4"
     DEVELOPMENT_TEAM: BJZSH247Q9
     ENABLE_HARDENED_RUNTIME: YES
     MACOSX_DEPLOYMENT_TARGET: "12.3"
@@ -26,14 +26,16 @@ targets:
           - Info.plist
           - Nightshift.entitlements
           - PrivacyInfo.xcprivacy
+          - Nightshift.icon
       - path: Nightshift/PrivacyInfo.xcprivacy
         buildPhase: resources
+      - path: Icon/Nightshift Icon.icon
     settings:
       base:
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
-        # Nightshift.icon is the Icon Composer document checked into this target.
+        # The hand-authored Icon Composer document is the app icon source.
         # Xcode compiles it into platform-appropriate app icon renditions.
-        ASSETCATALOG_COMPILER_APPICON_NAME: Nightshift
+        ASSETCATALOG_COMPILER_APPICON_NAME: "Nightshift Icon"
         CODE_SIGN_ENTITLEMENTS: Nightshift/Nightshift.entitlements
         CODE_SIGN_STYLE: Automatic
         COMBINE_HIDPI_IMAGES: YES

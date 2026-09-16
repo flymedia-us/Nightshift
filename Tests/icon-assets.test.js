@@ -24,16 +24,15 @@ test("Safari extension icons have every manifest size", () => {
 });
 
 test("the macOS app icon is an Icon Composer document", () => {
-    const iconDirectory = path.join(repositoryRoot, "Nightshift", "Nightshift.icon");
+    const iconDirectory = path.join(repositoryRoot, "Icon", "Nightshift Icon.icon");
     const icon = JSON.parse(fs.readFileSync(path.join(iconDirectory, "icon.json"), "utf8"));
     const project = fs.readFileSync(path.join(repositoryRoot, "project.yml"), "utf8");
 
-    assert.match(project, /ASSETCATALOG_COMPILER_APPICON_NAME: Nightshift/);
+    assert.match(project, /ASSETCATALOG_COMPILER_APPICON_NAME: "Nightshift Icon"/);
     assert.equal(icon.groups.length, 1);
-    assert.equal(icon.groups[0].layers.length, 1);
-    assert.equal(icon.groups[0].layers[0]["image-name"], "IconComposer-Crescent-1024.png");
-    assert.deepEqual(
-        pngDimensions(path.join(iconDirectory, "Assets", "IconComposer-Crescent-1024.png")),
-        [1024, 1024],
-    );
+    assert.equal(icon.groups[0].layers.length, 2);
+    assert.equal(icon.groups[0].layers[0]["image-name"], "2.new sparkle.svg");
+    assert.equal(icon.groups[0].layers[1]["image-name"], "1.moon shadow.svg");
+    assert.ok(fs.existsSync(path.join(iconDirectory, "Assets", "1.moon shadow.svg")));
+    assert.ok(fs.existsSync(path.join(iconDirectory, "Assets", "2.new sparkle.svg")));
 });

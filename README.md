@@ -67,7 +67,7 @@ Install the WebKit runtime once, then run the suite:
 
 ```sh
 npm run smoke:install
-npm run icons       # Regenerate Safari PNGs and the Icon Composer layer from SVG masters
+npm run icons       # Regenerate Safari extension and toolbar PNGs from SVG masters
 make smoke
 ```
 
@@ -78,8 +78,8 @@ Use `NIGHTSHIFT_SMOKE_SITE=github` to run one case, or `NIGHTSHIFT_SMOKE_HEADED=
 - `Nightshift/` — SwiftUI macOS container app
 - `Nightshift Extension/` — native Web Extension host and Manifest V3 resources
 - `Tests/` — Node tests for extension behavior
-- `Artwork/` — versioned SVG masters and the Icon Composer layer input for required app and toolbar icons
-- `Nightshift/Nightshift.icon` — source-of-truth macOS app icon, authored in Apple Icon Composer
+- `Artwork/` — source SVGs and deterministic Safari PNG renderer
+- `Icon/Nightshift Icon.icon` — source-of-truth macOS app icon, hand-authored in Apple Icon Composer
 - `AppStore/` — versioned listing copy, review notes, and screenshot production guidance
 - `project.yml` — source of truth for Xcode targets and build settings
 - `.github/workflows/ci.yml` — JavaScript tests plus unsigned builds on macOS 15, 26, and 27 runners

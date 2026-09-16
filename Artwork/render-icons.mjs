@@ -52,15 +52,6 @@ try {
     );
   }
 
-  await render(
-    'Nightshift-IconComposer-Crescent.svg',
-    1024,
-    [
-      path.join(artworkDirectory, 'IconComposer-Crescent-1024.png'),
-      path.join(repositoryRoot, 'Nightshift/Nightshift.icon/Assets/IconComposer-Crescent-1024.png'),
-    ],
-    browser,
-  );
 } finally {
   await browser.close();
 }
