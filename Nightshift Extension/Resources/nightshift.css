@@ -1,0 +1,12 @@
+html[data-nightshift-active] {
+    background-color: rgb(217, 217, 217) !important;
+    filter: invert(0.85) hue-rotate(165deg) !important;
+}
+
+html[data-nightshift-active] img,
+html[data-nightshift-active] video,
+html[data-nightshift-active] canvas,
+html[data-nightshift-active] svg,
+html[data-nightshift-active] [role="img"] {
+    filter: invert(1) hue-rotate(-165deg) !important;
+}

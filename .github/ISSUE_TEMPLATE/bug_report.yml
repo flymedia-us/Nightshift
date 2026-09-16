@@ -1,0 +1,45 @@
+name: Bug report
+description: Tell us when Nightshift does not behave as expected.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include private browsing data, account details, or sensitive screenshots.
+  - type: input
+    id: version
+    attributes:
+      label: Nightshift version
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS and Safari version
+      placeholder: "macOS 26.0, Safari 26.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: mode
+    attributes:
+      label: Selected appearance mode
+      options:
+        - Always Light
+        - Always Dark
+        - System
+    validations:
+      required: true
+  - type: input
+    id: site
+    attributes:
+      label: Website address
+      description: Share only a public URL. Do not share a private or account-specific URL.
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened?
+      description: Include expected behavior, actual behavior, and concise reproduction steps.
+    validations:
+      required: true

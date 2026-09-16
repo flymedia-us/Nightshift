@@ -1,0 +1,12 @@
+Nightshift is a Safari Web Extension with no account, purchases, analytics, advertising, or network service.
+
+To review:
+1. Launch Nightshift.
+2. Click “Open Safari Extension Settings.”
+3. Enable Nightshift and grant access to websites when Safari asks.
+4. Open an ordinary HTTP or HTTPS website.
+5. Add Nightshift to Safari's toolbar if it is not already visible, then open its popup.
+6. Verify that Always Dark applies the dark filter, Always Light removes it, and System follows the Mac's current appearance.
+7. Turn off “Enable on this website” and verify that the current site remains unchanged.
+
+Always Light means Nightshift is inactive; it does not force a website's own dark theme to become light. Safari internal pages and other protected browser pages are intentionally unavailable to extensions.

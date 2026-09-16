@@ -11,5 +11,6 @@ xcuserdata
 *.moved-aside
 DerivedData
 *.xcuserstate
-.build/
 .DS_Store
+.build/
+node_modules/

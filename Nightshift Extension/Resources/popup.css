@@ -1,0 +1,109 @@
+:root {
+    color-scheme: light dark;
+    font: -apple-system-body;
+    --accent: rgb(88, 86, 214);
+    --border: rgba(127, 127, 127, 0.25);
+    --secondary: GrayText;
+    --surface: rgba(127, 127, 127, 0.1);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-width: 320px;
+    background: Canvas;
+    color: CanvasText;
+}
+
+main {
+    display: grid;
+    gap: 16px;
+    padding: 18px;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mark {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+}
+
+h1,
+p {
+    margin: 0;
+}
+
+h1 {
+    font-size: 16px;
+}
+
+header p,
+small,
+#status {
+    color: var(--secondary);
+}
+
+header p,
+small {
+    font-size: 12px;
+}
+
+fieldset {
+    display: grid;
+    gap: 2px;
+    margin: 0;
+    padding: 6px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+legend {
+    padding: 0 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+fieldset label,
+.site-control label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px;
+    border-radius: 7px;
+}
+
+fieldset label:hover {
+    background: var(--surface);
+}
+
+label span {
+    display: grid;
+    flex: 1;
+    gap: 2px;
+}
+
+input {
+    accent-color: var(--accent);
+}
+
+.site-control {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.site-control label {
+    padding-inline: 0;
+}
+
+#status {
+    min-height: 15px;
+    font-size: 11px;
+}

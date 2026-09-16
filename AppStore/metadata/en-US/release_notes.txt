@@ -1,0 +1,8 @@
+Nightshift has been rebuilt for modern Safari and macOS.
+
+• Choose Always Light, Always Dark, or System appearance
+• Follow macOS Dark Mode automatically
+• Enable or disable Nightshift for individual websites
+• Update open tabs immediately when settings change
+• New SwiftUI companion app and Safari Web Extension architecture
+• Native support for Apple silicon and Intel Macs

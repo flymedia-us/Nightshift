@@ -4,16 +4,17 @@ options:
   bundleIdPrefix: com.FlyMedia
   createIntermediateGroups: true
   deploymentTarget:
-    macOS: "15.0"
+    macOS: "12.3"
 
 settings:
   base:
-    CURRENT_PROJECT_VERSION: "1"
+    CURRENT_PROJECT_VERSION: "3"
     DEVELOPMENT_TEAM: BJZSH247Q9
     ENABLE_HARDENED_RUNTIME: YES
-    MACOSX_DEPLOYMENT_TARGET: "15.0"
+    MACOSX_DEPLOYMENT_TARGET: "12.3"
     MARKETING_VERSION: "1.0.0"
-    SWIFT_VERSION: "5.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    SWIFT_VERSION: "6.0"
 
 targets:
   Nightshift:
@@ -24,10 +25,15 @@ targets:
         excludes:
           - Info.plist
           - Nightshift.entitlements
+          - PrivacyInfo.xcprivacy
+      - path: Nightshift/PrivacyInfo.xcprivacy
+        buildPhase: resources
     settings:
       base:
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
-        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        # Nightshift.icon is the Icon Composer document checked into this target.
+        # Xcode compiles it into platform-appropriate app icon renditions.
+        ASSETCATALOG_COMPILER_APPICON_NAME: Nightshift
         CODE_SIGN_ENTITLEMENTS: Nightshift/Nightshift.entitlements
         CODE_SIGN_STYLE: Automatic
         COMBINE_HIDPI_IMAGES: YES
@@ -41,16 +47,52 @@ targets:
     type: app-extension
     platform: macOS
     sources:
-      - path: Nightshift Extension
-        excludes:
-          - Info.plist
-          - Nightshift_Extension.entitlements
+      - path: Nightshift Extension/SafariWebExtensionHandler.swift
+      - path: Nightshift Extension/PrivacyInfo.xcprivacy
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/manifest.json
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/theme-policy.js
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/content.js
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/nightshift.css
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/popup.html
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/popup.css
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/popup.js
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/icon-48.png
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/icon-64.png
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/icon-96.png
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/icon-128.png
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/icon-256.png
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/icon-512.png
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/toolbar-16.png
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/toolbar-19.png
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/toolbar-32.png
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/toolbar-38.png
+        buildPhase: resources
     settings:
       base:
         APPLICATION_EXTENSION_API_ONLY: YES
         CODE_SIGN_ENTITLEMENTS: Nightshift Extension/Nightshift_Extension.entitlements
         CODE_SIGN_STYLE: Automatic
+        ENABLE_APP_SANDBOX: YES
+        ENABLE_USER_SELECTED_FILES: readonly
         INFOPLIST_FILE: Nightshift Extension/Info.plist
+        OTHER_LDFLAGS: -framework SafariServices
         PRODUCT_BUNDLE_IDENTIFIER: com.FlyMedia.Nightshift.Extension
         SKIP_INSTALL: YES
 
@@ -61,4 +103,3 @@ schemes:
         Nightshift: all
     run:
       config: Debug
-

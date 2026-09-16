@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "Nightshift",
+  "description": "Choose when websites use a dark appearance.",
+  "version": "1.0.0",
+  "icons": {
+    "48": "icon-48.png",
+    "64": "icon-64.png",
+    "96": "icon-96.png",
+    "128": "icon-128.png",
+    "256": "icon-256.png",
+    "512": "icon-512.png"
+  },
+  "action": {
+    "default_title": "Nightshift",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "toolbar-16.png",
+      "19": "toolbar-19.png",
+      "32": "toolbar-32.png",
+      "38": "toolbar-38.png"
+    }
+  },
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js": [
+        "theme-policy.js",
+        "content.js"
+      ],
+      "css": [
+        "nightshift.css"
+      ],
+      "run_at": "document_start"
+    }
+  ]
+}

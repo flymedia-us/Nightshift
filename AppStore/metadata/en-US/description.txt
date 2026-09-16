@@ -1,0 +1,20 @@
+Nightshift gives websites a comfortable dark appearance in Safari.
+
+Choose the mode that fits your Mac:
+• Always Light leaves websites unchanged.
+• Always Dark applies Nightshift throughout the day.
+• System follows macOS Light and Dark Mode automatically.
+
+Use the Safari toolbar to turn Nightshift off for individual websites. Your choices update open tabs immediately and stay saved on your Mac.
+
+Nightshift is lightweight, open source, and built with Safari's modern Web Extension architecture. It does not create an account, send your browsing history to Fly Media, or collect personal data.
+
+Features:
+• Three global appearance modes
+• Automatic synchronization with system appearance
+• Per-website controls
+• Immediate updates in open tabs
+• Native SwiftUI companion app
+• Support for Apple silicon and Intel Macs
+
+Nightshift uses a visual color filter to transform websites. Some pages with complex graphics or custom styling may look different than expected, and websites that already provide their own dark theme may work best with Nightshift disabled for that site.

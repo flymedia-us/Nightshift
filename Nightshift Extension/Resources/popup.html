@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nightshift</title>
+    <link rel="stylesheet" href="popup.css">
+    <script src="theme-policy.js" defer></script>
+    <script src="popup.js" defer></script>
+</head>
+<body>
+    <main>
+        <header>
+            <img class="mark" src="icon-64.png" alt="">
+            <div>
+                <h1>Nightshift</h1>
+                <p id="site-name">Loading current website…</p>
+            </div>
+        </header>
+
+        <fieldset>
+            <legend>Appearance</legend>
+            <label>
+                <input type="radio" name="global-mode" value="light">
+                <span><strong>Always Light</strong><small>Leave websites unchanged</small></span>
+            </label>
+            <label>
+                <input type="radio" name="global-mode" value="dark">
+                <span><strong>Always Dark</strong><small>Apply Nightshift at all times</small></span>
+            </label>
+            <label>
+                <input type="radio" name="global-mode" value="system">
+                <span><strong>System</strong><small>Follow your Mac's appearance</small></span>
+            </label>
+        </fieldset>
+
+        <div class="site-control">
+            <label for="site-enabled">
+                <span><strong>Enable on this website</strong><small id="site-detail">Uses the global appearance setting</small></span>
+                <input id="site-enabled" type="checkbox">
+            </label>
+        </div>
+
+        <p id="status" role="status" aria-live="polite"></p>
+    </main>
+</body>
+</html>

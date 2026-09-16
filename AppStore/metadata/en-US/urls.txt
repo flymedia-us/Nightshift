@@ -1,0 +1,5 @@
+Support URL: https://apps.flymedia.us/nightshift/support/
+Marketing URL: https://apps.flymedia.us/nightshift/
+Privacy Policy URL: https://apps.flymedia.us/nightshift/privacy/
+
+These pages must be published in the flymedia-us/apps repository before submission.

@@ -24,53 +24,14 @@
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>NSExtension</key>
 	<dict>
-		<key>SFSafariStyleSheet</key>
-		<array>
-			<dict>
-				<key>Style Sheet</key>
-				<string>stackoverflow-dark.css</string>
-				<key>Allowed URL Patterns</key>
-				<array>
-					<string>https://*.stackoverflow.com/*</string>
-				</array>
-			</dict>
-		</array>
 		<key>NSExtensionPointIdentifier</key>
-		<string>com.apple.Safari.extension</string>
+		<string>com.apple.Safari.web-extension</string>
 		<key>NSExtensionPrincipalClass</key>
-		<string>$(PRODUCT_MODULE_NAME).SafariExtensionHandler</string>
-		<key>SFSafariContentScript</key>
-		<array>
-			<dict>
-				<key>Script</key>
-				<string>script.js</string>
-			</dict>
-		</array>
-		<key>SFSafariToolbarItem</key>
-		<dict>
-			<key>Action</key>
-			<string>Popover</string>
-			<key>Identifier</key>
-			<string>Button</string>
-			<key>Image</key>
-			<string>ToolbarItemIcon.pdf</string>
-			<key>Label</key>
-			<string>Nightshift</string>
-		</dict>
-		<key>SFSafariWebsiteAccess</key>
-		<dict>
-			<key>Allowed Domains</key>
-			<array>
-				<string>https://*/*</string>
-				<string>http://*/*</string>
-			</array>
-			<key>Level</key>
-			<string>All</string>
-		</dict>
+		<string>$(PRODUCT_MODULE_NAME).SafariWebExtensionHandler</string>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2026 Fly Media LLC. Original work © 2020 Aleksei Maslakov.</string>
 	<key>NSHumanReadableDescription</key>
-	<string>Nightshift enables dark mode for websites.</string>
+	<string>Choose when websites use Nightshift's dark appearance.</string>
 </dict>
 </plist>
