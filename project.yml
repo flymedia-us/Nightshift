@@ -26,7 +26,6 @@ targets:
           - Info.plist
           - Nightshift.entitlements
           - PrivacyInfo.xcprivacy
-          - Nightshift.icon
       - path: Nightshift/PrivacyInfo.xcprivacy
         buildPhase: resources
       - path: Icon/Nightshift Icon.icon
