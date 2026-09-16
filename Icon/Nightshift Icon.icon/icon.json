@@ -10,7 +10,19 @@
           "glass" : true,
           "image-name" : "2.new sparkle.svg",
           "name" : "2.new sparkle"
-        },
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.3
+      }
+    },
+    {
+      "layers" : [
         {
           "fill-specializations" : [
             {
