@@ -1,10 +1,8 @@
 # Nightshift support
 
-**Planned canonical support page:** <https://apps.flymedia.us/nightshift/support/>
+**Canonical support page:** <https://apps.flymedia.us/nightshift/support/>
 
-Publish the canonical page from the `flymedia-us/apps` website repository before submitting Nightshift to App Review.
-
-For questions, bugs, or feature requests, email `contact@flymedia.us` or use the repository's GitHub Issues page.
+For questions, bugs, or feature requests, email `contact@flymedia.us` or use [GitHub Issues](https://github.com/flymedia-us/Nightshift/issues).
 
 Useful details for a bug report:
 

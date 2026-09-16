@@ -1,1 +1,1 @@
-dark mode,night,websites,appearance,reading,browser,system theme,low light,accessibility
+dark mode,night mode,website theme,Safari,reading,appearance,low light,system theme

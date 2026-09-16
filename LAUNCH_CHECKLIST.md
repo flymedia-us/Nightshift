@@ -5,7 +5,8 @@
 - [x] Fly Media app and extension bundle identifiers
 - [x] Marketing version and build number configured
 - [x] App icon authored in Icon Composer and Safari extension icon assets
-- [x] Utilities category configured in the app and selected in App Store Connect
+- [x] Utilities category configured in the app
+- [ ] Select Utilities in App Store Connect
 - [ ] Confirm whether this is a new App Store record or an update/transfer of the original listing
 
 > The current bundle ID is `com.FlyMedia.Nightshift`. Apple treats a different bundle ID as a different app. Preserving an earlier App Store listing requires control or transfer of that listing and its existing identifier.
@@ -26,10 +27,11 @@
 ## App Store Connect
 
 - [x] English name, subtitle, promotional text, description, keywords, release notes, and review notes drafted
+- [x] App Store Connect handoff prepared in `AppStore/app-store-connect.md`
 - [x] Privacy manifests declare no tracking or data collection
 - [ ] Reserve or confirm app name and create/confirm the App Store record
 - [ ] Confirm bundle ID, SKU, primary language, category, price, and availability
-- [ ] Complete the age-rating questionnaire; expected result is the lowest general rating if all content answers remain “None”
+- [ ] Complete the age-rating questionnaire using the rationale in `AppStore/app-store-connect.md`; do not claim unrestricted web access because Nightshift does not provide a browser or navigation surface
 - [ ] Declare “No, we do not collect data from this app” in App Privacy
 - [ ] Confirm export compliance; the app declares no non-exempt encryption
 - [ ] Confirm Digital Services Act trader status and required contact details
@@ -42,7 +44,7 @@
 
 ## Open-source and operations
 
-- [ ] Decide the public repository launch date
+- [x] Publish the source repository under the MIT License
 - [x] Add issue templates, a security policy, and contribution guidance before opening the repository
 - [ ] Tag the final source commit and publish release notes
 - [ ] Keep credentials and internal launch material outside the source repository

@@ -1,4 +1,4 @@
-Nightshift gives websites a comfortable dark appearance in Safari.
+Nightshift is a completely free, open-source dark mode for Safari on Mac. No ads, no account, no subscription, no trial, and no in-app purchases.
 
 Choose the mode that fits your Mac:
 • Always Light leaves websites unchanged.
@@ -7,7 +7,7 @@ Choose the mode that fits your Mac:
 
 Use the Safari toolbar to turn Nightshift off for individual websites. Your choices update open tabs immediately and stay saved on your Mac.
 
-Nightshift is lightweight, open source, and built with Safari's modern Web Extension architecture. It does not create an account, send your browsing history to Fly Media, or collect personal data.
+Nightshift is lightweight, open source, and built with Safari's modern Web Extension architecture. It does not create an account, send your browsing history to Fly Media, or collect personal data. The complete source is available under the MIT License.
 
 Features:
 • Three global appearance modes

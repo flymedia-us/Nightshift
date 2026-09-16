@@ -1,6 +1,11 @@
 # Nightshift
 
-Nightshift is a Safari Web Extension for macOS that gives websites a dark appearance. This Fly Media edition modernizes the original [unmade/Nightshift](https://github.com/unmade/Nightshift) project while retaining its MIT license and commit history.
+Nightshift is a completely free, open-source Safari Web Extension for macOS that gives websites a dark appearance. There are no ads, accounts, subscriptions, trials, or in-app purchases. This Fly Media edition modernizes the original [unmade/Nightshift](https://github.com/unmade/Nightshift) project while retaining its MIT license and commit history.
+
+- Product page: <https://apps.flymedia.us/nightshift/>
+- Support: <https://apps.flymedia.us/nightshift/support/>
+- Privacy policy: <https://apps.flymedia.us/nightshift/privacy/>
+- Report a bug or suggest a feature: <https://github.com/flymedia-us/Nightshift/issues>
 
 ## Appearance modes
 
@@ -80,20 +85,20 @@ Use `NIGHTSHIFT_SMOKE_SITE=github` to run one case, or `NIGHTSHIFT_SMOKE_HEADED=
 - `Tests/` — Node tests for extension behavior
 - `Artwork/` — source SVGs and deterministic Safari PNG renderer
 - `Icon/Nightshift Icon.icon` — source-of-truth macOS app icon, hand-authored in Apple Icon Composer
-- `AppStore/` — versioned listing copy, review notes, and screenshot production guidance
+- `AppStore/` — versioned listing copy, App Store Connect handoff, review notes, and screenshot production guidance
 - `project.yml` — source of truth for Xcode targets and build settings
 - `.github/workflows/ci.yml` — JavaScript tests plus unsigned builds on macOS 15, 26, and 27 runners
 
 ## Repository setup
 
-- `origin` — private Fly Media repository: `git@github.com:flymedia-us/Nightshift.git`
+- `origin` — public Fly Media repository: `git@github.com:flymedia-us/Nightshift.git`
 - `upstream` — original project: `https://github.com/unmade/Nightshift.git`
 
 Fetch future upstream changes with `git fetch upstream`.
 
 ## Release preparation
 
-See [`LAUNCH_CHECKLIST.md`](LAUNCH_CHECKLIST.md) for the remaining App Store, compatibility, accessibility, and open-source release gates. Versioned listing copy lives in [`AppStore/`](AppStore/); large screenshot binaries and all credentials intentionally live outside this repository.
+See [`LAUNCH_CHECKLIST.md`](LAUNCH_CHECKLIST.md) for the remaining App Store, compatibility, accessibility, and release gates. The ready-to-enter listing handoff is in [`AppStore/app-store-connect.md`](AppStore/app-store-connect.md). Large screenshot binaries and all credentials intentionally live outside this repository.
 
 ## License
 

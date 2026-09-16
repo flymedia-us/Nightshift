@@ -1,8 +1,8 @@
 # Privacy Policy — Nightshift
 
-**Planned canonical policy:** <https://apps.flymedia.us/nightshift/privacy/>
+**Canonical policy:** <https://apps.flymedia.us/nightshift/privacy/>
 
-Publish the canonical page from the `flymedia-us/apps` website repository before submitting Nightshift to App Review. This file is a technical summary and pointer rather than a second legally operative copy.
+This file is a technical summary and pointer rather than a second legally operative copy.
 
 ## Technical summary
 
