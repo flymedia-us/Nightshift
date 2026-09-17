@@ -8,10 +8,14 @@ test("normalizes invalid settings to System with no disabled sites", () => {
     assert.deepEqual(policy.normalizeSettings({ globalMode: "sepia", disabledSites: "example.com" }), {
         globalMode: "system",
         disabledSites: [],
+        autoDisabledSites: [],
+        enabledSites: [],
     });
     assert.deepEqual(policy.normalizeSettings(null), {
         globalMode: "system",
         disabledSites: [],
+        autoDisabledSites: [],
+        enabledSites: [],
     });
 });
 
@@ -47,4 +51,10 @@ test("host exclusions retain explicit ports", () => {
     const settings = { globalMode: "dark", disabledSites: ["localhost:3000"] };
     assert.equal(policy.shouldApply(settings, "localhost:3000", false), false);
     assert.equal(policy.shouldApply(settings, "localhost:4000", false), true);
+});
+
+test("native-dark-mode exclusions apply unless the user explicitly re-enables the site", () => {
+    const settings = { autoDisabledSites: ["example.com"] };
+    assert.equal(policy.shouldApply(settings, "example.com", true), false);
+    assert.equal(policy.shouldApply({ ...settings, enabledSites: ["example.com"] }, "example.com", true), true);
 });

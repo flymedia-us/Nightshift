@@ -10,10 +10,12 @@ const resourceDirectory = path.join(__dirname, "..", "Nightshift Extension", "Re
 const policySource = fs.readFileSync(path.join(resourceDirectory, "theme-policy.js"), "utf8");
 const contentSource = fs.readFileSync(path.join(resourceDirectory, "content.js"), "utf8");
 
-function createHarness({ host = "example.com", systemIsDark = false, storedSettings = {} } = {}) {
+function createHarness({ host = "example.com", systemIsDark = false, storedSettings = {}, nativeDarkMode = false } = {}) {
     const attributes = new Set();
     let systemListener;
     let storageListener;
+    const pageListeners = new Map();
+    const savedSettings = [];
 
     const root = {
         toggleAttribute(name, force) {
@@ -36,6 +38,7 @@ function createHarness({ host = "example.com", systemIsDark = false, storedSetti
         storage: {
             local: {
                 get: async () => storedSettings,
+                set: async (value) => { savedSettings.push(structuredClone(value)); },
             },
             onChanged: {
                 addListener(listener) {
@@ -49,10 +52,14 @@ function createHarness({ host = "example.com", systemIsDark = false, storedSetti
         URL,
         browser,
         console,
-        document: { documentElement: root },
+        document: { documentElement: root, readyState: "complete" },
+        NightshiftNativeDarkModeDetector: { hasNativeDarkMode: () => nativeDarkMode },
         window: {
             location: { host },
             matchMedia: () => mediaQuery,
+            addEventListener(event, listener) {
+                pageListeners.set(event, listener);
+            },
         },
     });
 
@@ -71,6 +78,7 @@ function createHarness({ host = "example.com", systemIsDark = false, storedSetti
         updateStorage(changes) {
             storageListener(changes, "local");
         },
+        savedSettings,
     };
 }
 
@@ -111,4 +119,10 @@ test("site exclusions deactivate an already-open page", async () => {
 
     harness.updateStorage({ disabledSites: { newValue: ["example.com"] } });
     assert.equal(harness.isActive(), false);
+});
+
+test("native dark-mode pages are automatically excluded after settings load", async () => {
+    const harness = createHarness({ storedSettings: { globalMode: "dark" }, nativeDarkMode: true });
+    await harness.settle();
+    assert.deepEqual(harness.savedSettings.at(-1).autoDisabledSites, ["example.com"]);
 });

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nightshift Settings</title>
+    <link rel="stylesheet" href="options.css">
+    <script src="theme-policy.js" defer></script>
+    <script src="options.js" defer></script>
+</head>
+<body>
+    <main>
+        <header>
+            <img src="icon-64.png" alt="" width="40" height="40">
+            <div>
+                <h1>Nightshift Settings</h1>
+                <p>Control which websites Nightshift leaves unchanged.</p>
+            </div>
+        </header>
+
+        <section aria-labelledby="excluded-sites-title">
+            <h2 id="excluded-sites-title">Excluded websites</h2>
+            <p class="intro">Detected sites have their own dark appearance. Manual exclusions always stay off.</p>
+            <form id="add-excluded-site">
+                <label for="excluded-site-host">Website address</label>
+                <div class="input-row">
+                    <input id="excluded-site-host" name="host" type="text" inputmode="url" placeholder="example.com" autocomplete="off">
+                    <button type="submit">Exclude website</button>
+                </div>
+            </form>
+            <p id="form-status" role="status" aria-live="polite"></p>
+            <ul id="excluded-sites" aria-live="polite"></ul>
+        </section>
+    </main>
+</body>
+</html>

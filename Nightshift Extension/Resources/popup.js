@@ -29,7 +29,10 @@
         }
 
         siteName.textContent = currentHost;
-        siteDetail.textContent = "Uses the global appearance setting";
+        const automaticallyDisabled = settings.autoDisabledSites.includes(currentHost) && !settings.enabledSites.includes(currentHost);
+        siteDetail.textContent = automaticallyDisabled
+            ? "Disabled because this site provides its own dark appearance"
+            : "Uses the global appearance setting";
         siteEnabledInput.disabled = false;
         siteEnabledInput.checked = !policy.isSiteDisabled(settings, currentHost);
     }
@@ -63,13 +66,16 @@
         }
 
         const disabledSites = new Set(settings.disabledSites);
+        const enabledSites = new Set(settings.enabledSites);
         if (siteEnabledInput.checked) {
             disabledSites.delete(currentHost);
+            enabledSites.add(currentHost);
         } else {
             disabledSites.add(currentHost);
+            enabledSites.delete(currentHost);
         }
 
-        saveSettings({ ...settings, disabledSites: [...disabledSites] })
+        saveSettings({ ...settings, disabledSites: [...disabledSites], enabledSites: [...enabledSites] })
             .catch((error) => setStatus(`Couldn't save: ${error.message}`));
     });
 

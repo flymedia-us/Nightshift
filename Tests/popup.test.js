@@ -67,6 +67,7 @@ function createHarness({ tabURL = "https://example.com/page", storedSettings = {
         savedSettings,
         siteEnabledInput,
         siteName,
+        siteDetail,
         status,
         async settle() {
             await new Promise((resolve) => setImmediate(resolve));
@@ -92,7 +93,9 @@ test("popup saves a new global mode", async () => {
     darkInput.dispatch("change");
     await harness.settle();
 
-    assert.deepEqual(harness.savedSettings.at(-1), { globalMode: "dark", disabledSites: [] });
+    assert.deepEqual(harness.savedSettings.at(-1), {
+        globalMode: "dark", disabledSites: [], autoDisabledSites: [], enabledSites: [],
+    });
     assert.equal(harness.status.textContent, "Saved");
 });
 
@@ -104,11 +107,25 @@ test("popup can disable and re-enable Nightshift for the active site", async () 
     harness.siteEnabledInput.dispatch("change");
     await harness.settle();
     assert.deepEqual(harness.savedSettings.at(-1).disabledSites, ["example.com"]);
+    assert.deepEqual(harness.savedSettings.at(-1).enabledSites, []);
 
     harness.siteEnabledInput.checked = true;
     harness.siteEnabledInput.dispatch("change");
     await harness.settle();
     assert.deepEqual(harness.savedSettings.at(-1).disabledSites, []);
+    assert.deepEqual(harness.savedSettings.at(-1).enabledSites, ["example.com"]);
+});
+
+test("popup explains automatic native-dark-mode exclusions and lets the user override one", async () => {
+    const harness = createHarness({ storedSettings: { globalMode: "dark", autoDisabledSites: ["example.com"] } });
+    await harness.settle();
+    assert.equal(harness.siteEnabledInput.checked, false);
+    assert.match(harness.siteDetail.textContent, /provides its own dark appearance/);
+
+    harness.siteEnabledInput.checked = true;
+    harness.siteEnabledInput.dispatch("change");
+    await harness.settle();
+    assert.deepEqual(harness.savedSettings.at(-1).enabledSites, ["example.com"]);
 });
 
 test("popup disables site controls on Safari-internal pages", async () => {

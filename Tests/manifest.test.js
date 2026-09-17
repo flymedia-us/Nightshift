@@ -11,6 +11,7 @@ const manifest = JSON.parse(fs.readFileSync(path.join(resourceDirectory, "manife
 test("manifest declares the expected Safari Web Extension entry points", () => {
     assert.equal(manifest.manifest_version, 3);
     assert.equal(manifest.action.default_popup, "popup.html");
+    assert.equal(manifest.options_ui.page, "options.html");
     assert.equal(manifest.icons["512"], "icon-512.png");
     assert.equal(manifest.action.default_icon["16"], "toolbar-16.png");
     assert.deepEqual(manifest.permissions.sort(), ["activeTab", "storage"]);
@@ -20,6 +21,7 @@ test("manifest declares the expected Safari Web Extension entry points", () => {
 test("every local resource referenced by the manifest exists", () => {
     const referencedResources = [
         manifest.action.default_popup,
+        manifest.options_ui.page,
         ...Object.values(manifest.icons),
         ...Object.values(manifest.action.default_icon),
         ...manifest.content_scripts.flatMap((script) => [...script.js, ...script.css]),

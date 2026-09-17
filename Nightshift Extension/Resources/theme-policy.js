@@ -10,6 +10,8 @@
     const DEFAULT_SETTINGS = Object.freeze({
         globalMode: MODES.SYSTEM,
         disabledSites: Object.freeze([]),
+        autoDisabledSites: Object.freeze([]),
+        enabledSites: Object.freeze([]),
     });
 
     function normalizeMode(value) {
@@ -49,13 +51,18 @@
         return {
             globalMode: normalizeMode(candidate.globalMode),
             disabledSites: normalizeDisabledSites(candidate.disabledSites),
+            autoDisabledSites: normalizeDisabledSites(candidate.autoDisabledSites),
+            enabledSites: normalizeDisabledSites(candidate.enabledSites),
         };
     }
 
     function isSiteDisabled(settings, host) {
         const normalizedSettings = normalizeSettings(settings);
         const normalizedHost = normalizeHost(host);
-        return normalizedHost !== "" && normalizedSettings.disabledSites.includes(normalizedHost);
+        return normalizedHost !== "" && (
+            normalizedSettings.disabledSites.includes(normalizedHost) ||
+            (normalizedSettings.autoDisabledSites.includes(normalizedHost) && !normalizedSettings.enabledSites.includes(normalizedHost))
+        );
     }
 
     function shouldApply(settings, host, systemIsDark) {

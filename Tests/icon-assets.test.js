@@ -29,10 +29,11 @@ test("the macOS app icon is an Icon Composer document", () => {
     const project = fs.readFileSync(path.join(repositoryRoot, "project.yml"), "utf8");
 
     assert.match(project, /ASSETCATALOG_COMPILER_APPICON_NAME: "Nightshift Icon"/);
-    assert.equal(icon.groups.length, 1);
-    assert.equal(icon.groups[0].layers.length, 2);
+    assert.equal(icon.groups.length, 2);
+    assert.equal(icon.groups[0].layers.length, 1);
     assert.equal(icon.groups[0].layers[0]["image-name"], "2.new sparkle.svg");
-    assert.equal(icon.groups[0].layers[1]["image-name"], "1.moon shadow.svg");
+    assert.equal(icon.groups[1].layers.length, 1);
+    assert.equal(icon.groups[1].layers[0]["image-name"], "1.moon shadow.svg");
     assert.ok(fs.existsSync(path.join(iconDirectory, "Assets", "1.moon shadow.svg")));
     assert.ok(fs.existsSync(path.join(iconDirectory, "Assets", "2.new sparkle.svg")));
 });

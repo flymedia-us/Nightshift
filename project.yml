@@ -8,11 +8,13 @@ options:
 
 settings:
   base:
-    CURRENT_PROJECT_VERSION: "4"
+    CURRENT_PROJECT_VERSION: "14"
+    CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO
     DEVELOPMENT_TEAM: BJZSH247Q9
     ENABLE_HARDENED_RUNTIME: YES
     MACOSX_DEPLOYMENT_TARGET: "12.3"
-    MARKETING_VERSION: "1.0.0"
+    MARKETING_VERSION: "1.0.5"
+    OTHER_CODE_SIGN_FLAGS: --timestamp
     SWIFT_STRICT_CONCURRENCY: complete
     SWIFT_VERSION: "6.0"
 
@@ -32,8 +34,6 @@ targets:
     settings:
       base:
         ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES: YES
-        # The hand-authored Icon Composer document is the app icon source.
-        # Xcode compiles it into platform-appropriate app icon renditions.
         ASSETCATALOG_COMPILER_APPICON_NAME: "Nightshift Icon"
         CODE_SIGN_ENTITLEMENTS: Nightshift/Nightshift.entitlements
         CODE_SIGN_STYLE: Automatic
@@ -55,6 +55,8 @@ targets:
         buildPhase: resources
       - path: Nightshift Extension/Resources/theme-policy.js
         buildPhase: resources
+      - path: Nightshift Extension/Resources/native-dark-mode-detector.js
+        buildPhase: resources
       - path: Nightshift Extension/Resources/content.js
         buildPhase: resources
       - path: Nightshift Extension/Resources/nightshift.css
@@ -64,6 +66,12 @@ targets:
       - path: Nightshift Extension/Resources/popup.css
         buildPhase: resources
       - path: Nightshift Extension/Resources/popup.js
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/options.html
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/options.css
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/options.js
         buildPhase: resources
       - path: Nightshift Extension/Resources/icon-48.png
         buildPhase: resources

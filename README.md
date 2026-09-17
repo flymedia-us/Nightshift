@@ -15,6 +15,10 @@ Nightshift is a completely free, open-source Safari Web Extension for macOS that
 
 Nightshift can also be disabled for individual sites from its Safari toolbar popup. Mode and site changes update open tabs immediately.
 
+When active, Nightshift also checks the current page locally after its CSS loads. It automatically disables itself only when the page is already dark *and* declares native dark-mode support through `color-scheme` or a `prefers-color-scheme: dark` rule. This avoids double-darkening sites with their own dark appearance without maintaining a browsing catalog or collecting user behavior. You can re-enable Nightshift for any detected site from the toolbar popup.
+
+Manage all excluded websites—including automatically detected and manually added sites—in Nightshift's browser settings page. Open Safari’s extension settings and choose Nightshift’s settings page to add or remove exclusions.
+
 ## Architecture
 
 - A Manifest V3 Safari Web Extension implements the toolbar popup, saved preferences, per-site policy, and page styling.
