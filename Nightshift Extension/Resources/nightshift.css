@@ -10,3 +10,11 @@ html[data-nightshift-active] svg,
 html[data-nightshift-active] [role="img"] {
     filter: invert(1) hue-rotate(-165deg) !important;
 }
+
+/* Google Docs renders the document page and its text into canvas tiles. Let
+   Nightshift's page filter reach those pixels so white paper becomes dark and
+   black text becomes light without changing the document's saved formatting. */
+html[data-nightshift-active][data-nightshift-google-docs] #docs-editor canvas,
+html[data-nightshift-active][data-nightshift-google-docs] .kix-canvas-tile-content {
+    filter: none !important;
+}

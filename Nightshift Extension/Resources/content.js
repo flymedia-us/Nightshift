@@ -10,6 +10,11 @@
     let settingsLoaded = false;
     let isSavingAutoExclusion = false;
     let pendingAppearanceCheck = false;
+    const GOOGLE_DOCS_HOST = "docs.google.com";
+
+    function isGoogleDocsHost() {
+        return policy.normalizeHost(window.location.host) === GOOGLE_DOCS_HOST;
+    }
 
     function applyTheme() {
         const root = document.documentElement;
@@ -17,6 +22,11 @@
             return;
         }
 
+        // Docs paints document pages into canvas tiles. The normal canvas media
+        // correction below intentionally cancels Nightshift's page filter, which
+        // would make Docs' dark canvas and dark text equally low-contrast. Keep
+        // this marker separate from the active state so the CSS stays host-scoped.
+        root.toggleAttribute("data-nightshift-google-docs", isGoogleDocsHost());
         const active = policy.shouldApply(settings, window.location.host, systemAppearance.matches);
         root.toggleAttribute("data-nightshift-active", active);
     }

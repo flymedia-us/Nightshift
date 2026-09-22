@@ -70,6 +70,7 @@ function createHarness({ host = "example.com", systemIsDark = false, storedSetti
 
     return {
         isActive: () => attributes.has("data-nightshift-active"),
+        hasGoogleDocsMarker: () => attributes.has("data-nightshift-google-docs"),
         async settle() {
             await new Promise((resolve) => setImmediate(resolve));
         },
@@ -87,6 +88,14 @@ function createHarness({ host = "example.com", systemIsDark = false, storedSetti
 test("content script applies the default System mode before async storage loads", () => {
     assert.equal(createHarness({ systemIsDark: true }).isActive(), true);
     assert.equal(createHarness({ systemIsDark: false }).isActive(), false);
+});
+
+test("Google Docs gets a rendering marker without changing the activation policy", () => {
+    const docs = createHarness({ host: "docs.google.com", systemIsDark: false });
+    const otherSite = createHarness({ host: "docs.google.com.evil.example", systemIsDark: false });
+    assert.equal(docs.hasGoogleDocsMarker(), true);
+    assert.equal(otherSite.hasGoogleDocsMarker(), false);
+    assert.equal(docs.isActive(), false);
 });
 
 test("stored Always Dark activates Nightshift on a light system", async () => {
