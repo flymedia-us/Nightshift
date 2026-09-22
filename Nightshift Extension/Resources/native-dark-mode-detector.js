@@ -1,9 +1,10 @@
 (function (globalScope) {
     "use strict";
 
-    // A site must provide both a native-dark-mode declaration and a dark rendered
-    // surface. Either signal alone is too noisy to use as an automatic exclusion.
+    // Capability is not appearance: a light page may advertise a dark theme. The
+    // decision to exclude Nightshift must be based on the current rendering.
     const MAX_DARK_LUMINANCE = 0.35;
+    const MIN_DARK_SAMPLE_RATIO = 0.6;
 
     function hasDarkToken(value) {
         return typeof value === "string" && /(^|\s)dark(\s|$)/i.test(value);
@@ -35,6 +36,19 @@
         return false;
     }
 
+    function hasDarkModeControl(document) {
+        const controls = document.querySelectorAll?.('button, input[type="checkbox"], input[type="radio"], [role="switch"], [role="menuitemradio"]') ?? [];
+        return [...controls].some((control) => {
+            const label = [
+                control.textContent,
+                control.value,
+                control.getAttribute?.("aria-label"),
+                control.getAttribute?.("title"),
+            ].filter(Boolean).join(" ");
+            return /\bdark\b/i.test(label);
+        });
+    }
+
     function parseColor(color) {
         const rgb = /^rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i.exec(color);
         if (rgb) return rgb.slice(1).map(Number);
@@ -53,22 +67,44 @@
         return (0.2126 * linear[0]) + (0.7152 * linear[1]) + (0.0722 * linear[2]) <= MAX_DARK_LUMINANCE;
     }
 
+    function backgroundColorFor(element, document) {
+        let candidate = element;
+        while (candidate) {
+            const color = document.defaultView?.getComputedStyle?.(candidate).backgroundColor;
+            if (parseColor(color)) return color;
+            candidate = candidate.parentElement;
+        }
+        return "";
+    }
+
     function hasDarkSurface(document) {
-        const candidates = [document.documentElement, document.body];
         const width = document.defaultView?.innerWidth ?? 0;
         const height = document.defaultView?.innerHeight ?? 0;
-        for (const point of [[1, 1], [Math.floor(width / 2), Math.floor(height / 2)]]) {
+        const points = [
+            [1, 1],
+            [Math.floor(width * 0.2), Math.floor(height * 0.2)],
+            [Math.floor(width * 0.8), Math.floor(height * 0.2)],
+            [Math.floor(width / 2), Math.floor(height / 2)],
+            [Math.floor(width / 2), Math.floor(height * 0.8)],
+        ];
+        const samples = [];
+        for (const point of points) {
             const element = document.elementFromPoint?.(...point);
-            if (element) candidates.push(element);
+            if (element) samples.push(backgroundColorFor(element, document));
         }
-        return candidates.some((element) => isDarkColor(document.defaultView?.getComputedStyle?.(element).backgroundColor));
+        if (samples.length === 0) {
+            samples.push(backgroundColorFor(document.body, document), backgroundColorFor(document.documentElement, document));
+        }
+        const usableSamples = samples.filter((color) => parseColor(color));
+        return usableSamples.length > 0 && usableSamples.filter(isDarkColor).length / usableSamples.length >= MIN_DARK_SAMPLE_RATIO;
     }
 
-    function hasNativeDarkMode(document) {
-        return hasDarkSurface(document) && (hasDarkColorScheme(document) || hasDarkSchemeRule(document));
+    function hasNativeDarkAppearance(document, host) {
+        if (globalScope.NightshiftKnownDarkSites?.activeRuleFor(host, document)) return true;
+        return hasDarkSurface(document);
     }
 
-    const api = Object.freeze({ hasNativeDarkMode, hasDarkColorScheme, hasDarkSchemeRule, hasDarkSurface, isDarkColor });
+    const api = Object.freeze({ hasNativeDarkAppearance, hasDarkColorScheme, hasDarkModeControl, hasDarkSchemeRule, hasDarkSurface, isDarkColor });
     globalScope.NightshiftNativeDarkModeDetector = api;
     if (typeof module === "object" && module.exports) module.exports = api;
 }(typeof globalThis === "undefined" ? this : globalThis));

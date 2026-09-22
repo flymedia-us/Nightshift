@@ -12,10 +12,13 @@ test("manifest declares the expected Safari Web Extension entry points", () => {
     assert.equal(manifest.manifest_version, 3);
     assert.equal(manifest.action.default_popup, "popup.html");
     assert.equal(manifest.options_ui.page, "options.html");
+    assert.equal(manifest.options_ui.open_in_tab, true);
     assert.equal(manifest.icons["512"], "icon-512.png");
     assert.equal(manifest.action.default_icon["16"], "toolbar-16.png");
-    assert.deepEqual(manifest.permissions.sort(), ["activeTab", "storage"]);
+    assert.deepEqual(manifest.permissions.sort(), ["activeTab", "nativeMessaging", "storage"]);
+    assert.equal(manifest.background.service_worker, "background.js");
     assert.deepEqual(manifest.host_permissions.sort(), ["http://*/*", "https://*/*"]);
+    assert.deepEqual(manifest.content_scripts[0].js, ["theme-policy.js", "settings-store.js", "known-dark-sites.js", "native-dark-mode-detector.js", "content.js"]);
 });
 
 test("every local resource referenced by the manifest exists", () => {
@@ -25,6 +28,7 @@ test("every local resource referenced by the manifest exists", () => {
         ...Object.values(manifest.icons),
         ...Object.values(manifest.action.default_icon),
         ...manifest.content_scripts.flatMap((script) => [...script.js, ...script.css]),
+        manifest.background.service_worker,
     ];
 
     for (const resource of referencedResources) {

@@ -32,10 +32,13 @@
 		962C4AE251B29A41FCAB8926 /* Nightshift Icon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 2C492D32A3AFAFD5C0FF8D94 /* Nightshift Icon.icon */; };
 		9AE414C67637E9CEFF453E22 /* toolbar-16.png in Resources */ = {isa = PBXBuildFile; fileRef = 2A9D1D99543F3A09359D7429 /* toolbar-16.png */; };
 		9FAEF96C295252F2A7518E8A /* NightshiftApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E73A4CE1908C0B9E39534F /* NightshiftApp.swift */; };
+		BC90A19ADABFE1A1AABD910E /* known-dark-sites.js in Resources */ = {isa = PBXBuildFile; fileRef = 232E1F820D39E2586A328D81 /* known-dark-sites.js */; };
 		C0C71C9AFD91B3F871FF10E4 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 09D19DE50B812D453660ED72 /* PrivacyInfo.xcprivacy */; };
 		C28EF54BB085BBB188CF3798 /* nightshift.css in Resources */ = {isa = PBXBuildFile; fileRef = 0C49A4FCA399970C82F1E9B0 /* nightshift.css */; };
 		D588E50105E1B34AE5C2BB05 /* icon-256.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E84600CD7F58050290106B /* icon-256.png */; };
+		EBA644390F91EFC7A8B32A9F /* settings-store.js in Resources */ = {isa = PBXBuildFile; fileRef = 1975F2761E81E7373D00A779 /* settings-store.js */; };
 		F0DC62A81E5BF39FC9E36233 /* icon-512.png in Resources */ = {isa = PBXBuildFile; fileRef = 643324892784B73BBB3C5065 /* icon-512.png */; };
+		F126DAAC4780ACCE4345341B /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = 7910EBB9BC7ADA569BA327B7 /* background.js */; };
 		FFD98F086AE854584580081B /* toolbar-32.png in Resources */ = {isa = PBXBuildFile; fileRef = A1FD0D4E6D5BD2443E9DBC20 /* toolbar-32.png */; };
 /* End PBXBuildFile section */
 
@@ -68,6 +71,8 @@
 		0C49A4FCA399970C82F1E9B0 /* nightshift.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = nightshift.css; sourceTree = "<group>"; };
 		1529CB9B58ED576899A9BB7F /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = manifest.json; sourceTree = "<group>"; };
 		1596FA1A2E09B87360F2F5B3 /* toolbar-19.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-19.png"; sourceTree = "<group>"; };
+		1975F2761E81E7373D00A779 /* settings-store.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "settings-store.js"; sourceTree = "<group>"; };
+		232E1F820D39E2586A328D81 /* known-dark-sites.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "known-dark-sites.js"; sourceTree = "<group>"; };
 		2A9D1D99543F3A09359D7429 /* toolbar-16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-16.png"; sourceTree = "<group>"; };
 		2C492D32A3AFAFD5C0FF8D94 /* Nightshift Icon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = "Nightshift Icon.icon"; sourceTree = "<group>"; };
 		31C041C23494BF67540BA9CE /* options.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = options.css; sourceTree = "<group>"; };
@@ -79,6 +84,7 @@
 		66BEDB290CDE1CC4E45B61AC /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
 		6E8B45A4F9B8497709DE62BC /* content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = content.js; sourceTree = "<group>"; };
 		6EFD0CF66FFE79C377320D27 /* Nightshift.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Nightshift.icns; sourceTree = "<group>"; };
+		7910EBB9BC7ADA569BA327B7 /* background.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = background.js; sourceTree = "<group>"; };
 		7932891AC98E5D73738B4012 /* toolbar-38.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-38.png"; sourceTree = "<group>"; };
 		7EFDC8D0E27C7063CFDE5974 /* options.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = options.js; sourceTree = "<group>"; };
 		84C94DF4BE0E02D1B2FFB650 /* Nightshift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Nightshift.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -101,6 +107,7 @@
 		60FE14D7F490CB74F7B9D518 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7910EBB9BC7ADA569BA327B7 /* background.js */,
 				6E8B45A4F9B8497709DE62BC /* content.js */,
 				87EC17FA01A3FC5DB52471FC /* icon-48.png */,
 				EE1DDB3EBCFCAEBFF159EF7B /* icon-64.png */,
@@ -108,6 +115,7 @@
 				AF694F57D0E751BC94EEED20 /* icon-128.png */,
 				D5E84600CD7F58050290106B /* icon-256.png */,
 				643324892784B73BBB3C5065 /* icon-512.png */,
+				232E1F820D39E2586A328D81 /* known-dark-sites.js */,
 				1529CB9B58ED576899A9BB7F /* manifest.json */,
 				ED50E9CA2C7C09F4952D08E9 /* native-dark-mode-detector.js */,
 				0C49A4FCA399970C82F1E9B0 /* nightshift.css */,
@@ -117,6 +125,7 @@
 				41B4565DBA2DB83B8B0C6913 /* popup.css */,
 				CF939B46A33A6980CAB1E815 /* popup.html */,
 				85CCC1941A0D2278B9B96B3C /* popup.js */,
+				1975F2761E81E7373D00A779 /* settings-store.js */,
 				32C396469B4C47CAAC08EBBF /* theme-policy.js */,
 				2A9D1D99543F3A09359D7429 /* toolbar-16.png */,
 				1596FA1A2E09B87360F2F5B3 /* toolbar-19.png */,
@@ -272,6 +281,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C0C71C9AFD91B3F871FF10E4 /* PrivacyInfo.xcprivacy in Resources */,
+				F126DAAC4780ACCE4345341B /* background.js in Resources */,
 				4F372C061AD76BDCABC5E29A /* content.js in Resources */,
 				523B87FE97C59AA8FD9FBB51 /* icon-128.png in Resources */,
 				D588E50105E1B34AE5C2BB05 /* icon-256.png in Resources */,
@@ -279,6 +289,7 @@
 				F0DC62A81E5BF39FC9E36233 /* icon-512.png in Resources */,
 				9249BC99B2F76465C38E5B39 /* icon-64.png in Resources */,
 				5F0E5665334D85572B356D04 /* icon-96.png in Resources */,
+				BC90A19ADABFE1A1AABD910E /* known-dark-sites.js in Resources */,
 				1332607EC1FA4A98854E79E2 /* manifest.json in Resources */,
 				68096CE403B9969771B0CB15 /* native-dark-mode-detector.js in Resources */,
 				C28EF54BB085BBB188CF3798 /* nightshift.css in Resources */,
@@ -288,6 +299,7 @@
 				90238DE4ADDF0C2117E8C6A4 /* popup.css in Resources */,
 				3B1762ECC496BDE5AF29B385 /* popup.html in Resources */,
 				6DC31C394727AE2AF8209B36 /* popup.js in Resources */,
+				EBA644390F91EFC7A8B32A9F /* settings-store.js in Resources */,
 				436FBA54D662E57A1D145032 /* theme-policy.js in Resources */,
 				9AE414C67637E9CEFF453E22 /* toolbar-16.png in Resources */,
 				459CC00FE19A9CD9CED8993C /* toolbar-19.png in Resources */,
@@ -380,7 +392,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = BJZSH247Q9;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -512,7 +524,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 14;
+				CURRENT_PROJECT_VERSION = 16;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = BJZSH247Q9;
 				ENABLE_HARDENED_RUNTIME = YES;

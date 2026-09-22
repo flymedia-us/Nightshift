@@ -8,7 +8,7 @@ options:
 
 settings:
   base:
-    CURRENT_PROJECT_VERSION: "14"
+    CURRENT_PROJECT_VERSION: "16"
     CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO
     DEVELOPMENT_TEAM: BJZSH247Q9
     ENABLE_HARDENED_RUNTIME: YES
@@ -54,6 +54,12 @@ targets:
       - path: Nightshift Extension/Resources/manifest.json
         buildPhase: resources
       - path: Nightshift Extension/Resources/theme-policy.js
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/settings-store.js
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/known-dark-sites.js
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/background.js
         buildPhase: resources
       - path: Nightshift Extension/Resources/native-dark-mode-detector.js
         buildPhase: resources

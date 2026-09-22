@@ -3,6 +3,7 @@
 
     const extensionAPI = globalThis.browser ?? globalThis.chrome;
     const policy = globalThis.NightshiftThemePolicy;
+    const settingsStore = globalThis.NightshiftSettingsStore;
     const form = document.querySelector("#add-excluded-site");
     const hostInput = document.querySelector("#excluded-site-host");
     const status = document.querySelector("#form-status");
@@ -22,7 +23,8 @@
 
     function save(nextSettings, message = "Saved") {
         settings = policy.normalizeSettings(nextSettings);
-        return extensionAPI.storage.local.set(settings).then(() => {
+        return settingsStore.save(settings).then((savedSettings) => {
+            settings = savedSettings;
             render();
             setStatus(message);
         });
@@ -84,7 +86,7 @@
         }, "Website excluded").catch((error) => setStatus(`Couldn't save: ${error.message}`));
     });
 
-    extensionAPI.storage.local.get(policy.DEFAULT_SETTINGS)
+    settingsStore.load()
         .then((storedSettings) => {
             settings = policy.normalizeSettings(storedSettings);
             render();

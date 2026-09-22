@@ -8,6 +8,7 @@ const vm = require("node:vm");
 
 const resourceDirectory = path.join(__dirname, "..", "Nightshift Extension", "Resources");
 const policySource = fs.readFileSync(path.join(resourceDirectory, "theme-policy.js"), "utf8");
+const settingsStoreSource = fs.readFileSync(path.join(resourceDirectory, "settings-store.js"), "utf8");
 const contentSource = fs.readFileSync(path.join(resourceDirectory, "content.js"), "utf8");
 
 function createHarness({ host = "example.com", systemIsDark = false, storedSettings = {}, nativeDarkMode = false } = {}) {
@@ -53,7 +54,7 @@ function createHarness({ host = "example.com", systemIsDark = false, storedSetti
         browser,
         console,
         document: { documentElement: root, readyState: "complete" },
-        NightshiftNativeDarkModeDetector: { hasNativeDarkMode: () => nativeDarkMode },
+        NightshiftNativeDarkModeDetector: { hasNativeDarkAppearance: () => nativeDarkMode },
         window: {
             location: { host },
             matchMedia: () => mediaQuery,
@@ -64,6 +65,7 @@ function createHarness({ host = "example.com", systemIsDark = false, storedSetti
     });
 
     vm.runInContext(policySource, context);
+    vm.runInContext(settingsStoreSource, context);
     vm.runInContext(contentSource, context);
 
     return {
@@ -125,4 +127,13 @@ test("native dark-mode pages are automatically excluded after settings load", as
     const harness = createHarness({ storedSettings: { globalMode: "dark" }, nativeDarkMode: true });
     await harness.settle();
     assert.deepEqual(harness.savedSettings.at(-1).autoDisabledSites, ["example.com"]);
+});
+
+test("a stale automatic exclusion is removed when the page is currently light", async () => {
+    const harness = createHarness({
+        storedSettings: { globalMode: "dark", autoDisabledSites: ["example.com"] },
+        nativeDarkMode: false,
+    });
+    await harness.settle();
+    assert.deepEqual(harness.savedSettings.at(-1).autoDisabledSites, []);
 });

@@ -3,6 +3,7 @@
 
     const extensionAPI = globalThis.browser ?? globalThis.chrome;
     const policy = globalThis.NightshiftThemePolicy;
+    const settingsStore = globalThis.NightshiftSettingsStore;
     const modeInputs = [...document.querySelectorAll('input[name="global-mode"]')];
     const siteEnabledInput = document.querySelector("#site-enabled");
     const siteName = document.querySelector("#site-name");
@@ -39,7 +40,7 @@
 
     async function saveSettings(nextSettings) {
         settings = policy.normalizeSettings(nextSettings);
-        await extensionAPI.storage.local.set(settings);
+        settings = await settingsStore.save(settings);
         render();
         setStatus("Saved");
     }
@@ -80,7 +81,7 @@
     });
 
     Promise.all([
-        extensionAPI.storage.local.get(policy.DEFAULT_SETTINGS),
+        settingsStore.load(),
         loadCurrentHost(),
     ])
         .then(([storedSettings]) => {

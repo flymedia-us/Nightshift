@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "check": "node --check 'Nightshift Extension/Resources/theme-policy.js' && node --check 'Nightshift Extension/Resources/native-dark-mode-detector.js' && node --check 'Nightshift Extension/Resources/content.js' && node --check 'Nightshift Extension/Resources/popup.js' && node --check 'Nightshift Extension/Resources/options.js'",
+    "check": "node --check 'Nightshift Extension/Resources/theme-policy.js' && node --check 'Nightshift Extension/Resources/settings-store.js' && node --check 'Nightshift Extension/Resources/background.js' && node --check 'Nightshift Extension/Resources/known-dark-sites.js' && node --check 'Nightshift Extension/Resources/native-dark-mode-detector.js' && node --check 'Nightshift Extension/Resources/content.js' && node --check 'Nightshift Extension/Resources/popup.js' && node --check 'Nightshift Extension/Resources/options.js'",
     "test": "node --test Tests/*.test.js",
     "icons": "node Artwork/render-icons.mjs",
     "smoke": "playwright test --config Tests/smoke/playwright.config.js",

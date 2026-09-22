@@ -8,6 +8,7 @@ const vm = require("node:vm");
 
 const resourceDirectory = path.join(__dirname, "..", "Nightshift Extension", "Resources");
 const policySource = fs.readFileSync(path.join(resourceDirectory, "theme-policy.js"), "utf8");
+const settingsStoreSource = fs.readFileSync(path.join(resourceDirectory, "settings-store.js"), "utf8");
 const popupSource = fs.readFileSync(path.join(resourceDirectory, "popup.js"), "utf8");
 
 function createInput(value = "") {
@@ -60,6 +61,7 @@ function createHarness({ tabURL = "https://example.com/page", storedSettings = {
     const context = vm.createContext({ URL, browser, console, document, structuredClone });
 
     vm.runInContext(policySource, context);
+    vm.runInContext(settingsStoreSource, context);
     vm.runInContext(popupSource, context);
 
     return {

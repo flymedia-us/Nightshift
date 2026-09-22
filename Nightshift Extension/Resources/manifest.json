@@ -22,7 +22,8 @@
     }
   },
   "options_ui": {
-    "page": "options.html"
+    "page": "options.html",
+    "open_in_tab": true
   },
   "browser_specific_settings": {
     "safari": {
@@ -31,8 +32,12 @@
   },
   "permissions": [
     "activeTab",
-    "storage"
+    "storage",
+    "nativeMessaging"
   ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "host_permissions": [
     "http://*/*",
     "https://*/*"
@@ -45,6 +50,8 @@
       ],
       "js": [
         "theme-policy.js",
+        "settings-store.js",
+        "known-dark-sites.js",
         "native-dark-mode-detector.js",
         "content.js"
       ],

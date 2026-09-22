@@ -4,7 +4,7 @@ const headed = process.env.NIGHTSHIFT_SMOKE_HEADED === '1';
 
 export default defineConfig({
   testDir: '.',
-  testMatch: 'popular-sites.spec.js',
+  testMatch: '*.spec.js',
   fullyParallel: false,
   workers: 1,
   timeout: 45_000,

@@ -3,11 +3,13 @@
 
     const extensionAPI = globalThis.browser ?? globalThis.chrome;
     const policy = globalThis.NightshiftThemePolicy;
+    const settingsStore = globalThis.NightshiftSettingsStore;
     const nativeDarkModeDetector = globalThis.NightshiftNativeDarkModeDetector;
     const systemAppearance = window.matchMedia("(prefers-color-scheme: dark)");
     let settings = policy.normalizeSettings(policy.DEFAULT_SETTINGS);
     let settingsLoaded = false;
     let isSavingAutoExclusion = false;
+    let pendingAppearanceCheck = false;
 
     function applyTheme() {
         const root = document.documentElement;
@@ -41,21 +43,30 @@
 
     function autoDisableNativeDarkMode() {
         const host = policy.normalizeHost(window.location.host);
-        if (!settingsLoaded || document.readyState === "loading" || !host || isSavingAutoExclusion || settings.enabledSites.includes(host) || settings.autoDisabledSites.includes(host)) return;
-        if (!policy.shouldApply(settings, host, systemAppearance.matches) || !nativeDarkModeDetector?.hasNativeDarkMode(document)) return;
+        if (!settingsLoaded || document.readyState === "loading" || !host || isSavingAutoExclusion || settings.enabledSites.includes(host)) return;
+        const settingsWithoutCurrentAutoExclusion = {
+            ...settings,
+            autoDisabledSites: settings.autoDisabledSites.filter((site) => site !== host),
+        };
+        if (!policy.shouldApply(settingsWithoutCurrentAutoExclusion, host, systemAppearance.matches)) return;
+        const hasNativeDarkAppearance = nativeDarkModeDetector?.hasNativeDarkAppearance(document, host) === true;
+        const isAutoDisabled = settings.autoDisabledSites.includes(host);
+        if (hasNativeDarkAppearance === isAutoDisabled) return;
 
         isSavingAutoExclusion = true;
-        extensionAPI.storage.local.set({
+        settingsStore.save({
             ...settings,
-            autoDisabledSites: [...settings.autoDisabledSites, host],
+            autoDisabledSites: hasNativeDarkAppearance
+                ? [...settings.autoDisabledSites, host]
+                : settings.autoDisabledSites.filter((site) => site !== host),
         }).catch((error) => console.error("Nightshift couldn't save its native-dark-mode exclusion.", error))
             .finally(() => { isSavingAutoExclusion = false; });
     }
 
     applyTheme();
 
-    extensionAPI.storage.local
-        .get(policy.DEFAULT_SETTINGS)
+    settingsStore
+        .load()
         .then(updateSettings)
         .catch((error) => console.error("Nightshift couldn't load its settings.", error));
 
@@ -65,6 +76,19 @@
     // so Nightshift's filter never needs to be removed or flashed off.
     window.addEventListener("DOMContentLoaded", autoDisableNativeDarkMode, { once: true });
     window.addEventListener("load", autoDisableNativeDarkMode, { once: true });
+
+    // Single-page apps commonly apply their saved theme after load. Re-evaluate
+    // once per mutation burst without permanently excluding a merely capable site.
+    if (typeof MutationObserver === "function" && document.documentElement) {
+        new MutationObserver(() => {
+            if (pendingAppearanceCheck) return;
+            pendingAppearanceCheck = true;
+            queueMicrotask(() => {
+                pendingAppearanceCheck = false;
+                autoDisableNativeDarkMode();
+            });
+        }).observe(document.documentElement, { attributes: true, childList: true, subtree: true });
+    }
 
     if (typeof systemAppearance.addEventListener === "function") {
         systemAppearance.addEventListener("change", applyTheme);
