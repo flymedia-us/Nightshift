@@ -154,6 +154,16 @@ test("Google Drive stays excluded while Google Docs remains enabled", async () =
     assert.equal(docs.isActive(), true);
 });
 
+test("Google Docs clears a stale native-dark exclusion and remains active", async () => {
+    const docs = createHarness({
+        host: "docs.google.com",
+        storedSettings: { globalMode: "dark", autoDisabledSites: ["docs.google.com"] },
+    });
+    await docs.settle();
+    assert.equal(docs.isActive(), true);
+    assert.deepEqual(docs.savedSettings.at(-1).autoDisabledSites, []);
+});
+
 test("a stale known-site exclusion is removed when the site is not listed", async () => {
     const harness = createHarness({
         storedSettings: { globalMode: "dark", autoDisabledSites: ["example.com"] },

@@ -33,11 +33,23 @@
         }
 
         siteName.textContent = currentHost;
+        const isGoogleDocs = currentHost === "docs.google.com";
+        const isManuallyDisabled = settings.disabledSites.includes(currentHost);
+        if (isGoogleDocs) {
+            siteDetail.textContent = isManuallyDisabled
+                ? "Disabled for this website"
+                : "Google Docs custom rendering is enabled";
+            siteEnabledInput.disabled = false;
+            siteEnabledInput.checked = !isManuallyDisabled;
+            return;
+        }
         let knownDarkSite = false;
         try {
             const location = new URL(currentURL);
-            knownDarkSite = manualDarkSites?.matches(location) === true ||
-                knownDarkSites?.hasKnownDarkAppearance(location, null) === true;
+            knownDarkSite = !isGoogleDocs && (
+                manualDarkSites?.matches(location) === true ||
+                knownDarkSites?.hasKnownDarkAppearance(location, null) === true
+            );
         } catch {
             // Safari-internal and malformed URLs are handled by the host check below.
         }

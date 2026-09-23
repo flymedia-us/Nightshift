@@ -10,7 +10,7 @@ const stylesheet = await readFile(
   'utf8',
 );
 
-test('Google Docs receives the page filter without double-inverting its canvases', async ({ page }) => {
+test('Google Docs uses the shared dark-gray filter without double-inverting its canvases', async ({ page }) => {
   await page.setContent(`
     <div id="docs-editor"><canvas width="120" height="40"></canvas></div>
     <canvas id="ordinary-canvas" width="120" height="40"></canvas>
@@ -27,7 +27,7 @@ test('Google Docs receives the page filter without double-inverting its canvases
     ordinaryCanvas: getComputedStyle(document.querySelector('#ordinary-canvas')).filter,
   }));
 
-  expect(filters.root).toContain('invert');
+  expect(filters.root).toContain('invert(0.85)');
   expect(filters.docsCanvas).toBe('none');
   expect(filters.ordinaryCanvas).toContain('invert');
 });

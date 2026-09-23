@@ -17,19 +17,23 @@
         return policy.normalizeHost(window.location.host) === GOOGLE_DOCS_HOST;
     }
     function hasKnownDarkAppearance() {
+        if (isGoogleDocsHost()) {
+            return false;
+        }
         return manualDarkSites?.matches(window.location) === true ||
             knownDarkSites?.hasKnownDarkAppearance(window.location, document) === true;
     }
 
     function effectiveSettings() {
         const host = policy.normalizeHost(window.location.host);
-        if (!host || settings.enabledSites.includes(host) || !hasKnownDarkAppearance()) {
-            return settings;
+        const autoDisabledSites = settings.autoDisabledSites.filter((site) => site !== GOOGLE_DOCS_HOST);
+        if (!host || isGoogleDocsHost() || settings.enabledSites.includes(host) || !hasKnownDarkAppearance()) {
+            return { ...settings, autoDisabledSites };
         }
 
         return {
             ...settings,
-            autoDisabledSites: [...new Set([...settings.autoDisabledSites, host])],
+            autoDisabledSites: [...new Set([...autoDisabledSites, host])],
         };
     }
 
@@ -71,15 +75,16 @@
         const host = policy.normalizeHost(window.location.host);
         if (!settingsLoaded || document.readyState === "loading" || !host || isSavingAutoExclusion || settings.enabledSites.includes(host)) return;
         const hasKnownDarkSite = hasKnownDarkAppearance();
-        const isAutoDisabled = settings.autoDisabledSites.includes(host);
-        if (hasKnownDarkSite === isAutoDisabled) return;
+        const autoDisabledSites = settings.autoDisabledSites.filter((site) => site !== GOOGLE_DOCS_HOST);
+        const isAutoDisabled = autoDisabledSites.includes(host);
+        if (hasKnownDarkSite === isAutoDisabled && autoDisabledSites.length === settings.autoDisabledSites.length) return;
 
         isSavingAutoExclusion = true;
         settingsStore.save({
             ...settings,
             autoDisabledSites: hasKnownDarkSite
-                ? [...settings.autoDisabledSites, host]
-                : settings.autoDisabledSites.filter((site) => site !== host),
+                ? [...new Set([...autoDisabledSites, host])]
+                : autoDisabledSites.filter((site) => site !== host),
         }).catch((error) => console.error("Nightshift couldn't save its native-dark-mode exclusion.", error))
             .finally(() => { isSavingAutoExclusion = false; });
     }

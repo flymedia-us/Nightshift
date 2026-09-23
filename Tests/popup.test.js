@@ -139,6 +139,16 @@ test("popup excludes a registry site before its cached exclusion is saved", asyn
     assert.match(harness.siteDetail.textContent, /native dark-mode registry/);
 });
 
+test("popup keeps Google Docs enabled even with a stale cached exclusion", async () => {
+    const harness = createHarness({
+        tabURL: "https://docs.google.com/document/d/example",
+        storedSettings: { globalMode: "dark", autoDisabledSites: ["docs.google.com"] },
+    });
+    await harness.settle();
+    assert.equal(harness.siteEnabledInput.checked, true);
+    assert.equal(harness.siteDetail.textContent, "Google Docs custom rendering is enabled");
+});
+
 test("popup disables site controls on Safari-internal pages", async () => {
     const harness = createHarness({ tabURL: "safari://settings" });
     await harness.settle();
