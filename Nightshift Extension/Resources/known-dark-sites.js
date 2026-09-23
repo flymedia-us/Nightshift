@@ -1,33 +1,4094 @@
 (function (globalScope) {
     "use strict";
 
-    // Compatibility rules are deliberately small. A host is never excluded merely
-    // because it is listed here: every rule must prove that its dark appearance is
-    // active in the current document.
-    const RULES = Object.freeze([
-        Object.freeze({
-            hosts: Object.freeze(["www.youtube.com", "m.youtube.com"]),
-            activeSelectors: Object.freeze(["html[dark]", "ytd-app[dark]", "body[dark]"]),
-        }),
-        Object.freeze({
-            hosts: Object.freeze(["en.wikipedia.org", "www.wikipedia.org"]),
-            activeSelectors: Object.freeze(["html.skin-theme-clientpref-night", "body.skin-theme-clientpref-night", "html[data-theme='dark']"]),
-        }),
-        Object.freeze({
-            hosts: Object.freeze(["www.instagram.com"]),
-            activeSelectors: Object.freeze(["html[data-theme='dark']", "body[data-theme='dark']"]),
-        }),
-        Object.freeze({
-            hosts: Object.freeze(["www.theverge.com"]),
-            activeSelectors: Object.freeze(["html[data-theme='dark']", "html.dark", "body.dark"]),
-        }),
-    ]);
+    // GENERATED DATA: run npm run generate:dark-sites after updating either the
+    // vendored Dark Reader snapshots or Config/manual-dark-sites.config.
+    // Dark Reader compatibility data is MIT-licensed; see THIRD_PARTY_NOTICES.md.
+    const IMPORTED_DARK_SITE_PATTERNS = Object.freeze([
+    "*.cases.gg",
+    "*.clash.gg",
+    "*.cncnet.org",
+    "*.comfig.app",
+    "*.curseforge.com",
+    "*.draftbot.fr",
+    "*.draftbot.gg",
+    "*.furaffinity.net",
+    "*.hadesblack.com",
+    "*.iaas.store",
+    "*.iaasdev.ru",
+    "*.koya.gg",
+    "*.mastercomfig.com",
+    "*.newgrounds.com",
+    "*.ostra.gg",
+    "*.paydaythegame.com",
+    "*.rustclash.com",
+    "*.sapph.xyz",
+    "*.starbreeze.com",
+    "*.suyu.dev",
+    "*.taylorswift.com",
+    "*.tickettool.xyz",
+    "*.tracker.gg",
+    "*.tracker.network",
+    "0bin.net",
+    "0x00sec.org",
+    "12bytes.org",
+    "13willow.com",
+    "1lighty.github.io/BetterDiscordStuff",
+    "1maginary.online",
+    "1nf.me",
+    "23.social",
+    "2600.com",
+    "3072.vercel.app",
+    "314n.org",
+    "5cs.fail",
+    "5stardata.info",
+    "988lifeline.org",
+    "a-maze.jothin.tech",
+    "aagaming.me",
+    "abc.com",
+    "abhiyan.me",
+    "absolucy.moe",
+    "academy.hackthebox.com",
+    "account.bhvr.com",
+    "account.hackthebox.com",
+    "account.ncased.com",
+    "accursedfarms.com",
+    "aceship.github.io",
+    "acespace.love",
+    "addictinggames.com",
+    "adridoesthings.com",
+    "adventofcode.com",
+    "agent-stats.com",
+    "ageofempires.com",
+    "agfy.co",
+    "agorawr.artconomy.com",
+    "airconsole.com",
+    "ajay.app",
+    "akkoma.dev",
+    "albony.xyz",
+    "alfawal.dev",
+    "aliciasykes.com",
+    "allskillopti.com",
+    "ambr.top",
+    "ameliorated.info",
+    "ameliorated.io",
+    "amog-os.github.io",
+    "amp-what.com",
+    "an3x.org",
+    "andrewleguay.com",
+    "androiddev.social",
+    "anikuro.ru",
+    "animixplay.to",
+    "animk.info",
+    "anishde.dev",
+    "anitrack.co",
+    "annaaurora.eu",
+    "annapurnainteractive.com",
+    "answeroverflow.com",
+    "antalbiztonsag.com",
+    "aonprd.com",
+    "apbdb.com",
+    "api.unii.dev",
+    "app.destinyitemmanager.com",
+    "app.hackthebox.com",
+    "app.keeweb.info",
+    "app.minehut.com",
+    "app.mobalytics.gg",
+    "app.pianorhythm.io",
+    "app.plex.tv",
+    "app.pluralsight.com",
+    "app.revolt.chat",
+    "app.spacebar.chat",
+    "app.sqldbm.com",
+    "applesilicongames.com",
+    "application.security",
+    "aqtiongame.com",
+    "archive.ragtag.moe",
+    "archon.gg",
+    "ard.social",
+    "ardov.me",
+    "ari.lt",
+    "armaforces.com",
+    "artconomy.com",
+    "artixlinux.org",
+    "artlist.io",
+    "arweave.app",
+    "asciimation.co.nz",
+    "ashcam.xyz",
+    "ashishpanigrahi.com",
+    "asoftmurmur.com",
+    "assassins-creed.de",
+    "astronvim.github.io",
+    "atelier.net/virtual-economy",
+    "atelier801.com",
+    "athome.fandango.com",
+    "atlasos.net",
+    "atresplayer.com",
+    "attackontitan.fandom.com",
+    "audiomass.co",
+    "audioquest.com",
+    "audioz.download",
+    "augmentedsteam.com",
+    "auth.tedomum.net",
+    "av9.dev",
+    "avengedsevenfold.com",
+    "azeria-labs.com",
+    "badboybill.com",
+    "badlion.net",
+    "baldursgate3.game",
+    "banfeed.com",
+    "baobun.dev",
+    "based.cooking",
+    "battle.net",
+    "battlefieldtracker.com",
+    "battlelog.battlefield.com/bf4",
+    "bbc.co.uk/bbcfour",
+    "bbc.co.uk/bbcone",
+    "bbc.co.uk/bbctwo",
+    "bbc.co.uk/iplayer",
+    "bbc.co.uk/sounds",
+    "bbc.co.uk/tv/bbcalba",
+    "bbc.co.uk/tv/bbcnews",
+    "bbc.co.uk/tv/bbcparliament",
+    "bbc.co.uk/tv/bbcscotland",
+    "bbc.co.uk/tv/bbcthree",
+    "bbc.co.uk/tv/cbbc",
+    "bbc.co.uk/tv/cbeebies",
+    "bbc.co.uk/tv/radio1",
+    "bbc.co.uk/tv/s4c",
+    "bdeditor.dev",
+    "beastskills.com",
+    "beatleader.xyz",
+    "beatsaver.com",
+    "bedrocklinux.org",
+    "beepbox.co",
+    "bequiet.com",
+    "bereal.com",
+    "bestblackhatforum.com",
+    "beta.destinyitemmanager.com",
+    "betterdiscord.app",
+    "betterttv.com",
+    "bg3.wiki",
+    "bherila.net",
+    "bidet.gg",
+    "bildung.social",
+    "bin.disroot.org",
+    "bin.veracry.pt",
+    "birdflop.com",
+    "birdie0.github.io",
+    "bitcoinity.org/markets",
+    "bithatch.co.uk",
+    "blackarch.org",
+    "blackhat.com",
+    "blackhatsem.com",
+    "blackhatworld.com",
+    "blackle.com",
+    "blackmod.net",
+    "blast.tv",
+    "blastpremier.com",
+    "blgn.dev",
+    "blink.sh",
+    "blizzard.com",
+    "blocks.pandadev.net",
+    "blog.aractus.com",
+    "blog.counter-strike.net",
+    "blog.pixelexperience.org",
+    "blog.velocifyer.com",
+    "blox.link",
+    "blueagle.top",
+    "bluefirestudios.com",
+    "bobjoerules.github.io",
+    "bocchilorenzo.github.io",
+    "bogleech.com",
+    "bondoer.fr",
+    "bonfirenetworks.org",
+    "bonn.social",
+    "bootstrap.academy",
+    "botboy.snaz.in",
+    "bouncingdvdlogo.com",
+    "brew.sh",
+    "bri.io",
+    "brianlovin.com",
+    "brianpmaher.com",
+    "briantakita.me",
+    "broadcasthe.net",
+    "brodierobertson.xyz",
+    "brunotome.dev",
+    "bsodium.fr",
+    "bugmenot.com",
+    "bungie.net",
+    "bytebin.lucko.me",
+    "c-saccoccio.fr",
+    "cadence.moe",
+    "canalplus.com",
+    "caniuse.com",
+    "canyoublockit.com",
+    "capcut.com",
+    "caracal.club",
+    "carbon.now.sh",
+    "carl.gg",
+    "carrd.co",
+    "casaos.io",
+    "cascadr.co",
+    "catvibers.me",
+    "cc.com",
+    "ccugame.app",
+    "cdn.minlor.net",
+    "cdnnow.pro",
+    "changelog.pandadev.net",
+    "chaos.social",
+    "chat-gpt.org",
+    "chat.openai.com",
+    "chat.ryzom.com",
+    "chat.unii.dev",
+    "chat.vote",
+    "cheat.sh",
+    "checkout.steampowered.com",
+    "checkra.in",
+    "chess.com",
+    "chess.wintrcat.uk",
+    "chesstempo.com",
+    "chitownhousemusic.com",
+    "chromatic-tuner.com",
+    "cider.sh",
+    "cjratliff.com",
+    "cl00e9ment.gitlab.io/kingdom-blazon-generator/",
+    "clashofstats.com",
+    "cleo.li",
+    "cloud.minlor.net",
+    "club.steam250.com",
+    "cnc-comm.com",
+    "cncnet.org",
+    "co.wukko.me",
+    "cobalt.tools",
+    "codeium.com",
+    "codepen.io",
+    "coder.com",
+    "codesandbox.io",
+    "codestackr.com",
+    "codewars.com",
+    "colean.cc",
+    "colordesigner.io",
+    "comfig.app",
+    "community.eveonline.com",
+    "conexo.ws",
+    "console.firebase.google.com",
+    "cookieplmonster.github.io",
+    "coolmathgames.com",
+    "coriolis.io",
+    "counter-strike.net",
+    "countermail.com",
+    "cp.minetro.com",
+    "craiyon.com",
+    "crazygames.com",
+    "create.roblox.com/docs",
+    "crontab.guru",
+    "crunchyroll.com",
+    "cs.rin.ru",
+    "csfail.link",
+    "cssbattle.dev",
+    "ctf.hackthebox.com",
+    "ctt.cx",
+    "cuibonobo.com",
+    "curia.social-network.europa.eu",
+    "curiositystream.com",
+    "curseforge.com",
+    "cursorlag.velocifyer.com",
+    "cxsecurity.com",
+    "cybercodeonline.com",
+    "cybercrime-tracker.net",
+    "cyberpunk.net",
+    "cybersole.io",
+    "cytu.be",
+    "d2checkpoint.com",
+    "daddyanity.com",
+    "daily-fire.com",
+    "daksh.eu.org",
+    "damnvulnerabledefi.xyz",
+    "dan-cases.com",
+    "danidev.net",
+    "daringfireball.net",
+    "dark.diatr.us",
+    "darkmode.com",
+    "darkmodelist.com",
+    "darkmodesites.com",
+    "darkreader.org",
+    "dartpad.dev",
+    "dash.baobun.dev",
+    "dashy.to",
+    "datomatic.no-intro.org",
+    "davros.netlify.app",
+    "dblstatistics.com",
+    "dbzer0.com",
+    "dd-wrt.com",
+    "ddpe.androz2091.fr",
+    "deadbydaylight.com",
+    "deadbydaylight.fandom.com",
+    "decrypt.day",
+    "deepswap.ai",
+    "deepweblinks.net",
+    "defcon.org",
+    "deidetected.com",
+    "deltarune.com",
+    "demo.photoprism.app",
+    "demonforums.net",
+    "denims.tv",
+    "denshi.org",
+    "desktop.github.com",
+    "desoroxxx.github.io/Portfolio/",
+    "destiny.gg",
+    "destinytracker.com",
+    "det.social",
+    "devanbuggay.com",
+    "developer.valvesoftware.com",
+    "developerinsider.co",
+    "developers.cloudflare.com",
+    "di.fm",
+    "diablogame.de",
+    "dicebear.com",
+    "diep.io",
+    "digi77.com",
+    "digikam.org",
+    "digki.dignityofwar.com",
+    "disasm.pro",
+    "disboard.org",
+    "discadia.com",
+    "discohook.org",
+    "discord-date.shyked.fr",
+    "discord.bots.gg",
+    "discord.com/app",
+    "discord.com/developers",
+    "discord.com/login",
+    "discord.com/register",
+    "discord.id",
+    "discordbotlist.com",
+    "discordpackage.com",
+    "discords.com",
+    "discordservers.com",
+    "discordtimestamp.com",
+    "discourse.automationgame.com",
+    "discourse.cataclysmdda.org",
+    "discuss.logseq.com",
+    "disneyplus.com",
+    "distro.tube",
+    "distrobox.it",
+    "djflame.tech",
+    "dlive.tv",
+    "docs.adonisjs.com",
+    "docs.baobun.dev",
+    "docs.gofiber.io",
+    "docs.quad9.net",
+    "docs.rs",
+    "dodi-repacks.site",
+    "doesitarm.com",
+    "doge.gov",
+    "dominion.games",
+    "donk.link",
+    "donklink.com",
+    "doodstream.com",
+    "dota2.com",
+    "dota2.ru",
+    "dotabuff.com",
+    "dotapicker.com",
+    "draculatheme.com",
+    "dragonage-game.de",
+    "drakewars.com",
+    "drewj.la",
+    "droidify.eu.org",
+    "drunkenslug.com",
+    "dsa-drakensang.de",
+    "dsc.gg",
+    "dualshockers.com",
+    "duckychannel.com.tw",
+    "dumpert.nl",
+    "dumpus.app",
+    "dungeon-lords.de",
+    "dustinbrett.com",
+    "dyinglight.fandom.com",
+    "dyinglight.wiki.gg",
+    "dyno.gg",
+    "e-z.bio",
+    "e-z.host",
+    "eagle.cool",
+    "echoarchives.net",
+    "eclipse.menu",
+    "ecys.xyz",
+    "edi.social",
+    "edit-csv.net",
+    "editor.method.ac",
+    "elderscrolls.fandom.com",
+    "elitedangerous.com",
+    "ellie-app.com",
+    "elybeatmaker.com",
+    "emeraldchat.com/app",
+    "emkc.org",
+    "emoji.supply/kitchen/",
+    "emuparadise.me",
+    "energiewende.social",
+    "enesgenc.dev",
+    "enig.ma.tum.de",
+    "enigame.de",
+    "enlightenment.org",
+    "enlisted.net",
+    "enterprise.hackthebox.com",
+    "epicgames.com",
+    "epilogue.team",
+    "erai-raws.info",
+    "eren.si",
+    "escapefromtarkov.com",
+    "escapefromtarkov.fandom.com",
+    "esplay.com",
+    "esportal.com",
+    "etke.cc",
+    "etlegacy.com",
+    "eveonline.com",
+    "evewho.com",
+    "evowars.io",
+    "excel-dna.net",
+    "extrememusic.com",
+    "f.vision",
+    "f3bpodcast.com",
+    "f95zone.to",
+    "faceit-enhancer.com",
+    "faceit.com",
+    "factorio.com",
+    "factoriobin.com",
+    "fakeupdate.net/apple",
+    "fakeupdate.net/steam",
+    "fakeupdate.net/vista",
+    "fakeupdate.net/win10",
+    "fakeupdate.net/win10ue",
+    "fakeupdate.net/win7",
+    "fakeupdate.net/win8",
+    "fakeupdate.net/wnc",
+    "fakeupdate.net/xp",
+    "fallout-area.de",
+    "fandango.com",
+    "fantasy.works",
+    "fastro.dev",
+    "fedidb.org",
+    "fetlife.com",
+    "fetlifestatus.com",
+    "filegarden.com",
+    "filmmakermode.com",
+    "filterblade.xyz",
+    "filterlists.com",
+    "finder.usmans.me",
+    "findmcserver.com",
+    "fireship.io",
+    "firu.dev",
+    "fishshell.com",
+    "flavibot.xyz",
+    "fleepy.tv",
+    "flightlessmango.com",
+    "florr.io",
+    "floss.social",
+    "fluxpoint.dev",
+    "forge.coop",
+    "forgejo.org",
+    "forsen.horse",
+    "fortnite.com",
+    "fortnite.gg",
+    "fortnitetracker.com",
+    "forum.lastos.org",
+    "forum.tribler.org",
+    "forum.xda-developers.com",
+    "forumplayer.dev",
+    "forums.bhvr.com/dead-by-daylight/",
+    "forums.eveonline.com",
+    "forums.launchbox-app.com",
+    "fosstodon.org",
+    "fox.com",
+    "fragment.com",
+    "framp.me",
+    "frankerfacez.com/$",
+    "freecodecamp.org/$",
+    "freecodecamp.org/learn/",
+    "freeipa.org",
+    "frozensand.com",
+    "fulu.org",
+    "funnyjunk.com",
+    "furry.engineer",
+    "fusengine.github.io/apaxy-v2",
+    "fv.pro",
+    "gaijin.net",
+    "game.chronodivide.com",
+    "gamebanana.com",
+    "gamedle.wtf",
+    "gamejolt.com",
+    "gamersnexus.net",
+    "gaming.amazon.com",
+    "garudalinux.org",
+    "gastonle.rs",
+    "gastonle.ru",
+    "geektyper.com",
+    "genshin-impact.fandom.com",
+    "genshin.gg",
+    "geocities.restorativland.org",
+    "getaether.net",
+    "getdweb.net",
+    "gethalfmoon.com",
+    "gethomepage.dev",
+    "getsharex.com",
+    "getwacup.com",
+    "gfl.matsuda.tips",
+    "gflcorner.com",
+    "gfverse.info",
+    "ggapp.io",
+    "ghidra-sre.org",
+    "gi.yatta.moe",
+    "giantbomb.com",
+    "gibber.cc",
+    "gibbu.github.io/ThemePreview/",
+    "gifrun.com",
+    "gifyourgame.com",
+    "gikken.co",
+    "giphy.com",
+    "git.gnous.eu",
+    "github1s.com",
+    "gitkraken.com",
+    "gitmoji.kaki87.net",
+    "globoplay.globo.com",
+    "glow.phoesion.com",
+    "glowing-bear.org",
+    "glslsandbox.com",
+    "glyphtones.is-a.dev",
+    "go4liftoff.com",
+    "gog.com/forum",
+    "gogalaxy.com",
+    "goodfirstissue.dev",
+    "goosegame.io",
+    "gopiratesoftware.com",
+    "grafana.social",
+    "graydon2.dreamwidth.org",
+    "grayjay.app",
+    "grc.arikado.ru",
+    "greatview.video",
+    "greynoise.io",
+    "grim.ac",
+    "groovy.bot",
+    "gtaforums.com",
+    "guessr.tv",
+    "gundamcocks.riflesniper.art",
+    "gunshipmusic.com",
+    "gusted.xyz",
+    "hachyderm.io",
+    "hack.chat",
+    "hackaday.com",
+    "hackaday.io",
+    "hackertyper.com",
+    "hackforums.net",
+    "hackthebox.com",
+    "hackthebox.eu",
+    "hackthissite.org",
+    "hacktoberfest-projects.vercel.app",
+    "hadesblack.com",
+    "halotracker.com",
+    "halowaypoint.com",
+    "handbook.artconomy.com",
+    "hang.fm",
+    "hardforum.com",
+    "hardstuck.gg",
+    "hardwaretimes.com",
+    "hawkbot1cs.org",
+    "hbomax.com",
+    "hctiwt.tv",
+    "hdencode.com",
+    "heavybit.com",
+    "heckerbot.dev",
+    "hedgewars.org",
+    "heliotrope.dk",
+    "help.steampowered.com",
+    "herodamage.com",
+    "hexiro.me",
+    "hidive.com",
+    "hiserod.github.io",
+    "hitnmix.com",
+    "hiveon.net",
+    "hkamran.com",
+    "homicide.igarape.org.br",
+    "hostedtalk.net",
+    "hotstar.com",
+    "howlongtobeat.com",
+    "hpdevone.com",
+    "hqapps.org",
+    "hrmspms.sicorax.mu",
+    "hub.warframestat.us",
+    "hulu.com",
+    "humblebundle.com/$",
+    "humblebundle.com/accessibility",
+    "humblebundle.com/charities",
+    "humblebundle.com/refer",
+    "humblegames.com",
+    "hyper.is",
+    "i3wm.org",
+    "iaas.store",
+    "iaasdev.ru",
+    "idlesteam.com",
+    "igg-games.com",
+    "iipython.dev",
+    "imageglass.org",
+    "imgbox.com",
+    "imgur.com",
+    "impb.in",
+    "imperialb.in",
+    "imxnoobx.com",
+    "indieweb.social",
+    "indiexpo.net",
+    "infinitezoom.net",
+    "infocon.org",
+    "infosec.exchange",
+    "inker.app",
+    "inker.co",
+    "intactphone.com",
+    "intothetrenches.1917.movie",
+    "iskdeusingqt6.org",
+    "isthereanydeal.com",
+    "isxander.dev",
+    "itrade.gg",
+    "jakeroman.com",
+    "jakobneumann.com",
+    "jakopavouk.cz",
+    "jakubkaczor.com",
+    "jaxcore.app",
+    "jbzd.com.pl",
+    "jekyllrb.com",
+    "jellymar.io",
+    "jetify.com",
+    "jeusto.com",
+    "jhey.dev",
+    "jigsawpuzzles.io",
+    "joeydrewstudios.com",
+    "join-lemmy.org",
+    "jonahsnider.com",
+    "josephchataignon.github.io",
+    "jothin.tech",
+    "jqbx.fm",
+    "jsben.ch",
+    "jsitor.com",
+    "json-diff.com",
+    "justfive.news",
+    "justwatch.com",
+    "kadantiscam.netlify.app",
+    "kaioken.dev",
+    "kalence2.github.io",
+    "kanoa.de",
+    "kaoskrew.org",
+    "kazimagazine.com",
+    "kbh.games",
+    "kbhgames.com",
+    "keenwrite.com",
+    "keezersquest.nl",
+    "kernel.fish",
+    "kestra.io",
+    "kfocus.org",
+    "khor.store",
+    "khuwawa.com",
+    "kika.de/$",
+    "kika.de/kika-live/*",
+    "kika.de/kummerkasten/*",
+    "kika.de/live/*",
+    "kika.de/selbermachen/*",
+    "kika.de/spiele/*",
+    "kika.de/suche/*",
+    "kika.de/ueber-kika/*",
+    "kika.de/videos/*",
+    "kilonova.ro",
+    "kimbatt.github.io/js-Z",
+    "kina.party",
+    "kingdom-leaks.com",
+    "kittybot.de",
+    "knockout.chat",
+    "kocowa.com",
+    "kodenames.io",
+    "korino.dev",
+    "koya.gg",
+    "krisoneil.com/home",
+    "kristal.cc",
+    "krunker.io",
+    "ksenon.net",
+    "ksp.mff.cuni.cz",
+    "kulbachny.com",
+    "kwejk.pl",
+    "kyleggiero.me",
+    "kyun.host",
+    "lagom.nl/lcd-test",
+    "lainchan.org",
+    "landchad.net",
+    "larbs.xyz",
+    "lemm.ee",
+    "lemmi.no",
+    "lemmy.world",
+    "lemmyverse.net",
+    "letroso.com",
+    "letterboxd.com",
+    "lichess.org",
+    "lightweightpdf.com",
+    "linear.app",
+    "lingva.ml",
+    "linkstack.org",
+    "linku.la",
+    "linux.org.ru",
+    "liquidplus.com",
+    "lishogi.org",
+    "listen.moe",
+    "littlealchemy2.com",
+    "livesplit.org",
+    "liveweave.com",
+    "loaded.com",
+    "loadout.tf",
+    "login.eveonline.com",
+    "logseq.com",
+    "loldle.net",
+    "lolesports.com",
+    "lollilol.xyz",
+    "looskie.com",
+    "lospec.com",
+    "lucasmellof.com",
+    "luckyone-dev.com",
+    "luckyone.dev",
+    "lukesmith.xyz",
+    "lumina-desktop.org",
+    "lutris.net",
+    "m.daum.net",
+    "m2v.ru",
+    "macbb.org",
+    "mango.pdf.zone",
+    "mapstodon.space",
+    "marte.dev",
+    "marvil.co",
+    "maskbox.app",
+    "masseffect.fandom.com",
+    "mastercomfig.com",
+    "mastofeed.com",
+    "max.com",
+    "maximepinot.com",
+    "mazes.jothin.tech",
+    "md.quad.codes",
+    "means.tv",
+    "mechapower.eu",
+    "mednafen.github.io",
+    "megathread.pages.dev",
+    "melody.ml",
+    "melonds.kuribo64.net",
+    "memory-alpha.fandom.com",
+    "mempool.space",
+    "merged.games",
+    "metronom.us",
+    "mewho.com/starfield47",
+    "migueldemoura.com",
+    "mikemaximus.github.io/gbm-web",
+    "minecraft.net",
+    "minehut.com",
+    "minlor.net",
+    "miru.watch",
+    "misode.github.io",
+    "mit.gg",
+    "mixxx.org",
+    "mizik.eu",
+    "mm-dev.rocks",
+    "mmorpg.com",
+    "mnsr.win",
+    "modworkshop.net",
+    "monaspace.githubnext.com",
+    "monitoror.com",
+    "monkeytype.com",
+    "morethantech.it",
+    "morrowshore.com",
+    "motion-canvas.github.io",
+    "motioncanvas.io",
+    "motz.xyz",
+    "mouse-sensitivity.com",
+    "mrms.cz",
+    "mrquantumoff.dev",
+    "mrrp.dev",
+    "mrtipson.github.io/otz-builds/",
+    "ms-paint-i.de",
+    "mstdn.social",
+    "mtv.com",
+    "musedash.moe",
+    "music.amazon.com",
+    "music.com",
+    "music.youtube.com",
+    "muttwizard.com",
+    "mutualaiddisasterrelief.org",
+    "mwittrien.github.io",
+    "mwomercs.com",
+    "mynoise.net",
+    "mypodficacademia.com",
+    "n-o-d-e.net",
+    "n7hq.masseffect.com",
+    "nameslol.com",
+    "nanobun.tv",
+    "nationsglory.com",
+    "nationsglory.es",
+    "nationsglory.fr",
+    "ncased.com",
+    "neal.fun/size-of-space",
+    "nee.lv",
+    "nemanjadragun.com",
+    "nerimity.com",
+    "netflix.com",
+    "netzhack.de",
+    "neundex.com",
+    "neurocore.xyz",
+    "newgrounds.com",
+    "nextron.pandadev.net",
+    "nextts.org",
+    "nextui.org",
+    "nexusmods.com",
+    "nfs.fandom.com",
+    "nfsmods.xyz",
+    "nfspolska.pl",
+    "ngplus.net",
+    "nh-server.github.io/switch-guide/",
+    "nheko-reborn.github.io",
+    "nicholasjohnson.ch",
+    "nickgen.netlify.app",
+    "niebezpiecznik.pl",
+    "nightlight.gg",
+    "nightly.smithed.net",
+    "nikse.dk",
+    "nitter.kavin.rocks",
+    "nitter.nixnet.services",
+    "nixos-and-flakes.thiscute.world",
+    "nomanssky.com",
+    "norden.social",
+    "nostr.com",
+    "nostv.pt",
+    "notesnook.com",
+    "nowplayi.ng",
+    "nulledbb.com",
+    "nvstly.com",
+    "obsidian.md",
+    "obsproject.com",
+    "obtainium.imranr.dev",
+    "odysee.com",
+    "offshorecorptalk.com",
+    "okayeg.com",
+    "oldfag.org",
+    "on.quad9.net",
+    "onionplay.asia",
+    "onlyformats.netlify.app",
+    "onlyfors.com",
+    "open.spotify.com",
+    "opendota.com",
+    "openemu.org",
+    "openrazer.github.io",
+    "openrgb.org",
+    "orama-interactive.itch.io/pixelorama",
+    "orbstack.dev",
+    "orteil.dashnet.org/cookieclicker",
+    "ostra.gg",
+    "osu.ppy.sh",
+    "osumatrix.me",
+    "otz-addon-tierlist.pages.dev",
+    "otz-opinions.pages.dev",
+    "otzdarva.com",
+    "ovagames.com",
+    "overdodactyl.github.io/ShadowFox",
+    "ovosimpatico.com",
+    "oxide.computer",
+    "pages.gay",
+    "paimon.moe",
+    "pally.gg",
+    "pandadev.net",
+    "paniash.netlify.app",
+    "paper-io.com",
+    "parahumans.wordpress.com",
+    "parrotsec.org",
+    "partner.steamgames.com/doc/",
+    "partner.steamgames.com/pccafe",
+    "partner.steamgames.com/vrlicensing",
+    "passthepopcorn.me",
+    "pastes.dev",
+    "pathofexile.com",
+    "pathofexile.fandom.com",
+    "payday.fandom.com",
+    "paydaythegame.com",
+    "pcgamestorrents.com",
+    "pedrorok.com",
+    "perf.link",
+    "peterlindbergh.obys.agency",
+    "petersalomonsen.com/webassemblymusic/livecodev2",
+    "phind.com",
+    "photomosh.com",
+    "photopea.com",
+    "physgun.com",
+    "pic.cleoold.com",
+    "ping.pe",
+    "pinia.vuejs.org",
+    "piped.kavin.rocks",
+    "piped.mha.fi",
+    "piped.tokhmi.xyz",
+    "piracybank.org",
+    "piskelapp.com",
+    "pitokmm.it",
+    "pixlr.com",
+    "planetneverwinter.de",
+    "plasticuproject.com",
+    "platinumgod.co.uk",
+    "play.chessclub.com",
+    "play.geforcenow.com",
+    "play.hbomax.com",
+    "playclassic.games",
+    "pluto.tv",
+    "poal.co",
+    "poe-racing.com",
+    "poe.ninja",
+    "poe2.ninja",
+    "poeapp.com",
+    "poelab.com",
+    "poliigon.com",
+    "poll.chat.vote",
+    "polsatboxgo.pl",
+    "polsatgo.pl",
+    "polychromatic.app",
+    "polyhaven.com",
+    "pony.tube",
+    "pool.pm",
+    "poweroutage.com",
+    "poweroutage.us",
+    "ppluss.de",
+    "ppy.sh",
+    "pr0gramm.com",
+    "premid.app",
+    "privacytools.io",
+    "prizafal.com",
+    "progettosnaps.net",
+    "projectdiscovery.io",
+    "protondb.com",
+    "proxx.app",
+    "ps2alerts.com",
+    "pvplegacy.net",
+    "pxseu.com",
+    "pylon.bot",
+    "q1dian.github.io",
+    "qalculator.xyz",
+    "quad9.net",
+    "queue.tf",
+    "raceday.watch",
+    "raidbots.com",
+    "raider.io",
+    "raidplan.io",
+    "rakowiecki.pl",
+    "rakuten.tv",
+    "rate.house",
+    "raunaksitoula.com",
+    "ravenation.club",
+    "rawgiving.com",
+    "ray.so",
+    "raycast.com",
+    "razeenf.ca",
+    "razer.com",
+    "razorsecure.com",
+    "reactbits.dev",
+    "redeclipse.net",
+    "reelgood.com",
+    "reflektclothing.co.uk",
+    "relay.firefox.com/faq",
+    "renderlab.net",
+    "reniguide.carrd.co",
+    "reniguide.info",
+    "replit.com",
+    "replugged.dev",
+    "reposilite.com",
+    "restream4me.com",
+    "retri.space",
+    "retromusic.app",
+    "returnyoutubedislike.com",
+    "revanced.app",
+    "reveddit.com",
+    "review.lineageos.org",
+    "rhwiki.net",
+    "richup.io",
+    "riflesniper.art",
+    "rimasmusic.com",
+    "ripped.guide",
+    "ritsuka.moe",
+    "rl6mans.com",
+    "rokoko.com",
+    "roleypoly.com",
+    "roosterteeth.fandom.com",
+    "router.vuejs.org",
+    "rtbyte.xyz",
+    "rtech.support",
+    "ruben-p.com",
+    "ruffle.rs",
+    "runechanger.stirante.com",
+    "runevm.io",
+    "runicgames.com",
+    "rusherhack.org",
+    "rust.facepunch.com",
+    "rust.nolt.io",
+    "rythm.fm",
+    "sa.jothin.tech",
+    "sacred-legends.de",
+    "sadistic.pl",
+    "safereddit.com",
+    "saintsrow.com",
+    "saliven.com",
+    "sammcheese.net",
+    "samseeman.com",
+    "sandervanderburg.blogspot.com",
+    "sapph.xyz",
+    "satisfactory-factories.app",
+    "sauce420.gitlab.io",
+    "save.tf",
+    "sb.ltn.fi",
+    "schildi.chat",
+    "science-news.co",
+    "scriptkit.com",
+    "seaofthieves.fandom.com",
+    "search.biboumail.fr",
+    "search.nebulacentre.net",
+    "secrethitler.io",
+    "secure.eveonline.com",
+    "senkognito.com",
+    "senkuro.com",
+    "septatrix.github.io/prefers-color-scheme-test/",
+    "serebii.net",
+    "settings.gg",
+    "seximal.net",
+    "seyi.dev",
+    "sharetextures.com",
+    "sharkiller.ddns.net",
+    "shatteredpixel.com",
+    "sheet.host",
+    "shellshock.io",
+    "shockbs.is-a.dev",
+    "shockbs.pro",
+    "shpposter.club",
+    "shubhamprasad.dev",
+    "shubhamprasad.vercel.app",
+    "siddharthray.com",
+    "siderite.dev",
+    "simkl.com",
+    "sive.rs",
+    "skeld.net",
+    "skeptikon.fr",
+    "skidrowreloaded.com",
+    "skiftos.org",
+    "skinport.com",
+    "skinsmonkey.com",
+    "skylabmusic.com",
+    "skynetsimulator.com",
+    "slay.one",
+    "sleeplessbeastie.eu",
+    "slider.kz",
+    "slippi.gg",
+    "slither.com",
+    "slither.io",
+    "smallformfactor.net",
+    "smithed.dev",
+    "smithed.net",
+    "snazzah.com",
+    "snoozing.com",
+    "snowsta.mp",
+    "social.bund.de",
+    "social.cologne",
+    "social.saarland",
+    "social.tchncs.de",
+    "somafm.com",
+    "spacestationgaming.com",
+    "spacex.com",
+    "spark.lucko.me",
+    "speedrun.com",
+    "speedtest.net",
+    "splatoon.nintendo.com",
+    "splatoon3.ink",
+    "sponsor.ajay.app",
+    "spotfy.one",
+    "spoticord.com",
+    "spyware.neocities.org",
+    "srrdb.com",
+    "stage.artconomy.com",
+    "star-made.org",
+    "starbreeze.com",
+    "starlink.com",
+    "starmadedock.net",
+    "statbot.net",
+    "stateofjs.com",
+    "status.codeberg.eu",
+    "status.kyun.host",
+    "steam.design",
+    "steam250.com",
+    "steambase.io",
+    "steamcharts.com",
+    "steamcommunity.com",
+    "steamdb.info",
+    "steamdeckhq.com",
+    "steamhunters.com",
+    "steamstat.us",
+    "steamtimeidler.com",
+    "stillu.cc",
+    "store.epicgames.com",
+    "store.gaijin.net",
+    "store.steampowered.com",
+    "storyfire.com",
+    "stray.game",
+    "studiomaertens.com",
+    "stylus-lang.com",
+    "sunxdcc.com",
+    "supinic.com",
+    "support.deadbydaylight.com",
+    "supremacy1914.com",
+    "surrealdb.com",
+    "surviv.io",
+    "suyu.dev",
+    "svtplay.se",
+    "sylviefox.ca",
+    "sync-tube.de",
+    "szmarczak.com",
+    "t3.chat",
+    "tabby.sh",
+    "tacoanon.github.io",
+    "talentbrick.com",
+    "tarkov-market.com",
+    "tautulli.com",
+    "tboi.com",
+    "teamfortress.com",
+    "teamliquid.com",
+    "teamsds.net",
+    "telescope.org",
+    "teleseer.com",
+    "televizeseznam.cz",
+    "term.ooo",
+    "terminal.sexy",
+    "terminalroot.com",
+    "tetr.io",
+    "textfiles.com",
+    "texture.ninja",
+    "texturebox.com",
+    "texturemax.com",
+    "textures.com",
+    "tf2mart.net",
+    "thecolonialtheatre.com",
+    "thegrimoire.deadbydaylight.com",
+    "thehomelab.wiki",
+    "thelastofus.fandom.com",
+    "thelinuxcast.org",
+    "theme-park.dev",
+    "themes.vscode.one",
+    "themetphilly.com",
+    "thermal-grizzly.com",
+    "thesigmaarts.com",
+    "thespacedevs.com",
+    "thetatoken.org",
+    "thetrackernetwork.com",
+    "thispersondoesnotexist.com",
+    "tickettool.xyz",
+    "tilde.club",
+    "tilde.team",
+    "tilde.town",
+    "tildeverse.org",
+    "timharek.no",
+    "tio.run",
+    "title-case-converter.vercel.app",
+    "tommytran.io",
+    "toneden.io",
+    "toolbrew.org",
+    "toolscord.com",
+    "top.gg",
+    "tostories.app",
+    "totems.me",
+    "tov.monster",
+    "tracker.gg",
+    "trblwlf.net",
+    "trigger.dev",
+    "trilon.io",
+    "tripleaughtdesign.com",
+    "trojansource.codes",
+    "trovo.live",
+    "truckersmp.com",
+    "truffle.vip",
+    "tsssaver.1conan.com",
+    "tube.kdy.ch",
+    "tukui.org",
+    "tvnz.co.nz",
+    "tvplus.com.tr",
+    "twiukraine.com",
+    "twnft.vercel.app",
+    "tycrek.com",
+    "tylerpalko.github.io",
+    "tynker.com/ide",
+    "tyrannytracker.org",
+    "tyt.com",
+    "ufplanets.com",
+    "ultrajs.dev",
+    "undergroundcellar.com",
+    "underlords.com",
+    "undertale.com",
+    "unii.dev",
+    "universe.eveonline.com",
+    "universeodon.com",
+    "unrealengine.com",
+    "urbanlinker.com",
+    "us.shop.battle.net",
+    "userdiag.com",
+    "v3.wttr.in",
+    "vanillatweaks.net",
+    "vcjhwebdev.github.io/useless-translator/",
+    "venturebanners.co.uk",
+    "viddit.red",
+    "villains.fandom.com",
+    "vimm.net",
+    "vinesauce.com",
+    "vivek9patel.github.io",
+    "vixeny.dev",
+    "vleer.app",
+    "vogons.org",
+    "volta.net",
+    "vortez.net",
+    "vrv.co",
+    "vscode.dev",
+    "vudu.com",
+    "vuecinemas.nl",
+    "w0rp.com",
+    "w41k3r.com",
+    "wago.io",
+    "wallhaven.cc",
+    "warcraftlogs.com",
+    "warezforums.com",
+    "warsow.net",
+    "warthunder.com",
+    "wasm.continuation-labs.com/d3demo/",
+    "weavesilk.com",
+    "web-check.xyz",
+    "weichong.dev",
+    "wickeditor.com/editor/",
+    "widgetbot.io",
+    "wiki.dignityofwar.com",
+    "wiki.eveuniversity.org",
+    "wiki.fireundubh.com",
+    "wiki.pixelexperience.org",
+    "wiki.the-elite.net",
+    "wiktrek.xyz",
+    "winboat.app",
+    "windowsterminalthemes.dev",
+    "winget.run",
+    "wiocha.pl",
+    "wisehosting.com",
+    "worldofcyberpunk.de",
+    "worldofgothic.de",
+    "worldofplayers.de",
+    "worldofrisen.de",
+    "worldoftanks.asia",
+    "worldoftanks.com",
+    "worldoftanks.eu",
+    "wormate.io",
+    "wormhole.app",
+    "wowaudit.com",
+    "wowhead.com",
+    "wowinterface.com",
+    "wtfast.com",
+    "wttr.in",
+    "wuemeli.com",
+    "x1337x.*/$",
+    "x64dbg.com",
+    "xbins.org",
+    "xbox.com/play",
+    "xdaforums.com",
+    "xela.codes",
+    "xela.dev",
+    "xerolinux.xyz",
+    "xmission.com",
+    "xn--rpa.cc",
+    "xonotic.org",
+    "yande.re",
+    "yarmo.eu",
+    "yashsingh.us",
+    "yildizskylab.com",
+    "ynoproject.net",
+    "you.dj",
+    "your.gg",
+    "yts.*",
+    "zaufanatrzeciastrona.pl",
+    "zbhavyai.github.io",
+    "zee5.com",
+    "zeon.dev",
+    "zerodayinitiative.com",
+    "zkillboard.com",
+    "zombsroyale.io",
+    "zt64.github.io",
+    "ztdp.ca",
+    "zunivers.zerator.com",
+    "zyrenth.dev"
+]);
+    const MANUAL_DARK_SITE_PATTERNS = Object.freeze([
+    "drive.google.com"
+]);
+    const DARK_SITE_PATTERNS = Object.freeze([
+    "*.cases.gg",
+    "*.clash.gg",
+    "*.cncnet.org",
+    "*.comfig.app",
+    "*.curseforge.com",
+    "*.draftbot.fr",
+    "*.draftbot.gg",
+    "*.furaffinity.net",
+    "*.hadesblack.com",
+    "*.iaas.store",
+    "*.iaasdev.ru",
+    "*.koya.gg",
+    "*.mastercomfig.com",
+    "*.newgrounds.com",
+    "*.ostra.gg",
+    "*.paydaythegame.com",
+    "*.rustclash.com",
+    "*.sapph.xyz",
+    "*.starbreeze.com",
+    "*.suyu.dev",
+    "*.taylorswift.com",
+    "*.tickettool.xyz",
+    "*.tracker.gg",
+    "*.tracker.network",
+    "0bin.net",
+    "0x00sec.org",
+    "12bytes.org",
+    "13willow.com",
+    "1lighty.github.io/BetterDiscordStuff",
+    "1maginary.online",
+    "1nf.me",
+    "23.social",
+    "2600.com",
+    "3072.vercel.app",
+    "314n.org",
+    "5cs.fail",
+    "5stardata.info",
+    "988lifeline.org",
+    "a-maze.jothin.tech",
+    "aagaming.me",
+    "abc.com",
+    "abhiyan.me",
+    "absolucy.moe",
+    "academy.hackthebox.com",
+    "account.bhvr.com",
+    "account.hackthebox.com",
+    "account.ncased.com",
+    "accursedfarms.com",
+    "aceship.github.io",
+    "acespace.love",
+    "addictinggames.com",
+    "adridoesthings.com",
+    "adventofcode.com",
+    "agent-stats.com",
+    "ageofempires.com",
+    "agfy.co",
+    "agorawr.artconomy.com",
+    "airconsole.com",
+    "ajay.app",
+    "akkoma.dev",
+    "albony.xyz",
+    "alfawal.dev",
+    "aliciasykes.com",
+    "allskillopti.com",
+    "ambr.top",
+    "ameliorated.info",
+    "ameliorated.io",
+    "amog-os.github.io",
+    "amp-what.com",
+    "an3x.org",
+    "andrewleguay.com",
+    "androiddev.social",
+    "anikuro.ru",
+    "animixplay.to",
+    "animk.info",
+    "anishde.dev",
+    "anitrack.co",
+    "annaaurora.eu",
+    "annapurnainteractive.com",
+    "answeroverflow.com",
+    "antalbiztonsag.com",
+    "aonprd.com",
+    "apbdb.com",
+    "api.unii.dev",
+    "app.destinyitemmanager.com",
+    "app.hackthebox.com",
+    "app.keeweb.info",
+    "app.minehut.com",
+    "app.mobalytics.gg",
+    "app.pianorhythm.io",
+    "app.plex.tv",
+    "app.pluralsight.com",
+    "app.revolt.chat",
+    "app.spacebar.chat",
+    "app.sqldbm.com",
+    "applesilicongames.com",
+    "application.security",
+    "aqtiongame.com",
+    "archive.ragtag.moe",
+    "archon.gg",
+    "ard.social",
+    "ardov.me",
+    "ari.lt",
+    "armaforces.com",
+    "artconomy.com",
+    "artixlinux.org",
+    "artlist.io",
+    "arweave.app",
+    "asciimation.co.nz",
+    "ashcam.xyz",
+    "ashishpanigrahi.com",
+    "asoftmurmur.com",
+    "assassins-creed.de",
+    "astronvim.github.io",
+    "atelier.net/virtual-economy",
+    "atelier801.com",
+    "athome.fandango.com",
+    "atlasos.net",
+    "atresplayer.com",
+    "attackontitan.fandom.com",
+    "audiomass.co",
+    "audioquest.com",
+    "audioz.download",
+    "augmentedsteam.com",
+    "auth.tedomum.net",
+    "av9.dev",
+    "avengedsevenfold.com",
+    "azeria-labs.com",
+    "badboybill.com",
+    "badlion.net",
+    "baldursgate3.game",
+    "banfeed.com",
+    "baobun.dev",
+    "based.cooking",
+    "battle.net",
+    "battlefieldtracker.com",
+    "battlelog.battlefield.com/bf4",
+    "bbc.co.uk/bbcfour",
+    "bbc.co.uk/bbcone",
+    "bbc.co.uk/bbctwo",
+    "bbc.co.uk/iplayer",
+    "bbc.co.uk/sounds",
+    "bbc.co.uk/tv/bbcalba",
+    "bbc.co.uk/tv/bbcnews",
+    "bbc.co.uk/tv/bbcparliament",
+    "bbc.co.uk/tv/bbcscotland",
+    "bbc.co.uk/tv/bbcthree",
+    "bbc.co.uk/tv/cbbc",
+    "bbc.co.uk/tv/cbeebies",
+    "bbc.co.uk/tv/radio1",
+    "bbc.co.uk/tv/s4c",
+    "bdeditor.dev",
+    "beastskills.com",
+    "beatleader.xyz",
+    "beatsaver.com",
+    "bedrocklinux.org",
+    "beepbox.co",
+    "bequiet.com",
+    "bereal.com",
+    "bestblackhatforum.com",
+    "beta.destinyitemmanager.com",
+    "betterdiscord.app",
+    "betterttv.com",
+    "bg3.wiki",
+    "bherila.net",
+    "bidet.gg",
+    "bildung.social",
+    "bin.disroot.org",
+    "bin.veracry.pt",
+    "birdflop.com",
+    "birdie0.github.io",
+    "bitcoinity.org/markets",
+    "bithatch.co.uk",
+    "blackarch.org",
+    "blackhat.com",
+    "blackhatsem.com",
+    "blackhatworld.com",
+    "blackle.com",
+    "blackmod.net",
+    "blast.tv",
+    "blastpremier.com",
+    "blgn.dev",
+    "blink.sh",
+    "blizzard.com",
+    "blocks.pandadev.net",
+    "blog.aractus.com",
+    "blog.counter-strike.net",
+    "blog.pixelexperience.org",
+    "blog.velocifyer.com",
+    "blox.link",
+    "blueagle.top",
+    "bluefirestudios.com",
+    "bobjoerules.github.io",
+    "bocchilorenzo.github.io",
+    "bogleech.com",
+    "bondoer.fr",
+    "bonfirenetworks.org",
+    "bonn.social",
+    "bootstrap.academy",
+    "botboy.snaz.in",
+    "bouncingdvdlogo.com",
+    "brew.sh",
+    "bri.io",
+    "brianlovin.com",
+    "brianpmaher.com",
+    "briantakita.me",
+    "broadcasthe.net",
+    "brodierobertson.xyz",
+    "brunotome.dev",
+    "bsodium.fr",
+    "bugmenot.com",
+    "bungie.net",
+    "bytebin.lucko.me",
+    "c-saccoccio.fr",
+    "cadence.moe",
+    "canalplus.com",
+    "caniuse.com",
+    "canyoublockit.com",
+    "capcut.com",
+    "caracal.club",
+    "carbon.now.sh",
+    "carl.gg",
+    "carrd.co",
+    "casaos.io",
+    "cascadr.co",
+    "catvibers.me",
+    "cc.com",
+    "ccugame.app",
+    "cdn.minlor.net",
+    "cdnnow.pro",
+    "changelog.pandadev.net",
+    "chaos.social",
+    "chat-gpt.org",
+    "chat.openai.com",
+    "chat.ryzom.com",
+    "chat.unii.dev",
+    "chat.vote",
+    "cheat.sh",
+    "checkout.steampowered.com",
+    "checkra.in",
+    "chess.com",
+    "chess.wintrcat.uk",
+    "chesstempo.com",
+    "chitownhousemusic.com",
+    "chromatic-tuner.com",
+    "cider.sh",
+    "cjratliff.com",
+    "cl00e9ment.gitlab.io/kingdom-blazon-generator/",
+    "clashofstats.com",
+    "cleo.li",
+    "cloud.minlor.net",
+    "club.steam250.com",
+    "cnc-comm.com",
+    "cncnet.org",
+    "co.wukko.me",
+    "cobalt.tools",
+    "codeium.com",
+    "codepen.io",
+    "coder.com",
+    "codesandbox.io",
+    "codestackr.com",
+    "codewars.com",
+    "colean.cc",
+    "colordesigner.io",
+    "comfig.app",
+    "community.eveonline.com",
+    "conexo.ws",
+    "console.firebase.google.com",
+    "cookieplmonster.github.io",
+    "coolmathgames.com",
+    "coriolis.io",
+    "counter-strike.net",
+    "countermail.com",
+    "cp.minetro.com",
+    "craiyon.com",
+    "crazygames.com",
+    "create.roblox.com/docs",
+    "crontab.guru",
+    "crunchyroll.com",
+    "cs.rin.ru",
+    "csfail.link",
+    "cssbattle.dev",
+    "ctf.hackthebox.com",
+    "ctt.cx",
+    "cuibonobo.com",
+    "curia.social-network.europa.eu",
+    "curiositystream.com",
+    "curseforge.com",
+    "cursorlag.velocifyer.com",
+    "cxsecurity.com",
+    "cybercodeonline.com",
+    "cybercrime-tracker.net",
+    "cyberpunk.net",
+    "cybersole.io",
+    "cytu.be",
+    "d2checkpoint.com",
+    "daddyanity.com",
+    "daily-fire.com",
+    "daksh.eu.org",
+    "damnvulnerabledefi.xyz",
+    "dan-cases.com",
+    "danidev.net",
+    "daringfireball.net",
+    "dark.diatr.us",
+    "darkmode.com",
+    "darkmodelist.com",
+    "darkmodesites.com",
+    "darkreader.org",
+    "dartpad.dev",
+    "dash.baobun.dev",
+    "dashy.to",
+    "datomatic.no-intro.org",
+    "davros.netlify.app",
+    "dblstatistics.com",
+    "dbzer0.com",
+    "dd-wrt.com",
+    "ddpe.androz2091.fr",
+    "deadbydaylight.com",
+    "deadbydaylight.fandom.com",
+    "decrypt.day",
+    "deepswap.ai",
+    "deepweblinks.net",
+    "defcon.org",
+    "deidetected.com",
+    "deltarune.com",
+    "demo.photoprism.app",
+    "demonforums.net",
+    "denims.tv",
+    "denshi.org",
+    "desktop.github.com",
+    "desoroxxx.github.io/Portfolio/",
+    "destiny.gg",
+    "destinytracker.com",
+    "det.social",
+    "devanbuggay.com",
+    "developer.valvesoftware.com",
+    "developerinsider.co",
+    "developers.cloudflare.com",
+    "di.fm",
+    "diablogame.de",
+    "dicebear.com",
+    "diep.io",
+    "digi77.com",
+    "digikam.org",
+    "digki.dignityofwar.com",
+    "disasm.pro",
+    "disboard.org",
+    "discadia.com",
+    "discohook.org",
+    "discord-date.shyked.fr",
+    "discord.bots.gg",
+    "discord.com/app",
+    "discord.com/developers",
+    "discord.com/login",
+    "discord.com/register",
+    "discord.id",
+    "discordbotlist.com",
+    "discordpackage.com",
+    "discords.com",
+    "discordservers.com",
+    "discordtimestamp.com",
+    "discourse.automationgame.com",
+    "discourse.cataclysmdda.org",
+    "discuss.logseq.com",
+    "disneyplus.com",
+    "distro.tube",
+    "distrobox.it",
+    "djflame.tech",
+    "dlive.tv",
+    "docs.adonisjs.com",
+    "docs.baobun.dev",
+    "docs.gofiber.io",
+    "docs.quad9.net",
+    "docs.rs",
+    "dodi-repacks.site",
+    "doesitarm.com",
+    "doge.gov",
+    "dominion.games",
+    "donk.link",
+    "donklink.com",
+    "doodstream.com",
+    "dota2.com",
+    "dota2.ru",
+    "dotabuff.com",
+    "dotapicker.com",
+    "draculatheme.com",
+    "dragonage-game.de",
+    "drakewars.com",
+    "drewj.la",
+    "droidify.eu.org",
+    "drunkenslug.com",
+    "dsa-drakensang.de",
+    "dsc.gg",
+    "dualshockers.com",
+    "duckychannel.com.tw",
+    "dumpert.nl",
+    "dumpus.app",
+    "dungeon-lords.de",
+    "dustinbrett.com",
+    "dyinglight.fandom.com",
+    "dyinglight.wiki.gg",
+    "dyno.gg",
+    "e-z.bio",
+    "e-z.host",
+    "eagle.cool",
+    "echoarchives.net",
+    "eclipse.menu",
+    "ecys.xyz",
+    "edi.social",
+    "edit-csv.net",
+    "editor.method.ac",
+    "elderscrolls.fandom.com",
+    "elitedangerous.com",
+    "ellie-app.com",
+    "elybeatmaker.com",
+    "emeraldchat.com/app",
+    "emkc.org",
+    "emoji.supply/kitchen/",
+    "emuparadise.me",
+    "energiewende.social",
+    "enesgenc.dev",
+    "enig.ma.tum.de",
+    "enigame.de",
+    "enlightenment.org",
+    "enlisted.net",
+    "enterprise.hackthebox.com",
+    "epicgames.com",
+    "epilogue.team",
+    "erai-raws.info",
+    "eren.si",
+    "escapefromtarkov.com",
+    "escapefromtarkov.fandom.com",
+    "esplay.com",
+    "esportal.com",
+    "etke.cc",
+    "etlegacy.com",
+    "eveonline.com",
+    "evewho.com",
+    "evowars.io",
+    "excel-dna.net",
+    "extrememusic.com",
+    "f.vision",
+    "f3bpodcast.com",
+    "f95zone.to",
+    "faceit-enhancer.com",
+    "faceit.com",
+    "factorio.com",
+    "factoriobin.com",
+    "fakeupdate.net/apple",
+    "fakeupdate.net/steam",
+    "fakeupdate.net/vista",
+    "fakeupdate.net/win10",
+    "fakeupdate.net/win10ue",
+    "fakeupdate.net/win7",
+    "fakeupdate.net/win8",
+    "fakeupdate.net/wnc",
+    "fakeupdate.net/xp",
+    "fallout-area.de",
+    "fandango.com",
+    "fantasy.works",
+    "fastro.dev",
+    "fedidb.org",
+    "fetlife.com",
+    "fetlifestatus.com",
+    "filegarden.com",
+    "filmmakermode.com",
+    "filterblade.xyz",
+    "filterlists.com",
+    "finder.usmans.me",
+    "findmcserver.com",
+    "fireship.io",
+    "firu.dev",
+    "fishshell.com",
+    "flavibot.xyz",
+    "fleepy.tv",
+    "flightlessmango.com",
+    "florr.io",
+    "floss.social",
+    "fluxpoint.dev",
+    "forge.coop",
+    "forgejo.org",
+    "forsen.horse",
+    "fortnite.com",
+    "fortnite.gg",
+    "fortnitetracker.com",
+    "forum.lastos.org",
+    "forum.tribler.org",
+    "forum.xda-developers.com",
+    "forumplayer.dev",
+    "forums.bhvr.com/dead-by-daylight/",
+    "forums.eveonline.com",
+    "forums.launchbox-app.com",
+    "fosstodon.org",
+    "fox.com",
+    "fragment.com",
+    "framp.me",
+    "frankerfacez.com/$",
+    "freecodecamp.org/$",
+    "freecodecamp.org/learn/",
+    "freeipa.org",
+    "frozensand.com",
+    "fulu.org",
+    "funnyjunk.com",
+    "furry.engineer",
+    "fusengine.github.io/apaxy-v2",
+    "fv.pro",
+    "gaijin.net",
+    "game.chronodivide.com",
+    "gamebanana.com",
+    "gamedle.wtf",
+    "gamejolt.com",
+    "gamersnexus.net",
+    "gaming.amazon.com",
+    "garudalinux.org",
+    "gastonle.rs",
+    "gastonle.ru",
+    "geektyper.com",
+    "genshin-impact.fandom.com",
+    "genshin.gg",
+    "geocities.restorativland.org",
+    "getaether.net",
+    "getdweb.net",
+    "gethalfmoon.com",
+    "gethomepage.dev",
+    "getsharex.com",
+    "getwacup.com",
+    "gfl.matsuda.tips",
+    "gflcorner.com",
+    "gfverse.info",
+    "ggapp.io",
+    "ghidra-sre.org",
+    "gi.yatta.moe",
+    "giantbomb.com",
+    "gibber.cc",
+    "gibbu.github.io/ThemePreview/",
+    "gifrun.com",
+    "gifyourgame.com",
+    "gikken.co",
+    "giphy.com",
+    "git.gnous.eu",
+    "github1s.com",
+    "gitkraken.com",
+    "gitmoji.kaki87.net",
+    "globoplay.globo.com",
+    "glow.phoesion.com",
+    "glowing-bear.org",
+    "glslsandbox.com",
+    "glyphtones.is-a.dev",
+    "go4liftoff.com",
+    "gog.com/forum",
+    "gogalaxy.com",
+    "goodfirstissue.dev",
+    "goosegame.io",
+    "gopiratesoftware.com",
+    "grafana.social",
+    "graydon2.dreamwidth.org",
+    "grayjay.app",
+    "grc.arikado.ru",
+    "greatview.video",
+    "greynoise.io",
+    "grim.ac",
+    "groovy.bot",
+    "gtaforums.com",
+    "guessr.tv",
+    "gundamcocks.riflesniper.art",
+    "gunshipmusic.com",
+    "gusted.xyz",
+    "hachyderm.io",
+    "hack.chat",
+    "hackaday.com",
+    "hackaday.io",
+    "hackertyper.com",
+    "hackforums.net",
+    "hackthebox.com",
+    "hackthebox.eu",
+    "hackthissite.org",
+    "hacktoberfest-projects.vercel.app",
+    "hadesblack.com",
+    "halotracker.com",
+    "halowaypoint.com",
+    "handbook.artconomy.com",
+    "hang.fm",
+    "hardforum.com",
+    "hardstuck.gg",
+    "hardwaretimes.com",
+    "hawkbot1cs.org",
+    "hbomax.com",
+    "hctiwt.tv",
+    "hdencode.com",
+    "heavybit.com",
+    "heckerbot.dev",
+    "hedgewars.org",
+    "heliotrope.dk",
+    "help.steampowered.com",
+    "herodamage.com",
+    "hexiro.me",
+    "hidive.com",
+    "hiserod.github.io",
+    "hitnmix.com",
+    "hiveon.net",
+    "hkamran.com",
+    "homicide.igarape.org.br",
+    "hostedtalk.net",
+    "hotstar.com",
+    "howlongtobeat.com",
+    "hpdevone.com",
+    "hqapps.org",
+    "hrmspms.sicorax.mu",
+    "hub.warframestat.us",
+    "hulu.com",
+    "humblebundle.com/$",
+    "humblebundle.com/accessibility",
+    "humblebundle.com/charities",
+    "humblebundle.com/refer",
+    "humblegames.com",
+    "hyper.is",
+    "i3wm.org",
+    "iaas.store",
+    "iaasdev.ru",
+    "idlesteam.com",
+    "igg-games.com",
+    "iipython.dev",
+    "imageglass.org",
+    "imgbox.com",
+    "imgur.com",
+    "impb.in",
+    "imperialb.in",
+    "imxnoobx.com",
+    "indieweb.social",
+    "indiexpo.net",
+    "infinitezoom.net",
+    "infocon.org",
+    "infosec.exchange",
+    "inker.app",
+    "inker.co",
+    "intactphone.com",
+    "intothetrenches.1917.movie",
+    "iskdeusingqt6.org",
+    "isthereanydeal.com",
+    "isxander.dev",
+    "itrade.gg",
+    "jakeroman.com",
+    "jakobneumann.com",
+    "jakopavouk.cz",
+    "jakubkaczor.com",
+    "jaxcore.app",
+    "jbzd.com.pl",
+    "jekyllrb.com",
+    "jellymar.io",
+    "jetify.com",
+    "jeusto.com",
+    "jhey.dev",
+    "jigsawpuzzles.io",
+    "joeydrewstudios.com",
+    "join-lemmy.org",
+    "jonahsnider.com",
+    "josephchataignon.github.io",
+    "jothin.tech",
+    "jqbx.fm",
+    "jsben.ch",
+    "jsitor.com",
+    "json-diff.com",
+    "justfive.news",
+    "justwatch.com",
+    "kadantiscam.netlify.app",
+    "kaioken.dev",
+    "kalence2.github.io",
+    "kanoa.de",
+    "kaoskrew.org",
+    "kazimagazine.com",
+    "kbh.games",
+    "kbhgames.com",
+    "keenwrite.com",
+    "keezersquest.nl",
+    "kernel.fish",
+    "kestra.io",
+    "kfocus.org",
+    "khor.store",
+    "khuwawa.com",
+    "kika.de/$",
+    "kika.de/kika-live/*",
+    "kika.de/kummerkasten/*",
+    "kika.de/live/*",
+    "kika.de/selbermachen/*",
+    "kika.de/spiele/*",
+    "kika.de/suche/*",
+    "kika.de/ueber-kika/*",
+    "kika.de/videos/*",
+    "kilonova.ro",
+    "kimbatt.github.io/js-Z",
+    "kina.party",
+    "kingdom-leaks.com",
+    "kittybot.de",
+    "knockout.chat",
+    "kocowa.com",
+    "kodenames.io",
+    "korino.dev",
+    "koya.gg",
+    "krisoneil.com/home",
+    "kristal.cc",
+    "krunker.io",
+    "ksenon.net",
+    "ksp.mff.cuni.cz",
+    "kulbachny.com",
+    "kwejk.pl",
+    "kyleggiero.me",
+    "kyun.host",
+    "lagom.nl/lcd-test",
+    "lainchan.org",
+    "landchad.net",
+    "larbs.xyz",
+    "lemm.ee",
+    "lemmi.no",
+    "lemmy.world",
+    "lemmyverse.net",
+    "letroso.com",
+    "letterboxd.com",
+    "lichess.org",
+    "lightweightpdf.com",
+    "linear.app",
+    "lingva.ml",
+    "linkstack.org",
+    "linku.la",
+    "linux.org.ru",
+    "liquidplus.com",
+    "lishogi.org",
+    "listen.moe",
+    "littlealchemy2.com",
+    "livesplit.org",
+    "liveweave.com",
+    "loaded.com",
+    "loadout.tf",
+    "login.eveonline.com",
+    "logseq.com",
+    "loldle.net",
+    "lolesports.com",
+    "lollilol.xyz",
+    "looskie.com",
+    "lospec.com",
+    "lucasmellof.com",
+    "luckyone-dev.com",
+    "luckyone.dev",
+    "lukesmith.xyz",
+    "lumina-desktop.org",
+    "lutris.net",
+    "m.daum.net",
+    "m2v.ru",
+    "macbb.org",
+    "mango.pdf.zone",
+    "mapstodon.space",
+    "marte.dev",
+    "marvil.co",
+    "maskbox.app",
+    "masseffect.fandom.com",
+    "mastercomfig.com",
+    "mastofeed.com",
+    "max.com",
+    "maximepinot.com",
+    "mazes.jothin.tech",
+    "md.quad.codes",
+    "means.tv",
+    "mechapower.eu",
+    "mednafen.github.io",
+    "megathread.pages.dev",
+    "melody.ml",
+    "melonds.kuribo64.net",
+    "memory-alpha.fandom.com",
+    "mempool.space",
+    "merged.games",
+    "metronom.us",
+    "mewho.com/starfield47",
+    "migueldemoura.com",
+    "mikemaximus.github.io/gbm-web",
+    "minecraft.net",
+    "minehut.com",
+    "minlor.net",
+    "miru.watch",
+    "misode.github.io",
+    "mit.gg",
+    "mixxx.org",
+    "mizik.eu",
+    "mm-dev.rocks",
+    "mmorpg.com",
+    "mnsr.win",
+    "modworkshop.net",
+    "monaspace.githubnext.com",
+    "monitoror.com",
+    "monkeytype.com",
+    "morethantech.it",
+    "morrowshore.com",
+    "motion-canvas.github.io",
+    "motioncanvas.io",
+    "motz.xyz",
+    "mouse-sensitivity.com",
+    "mrms.cz",
+    "mrquantumoff.dev",
+    "mrrp.dev",
+    "mrtipson.github.io/otz-builds/",
+    "ms-paint-i.de",
+    "mstdn.social",
+    "mtv.com",
+    "musedash.moe",
+    "music.amazon.com",
+    "music.com",
+    "music.youtube.com",
+    "muttwizard.com",
+    "mutualaiddisasterrelief.org",
+    "mwittrien.github.io",
+    "mwomercs.com",
+    "mynoise.net",
+    "mypodficacademia.com",
+    "n-o-d-e.net",
+    "n7hq.masseffect.com",
+    "nameslol.com",
+    "nanobun.tv",
+    "nationsglory.com",
+    "nationsglory.es",
+    "nationsglory.fr",
+    "ncased.com",
+    "neal.fun/size-of-space",
+    "nee.lv",
+    "nemanjadragun.com",
+    "nerimity.com",
+    "netflix.com",
+    "netzhack.de",
+    "neundex.com",
+    "neurocore.xyz",
+    "newgrounds.com",
+    "nextron.pandadev.net",
+    "nextts.org",
+    "nextui.org",
+    "nexusmods.com",
+    "nfs.fandom.com",
+    "nfsmods.xyz",
+    "nfspolska.pl",
+    "ngplus.net",
+    "nh-server.github.io/switch-guide/",
+    "nheko-reborn.github.io",
+    "nicholasjohnson.ch",
+    "nickgen.netlify.app",
+    "niebezpiecznik.pl",
+    "nightlight.gg",
+    "nightly.smithed.net",
+    "nikse.dk",
+    "nitter.kavin.rocks",
+    "nitter.nixnet.services",
+    "nixos-and-flakes.thiscute.world",
+    "nomanssky.com",
+    "norden.social",
+    "nostr.com",
+    "nostv.pt",
+    "notesnook.com",
+    "nowplayi.ng",
+    "nulledbb.com",
+    "nvstly.com",
+    "obsidian.md",
+    "obsproject.com",
+    "obtainium.imranr.dev",
+    "odysee.com",
+    "offshorecorptalk.com",
+    "okayeg.com",
+    "oldfag.org",
+    "on.quad9.net",
+    "onionplay.asia",
+    "onlyformats.netlify.app",
+    "onlyfors.com",
+    "open.spotify.com",
+    "opendota.com",
+    "openemu.org",
+    "openrazer.github.io",
+    "openrgb.org",
+    "orama-interactive.itch.io/pixelorama",
+    "orbstack.dev",
+    "orteil.dashnet.org/cookieclicker",
+    "ostra.gg",
+    "osu.ppy.sh",
+    "osumatrix.me",
+    "otz-addon-tierlist.pages.dev",
+    "otz-opinions.pages.dev",
+    "otzdarva.com",
+    "ovagames.com",
+    "overdodactyl.github.io/ShadowFox",
+    "ovosimpatico.com",
+    "oxide.computer",
+    "pages.gay",
+    "paimon.moe",
+    "pally.gg",
+    "pandadev.net",
+    "paniash.netlify.app",
+    "paper-io.com",
+    "parahumans.wordpress.com",
+    "parrotsec.org",
+    "partner.steamgames.com/doc/",
+    "partner.steamgames.com/pccafe",
+    "partner.steamgames.com/vrlicensing",
+    "passthepopcorn.me",
+    "pastes.dev",
+    "pathofexile.com",
+    "pathofexile.fandom.com",
+    "payday.fandom.com",
+    "paydaythegame.com",
+    "pcgamestorrents.com",
+    "pedrorok.com",
+    "perf.link",
+    "peterlindbergh.obys.agency",
+    "petersalomonsen.com/webassemblymusic/livecodev2",
+    "phind.com",
+    "photomosh.com",
+    "photopea.com",
+    "physgun.com",
+    "pic.cleoold.com",
+    "ping.pe",
+    "pinia.vuejs.org",
+    "piped.kavin.rocks",
+    "piped.mha.fi",
+    "piped.tokhmi.xyz",
+    "piracybank.org",
+    "piskelapp.com",
+    "pitokmm.it",
+    "pixlr.com",
+    "planetneverwinter.de",
+    "plasticuproject.com",
+    "platinumgod.co.uk",
+    "play.chessclub.com",
+    "play.geforcenow.com",
+    "play.hbomax.com",
+    "playclassic.games",
+    "pluto.tv",
+    "poal.co",
+    "poe-racing.com",
+    "poe.ninja",
+    "poe2.ninja",
+    "poeapp.com",
+    "poelab.com",
+    "poliigon.com",
+    "poll.chat.vote",
+    "polsatboxgo.pl",
+    "polsatgo.pl",
+    "polychromatic.app",
+    "polyhaven.com",
+    "pony.tube",
+    "pool.pm",
+    "poweroutage.com",
+    "poweroutage.us",
+    "ppluss.de",
+    "ppy.sh",
+    "pr0gramm.com",
+    "premid.app",
+    "privacytools.io",
+    "prizafal.com",
+    "progettosnaps.net",
+    "projectdiscovery.io",
+    "protondb.com",
+    "proxx.app",
+    "ps2alerts.com",
+    "pvplegacy.net",
+    "pxseu.com",
+    "pylon.bot",
+    "q1dian.github.io",
+    "qalculator.xyz",
+    "quad9.net",
+    "queue.tf",
+    "raceday.watch",
+    "raidbots.com",
+    "raider.io",
+    "raidplan.io",
+    "rakowiecki.pl",
+    "rakuten.tv",
+    "rate.house",
+    "raunaksitoula.com",
+    "ravenation.club",
+    "rawgiving.com",
+    "ray.so",
+    "raycast.com",
+    "razeenf.ca",
+    "razer.com",
+    "razorsecure.com",
+    "reactbits.dev",
+    "redeclipse.net",
+    "reelgood.com",
+    "reflektclothing.co.uk",
+    "relay.firefox.com/faq",
+    "renderlab.net",
+    "reniguide.carrd.co",
+    "reniguide.info",
+    "replit.com",
+    "replugged.dev",
+    "reposilite.com",
+    "restream4me.com",
+    "retri.space",
+    "retromusic.app",
+    "returnyoutubedislike.com",
+    "revanced.app",
+    "reveddit.com",
+    "review.lineageos.org",
+    "rhwiki.net",
+    "richup.io",
+    "riflesniper.art",
+    "rimasmusic.com",
+    "ripped.guide",
+    "ritsuka.moe",
+    "rl6mans.com",
+    "rokoko.com",
+    "roleypoly.com",
+    "roosterteeth.fandom.com",
+    "router.vuejs.org",
+    "rtbyte.xyz",
+    "rtech.support",
+    "ruben-p.com",
+    "ruffle.rs",
+    "runechanger.stirante.com",
+    "runevm.io",
+    "runicgames.com",
+    "rusherhack.org",
+    "rust.facepunch.com",
+    "rust.nolt.io",
+    "rythm.fm",
+    "sa.jothin.tech",
+    "sacred-legends.de",
+    "sadistic.pl",
+    "safereddit.com",
+    "saintsrow.com",
+    "saliven.com",
+    "sammcheese.net",
+    "samseeman.com",
+    "sandervanderburg.blogspot.com",
+    "sapph.xyz",
+    "satisfactory-factories.app",
+    "sauce420.gitlab.io",
+    "save.tf",
+    "sb.ltn.fi",
+    "schildi.chat",
+    "science-news.co",
+    "scriptkit.com",
+    "seaofthieves.fandom.com",
+    "search.biboumail.fr",
+    "search.nebulacentre.net",
+    "secrethitler.io",
+    "secure.eveonline.com",
+    "senkognito.com",
+    "senkuro.com",
+    "septatrix.github.io/prefers-color-scheme-test/",
+    "serebii.net",
+    "settings.gg",
+    "seximal.net",
+    "seyi.dev",
+    "sharetextures.com",
+    "sharkiller.ddns.net",
+    "shatteredpixel.com",
+    "sheet.host",
+    "shellshock.io",
+    "shockbs.is-a.dev",
+    "shockbs.pro",
+    "shpposter.club",
+    "shubhamprasad.dev",
+    "shubhamprasad.vercel.app",
+    "siddharthray.com",
+    "siderite.dev",
+    "simkl.com",
+    "sive.rs",
+    "skeld.net",
+    "skeptikon.fr",
+    "skidrowreloaded.com",
+    "skiftos.org",
+    "skinport.com",
+    "skinsmonkey.com",
+    "skylabmusic.com",
+    "skynetsimulator.com",
+    "slay.one",
+    "sleeplessbeastie.eu",
+    "slider.kz",
+    "slippi.gg",
+    "slither.com",
+    "slither.io",
+    "smallformfactor.net",
+    "smithed.dev",
+    "smithed.net",
+    "snazzah.com",
+    "snoozing.com",
+    "snowsta.mp",
+    "social.bund.de",
+    "social.cologne",
+    "social.saarland",
+    "social.tchncs.de",
+    "somafm.com",
+    "spacestationgaming.com",
+    "spacex.com",
+    "spark.lucko.me",
+    "speedrun.com",
+    "speedtest.net",
+    "splatoon.nintendo.com",
+    "splatoon3.ink",
+    "sponsor.ajay.app",
+    "spotfy.one",
+    "spoticord.com",
+    "spyware.neocities.org",
+    "srrdb.com",
+    "stage.artconomy.com",
+    "star-made.org",
+    "starbreeze.com",
+    "starlink.com",
+    "starmadedock.net",
+    "statbot.net",
+    "stateofjs.com",
+    "status.codeberg.eu",
+    "status.kyun.host",
+    "steam.design",
+    "steam250.com",
+    "steambase.io",
+    "steamcharts.com",
+    "steamcommunity.com",
+    "steamdb.info",
+    "steamdeckhq.com",
+    "steamhunters.com",
+    "steamstat.us",
+    "steamtimeidler.com",
+    "stillu.cc",
+    "store.epicgames.com",
+    "store.gaijin.net",
+    "store.steampowered.com",
+    "storyfire.com",
+    "stray.game",
+    "studiomaertens.com",
+    "stylus-lang.com",
+    "sunxdcc.com",
+    "supinic.com",
+    "support.deadbydaylight.com",
+    "supremacy1914.com",
+    "surrealdb.com",
+    "surviv.io",
+    "suyu.dev",
+    "svtplay.se",
+    "sylviefox.ca",
+    "sync-tube.de",
+    "szmarczak.com",
+    "t3.chat",
+    "tabby.sh",
+    "tacoanon.github.io",
+    "talentbrick.com",
+    "tarkov-market.com",
+    "tautulli.com",
+    "tboi.com",
+    "teamfortress.com",
+    "teamliquid.com",
+    "teamsds.net",
+    "telescope.org",
+    "teleseer.com",
+    "televizeseznam.cz",
+    "term.ooo",
+    "terminal.sexy",
+    "terminalroot.com",
+    "tetr.io",
+    "textfiles.com",
+    "texture.ninja",
+    "texturebox.com",
+    "texturemax.com",
+    "textures.com",
+    "tf2mart.net",
+    "thecolonialtheatre.com",
+    "thegrimoire.deadbydaylight.com",
+    "thehomelab.wiki",
+    "thelastofus.fandom.com",
+    "thelinuxcast.org",
+    "theme-park.dev",
+    "themes.vscode.one",
+    "themetphilly.com",
+    "thermal-grizzly.com",
+    "thesigmaarts.com",
+    "thespacedevs.com",
+    "thetatoken.org",
+    "thetrackernetwork.com",
+    "thispersondoesnotexist.com",
+    "tickettool.xyz",
+    "tilde.club",
+    "tilde.team",
+    "tilde.town",
+    "tildeverse.org",
+    "timharek.no",
+    "tio.run",
+    "title-case-converter.vercel.app",
+    "tommytran.io",
+    "toneden.io",
+    "toolbrew.org",
+    "toolscord.com",
+    "top.gg",
+    "tostories.app",
+    "totems.me",
+    "tov.monster",
+    "tracker.gg",
+    "trblwlf.net",
+    "trigger.dev",
+    "trilon.io",
+    "tripleaughtdesign.com",
+    "trojansource.codes",
+    "trovo.live",
+    "truckersmp.com",
+    "truffle.vip",
+    "tsssaver.1conan.com",
+    "tube.kdy.ch",
+    "tukui.org",
+    "tvnz.co.nz",
+    "tvplus.com.tr",
+    "twiukraine.com",
+    "twnft.vercel.app",
+    "tycrek.com",
+    "tylerpalko.github.io",
+    "tynker.com/ide",
+    "tyrannytracker.org",
+    "tyt.com",
+    "ufplanets.com",
+    "ultrajs.dev",
+    "undergroundcellar.com",
+    "underlords.com",
+    "undertale.com",
+    "unii.dev",
+    "universe.eveonline.com",
+    "universeodon.com",
+    "unrealengine.com",
+    "urbanlinker.com",
+    "us.shop.battle.net",
+    "userdiag.com",
+    "v3.wttr.in",
+    "vanillatweaks.net",
+    "vcjhwebdev.github.io/useless-translator/",
+    "venturebanners.co.uk",
+    "viddit.red",
+    "villains.fandom.com",
+    "vimm.net",
+    "vinesauce.com",
+    "vivek9patel.github.io",
+    "vixeny.dev",
+    "vleer.app",
+    "vogons.org",
+    "volta.net",
+    "vortez.net",
+    "vrv.co",
+    "vscode.dev",
+    "vudu.com",
+    "vuecinemas.nl",
+    "w0rp.com",
+    "w41k3r.com",
+    "wago.io",
+    "wallhaven.cc",
+    "warcraftlogs.com",
+    "warezforums.com",
+    "warsow.net",
+    "warthunder.com",
+    "wasm.continuation-labs.com/d3demo/",
+    "weavesilk.com",
+    "web-check.xyz",
+    "weichong.dev",
+    "wickeditor.com/editor/",
+    "widgetbot.io",
+    "wiki.dignityofwar.com",
+    "wiki.eveuniversity.org",
+    "wiki.fireundubh.com",
+    "wiki.pixelexperience.org",
+    "wiki.the-elite.net",
+    "wiktrek.xyz",
+    "winboat.app",
+    "windowsterminalthemes.dev",
+    "winget.run",
+    "wiocha.pl",
+    "wisehosting.com",
+    "worldofcyberpunk.de",
+    "worldofgothic.de",
+    "worldofplayers.de",
+    "worldofrisen.de",
+    "worldoftanks.asia",
+    "worldoftanks.com",
+    "worldoftanks.eu",
+    "wormate.io",
+    "wormhole.app",
+    "wowaudit.com",
+    "wowhead.com",
+    "wowinterface.com",
+    "wtfast.com",
+    "wttr.in",
+    "wuemeli.com",
+    "x1337x.*/$",
+    "x64dbg.com",
+    "xbins.org",
+    "xbox.com/play",
+    "xdaforums.com",
+    "xela.codes",
+    "xela.dev",
+    "xerolinux.xyz",
+    "xmission.com",
+    "xn--rpa.cc",
+    "xonotic.org",
+    "yande.re",
+    "yarmo.eu",
+    "yashsingh.us",
+    "yildizskylab.com",
+    "ynoproject.net",
+    "you.dj",
+    "your.gg",
+    "yts.*",
+    "zaufanatrzeciastrona.pl",
+    "zbhavyai.github.io",
+    "zee5.com",
+    "zeon.dev",
+    "zerodayinitiative.com",
+    "zkillboard.com",
+    "zombsroyale.io",
+    "zt64.github.io",
+    "ztdp.ca",
+    "zunivers.zerator.com",
+    "zyrenth.dev",
+    "drive.google.com"
+]);
+    const ACTIVE_RULES = Object.freeze([
+    {
+        "patterns": [
+            "*.alternate.*",
+            "*.alternate-b2b.*",
+            "*.business.alternate.*"
+        ],
+        "selectors": [
+            "html[data-bs-theme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "*.autotask.net"
+        ],
+        "selectors": [
+            "html link[href*=\"/Mvc/FrameworkContent/Styles/LandingMidnight.min.css?\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "*.euronews.com"
+        ],
+        "selectors": [
+            "body.is-template-video"
+        ]
+    },
+    {
+        "patterns": [
+            "*.gamer.com.tw"
+        ],
+        "selectors": [
+            "html[data-theme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "*.mediawiki.org",
+            "*.wikibooks.org",
+            "*.wikidata.org",
+            "*.wikifunctions.org",
+            "*.wikimedia.org",
+            "*.wikipedia.org",
+            "*.wikiquote.org",
+            "*.wikisource.org",
+            "wikisource.org",
+            "*.wiktionary.org",
+            "*.wikiversity.org",
+            "*.wikivoyage.org"
+        ],
+        "selectors": [
+            "html.skin-theme-clientpref-night"
+        ]
+    },
+    {
+        "patterns": [
+            "*.proton.me"
+        ],
+        "selectors": [
+            "html[data-theme-mode=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "*.quora.com"
+        ],
+        "selectors": [
+            "html[style*=\"color-scheme: dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "*.uncoverit.org"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "24noticias.sapo.pt",
+            "tek.sapo.pt"
+        ],
+        "selectors": [
+            "body.black-in-black"
+        ]
+    },
+    {
+        "patterns": [
+            "9to5google.com",
+            "9to5mac.com",
+            "9to5toys.com",
+            "dronedj.com",
+            "electrek.co",
+            "spaceexplored.com"
+        ],
+        "selectors": [
+            "body.darkmode--activated"
+        ]
+    },
+    {
+        "patterns": [
+            "account.protonvpn.com"
+        ],
+        "selectors": [
+            "html[data-theme-mode=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "activestate.com"
+        ],
+        "selectors": [
+            "body.dark_bg"
+        ]
+    },
+    {
+        "patterns": [
+            "adguard.com",
+            "adguard-dns.io",
+            "adguard-mail.com",
+            "adguard-vpn.com"
+        ],
+        "selectors": [
+            "html[data-theme=\"dark\" i]"
+        ]
+    },
+    {
+        "patterns": [
+            "adrenaline.com.br"
+        ],
+        "selectors": [
+            "body.dark-mode"
+        ]
+    },
+    {
+        "patterns": [
+            "aerography.eu"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "agroportal.pt"
+        ],
+        "selectors": [
+            "body.jnews-dark-mode"
+        ]
+    },
+    {
+        "patterns": [
+            "akademie.dw.com",
+            "corporate.dw.com"
+        ],
+        "selectors": [
+            "body[data-theme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "alarabiya.net"
+        ],
+        "selectors": [
+            "body.night-theme"
+        ]
+    },
+    {
+        "patterns": [
+            "alecks.dev"
+        ],
+        "selectors": [
+            "body.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "anonymfile.com"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "app.pachca.com"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "app.raindrop.io"
+        ],
+        "selectors": [
+            "html[data-theme=\"night\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "app.thestorygraph.com"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "app.todoist.com"
+        ],
+        "selectors": [
+            "html.theme_dark"
+        ]
+    },
+    {
+        "patterns": [
+            "archdaily.cl",
+            "archdaily.cn",
+            "archdaily.com",
+            "archdaily.com.br",
+            "archdaily.mx"
+        ],
+        "selectors": [
+            "body.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "arstechnica.com"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "bard.google.com"
+        ],
+        "selectors": [
+            "body.dark-theme"
+        ]
+    },
+    {
+        "patterns": [
+            "beta.docs.nodejs.org",
+            "nodejs.org"
+        ],
+        "selectors": [
+            "html[data-theme=\"dark\"]",
+            "html[style=\"color-scheme: dark;\"]",
+            "html.dark-mode"
+        ]
+    },
+    {
+        "patterns": [
+            "blog.miguelgrinberg.com"
+        ],
+        "selectors": [
+            "html[data-bs-theme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "blog.stevezmt.top",
+            "blog-preview.stevezmt.top"
+        ],
+        "selectors": [
+            "body.mdui-theme-layout-dark"
+        ]
+    },
+    {
+        "patterns": [
+            "blogs.sapo.pt"
+        ],
+        "selectors": [
+            "html[data-theme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "calendar.cron.com"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "canva.com"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "castroelectronica.pt"
+        ],
+        "selectors": [
+            "body.dark-mode"
+        ]
+    },
+    {
+        "patterns": [
+            "chat.deepseek.com"
+        ],
+        "selectors": [
+            "body.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "chatgpt.com"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "codebuff.com"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "console.aws.amazon.com",
+            "*.console.aws.amazon.com"
+        ],
+        "selectors": [
+            "body.awsui-polaris-dark-mode"
+        ]
+    },
+    {
+        "patterns": [
+            "copilot.microsoft.com"
+        ],
+        "selectors": [
+            "html[data-theme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "cybenetics.com"
+        ],
+        "selectors": [
+            "body.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "darty.pt"
+        ],
+        "selectors": [
+            "html[theme-mode=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "dashboardicons.com"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "deepwiki.com"
+        ],
+        "selectors": [
+            "html.dark",
+            "html[style=\"color-scheme: dark;\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "developer.mozilla.org"
+        ],
+        "selectors": [
+            "html[data-theme*=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "diariocriminal.sapo.pt",
+            "diariodabairrada.sapo.pt"
+        ],
+        "selectors": [
+            "body[data-cs=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "digitalinside.com.br",
+            "digitalinside.es",
+            "digitalinside.sapo.pt"
+        ],
+        "selectors": [
+            "body.darkmode"
+        ]
+    },
+    {
+        "patterns": [
+            "dinheirovivo.dn.pt",
+            "dn.pt",
+            "dnbrasil.dn.pt",
+            "motor24.pt"
+        ],
+        "selectors": [
+            "body[style*=\"background-color: rgb(29, 29, 29)\"]",
+            "body[style*=\"background-color: rgb(0, 0, 0)\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "discord.com"
+        ],
+        "selectors": [
+            "html.theme-dark"
+        ]
+    },
+    {
+        "patterns": [
+            "docmost.com"
+        ],
+        "selectors": [
+            "html[data-mantine-color-scheme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "docs.craft.do"
+        ],
+        "selectors": [
+            "html[style*=\"color-scheme: dark;\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "docs.piral.io",
+            "docs.piral.cloud"
+        ],
+        "selectors": [
+            "body.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "ecosia.org"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "effect.website"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "effect.website/docs"
+        ],
+        "selectors": [
+            "html[data-theme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "euromaidanpress.com"
+        ],
+        "selectors": [
+            "body[data-scheme=\"dark\"]",
+            "body[site-data-scheme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "facebook.com",
+            "instagram.com",
+            "threads.com",
+            "web.facebook.com"
+        ],
+        "selectors": [
+            "html.__fb-dark-mode"
+        ]
+    },
+    {
+        "patterns": [
+            "findissues.vercel.app"
+        ],
+        "selectors": [
+            "html[data-theme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "flashscore.com"
+        ],
+        "selectors": [
+            "body.theme--dark"
+        ]
+    },
+    {
+        "patterns": [
+            "flathub.org"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "flipboard.com"
+        ],
+        "selectors": [
+            "body.theme--dark"
+        ]
+    },
+    {
+        "patterns": [
+            "flox.dev"
+        ],
+        "selectors": [
+            "body[data-md-color-media=\"(prefers-color-scheme: dark)]"
+        ]
+    },
+    {
+        "patterns": [
+            "foradeserie.sapo.pt"
+        ],
+        "selectors": [
+            "html.site-s-dark",
+            "html.s-dark"
+        ]
+    },
+    {
+        "patterns": [
+            "gchq.github.io/CyberChef"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "geizhals.at",
+            "geizhals.de",
+            "geizhals.eu"
+        ],
+        "selectors": [
+            "body[data-darkmode=\"on\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "gemini.google.com"
+        ],
+        "selectors": [
+            "body.dark-theme"
+        ]
+    },
+    {
+        "patterns": [
+            "ginjfo.com"
+        ],
+        "selectors": [
+            "html.dark-skin"
+        ]
+    },
+    {
+        "patterns": [
+            "hacks.guide"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "hexdocs.pm"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "hexdocs.pm/elixir/"
+        ],
+        "selectors": [
+            "body.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "hexed.it"
+        ],
+        "selectors": [
+            "html[data-color-theme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "hub.flox.dev"
+        ],
+        "selectors": [
+            "html.dark-mode"
+        ]
+    },
+    {
+        "patterns": [
+            "hwcooling.net"
+        ],
+        "selectors": [
+            "body.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "ign.com"
+        ],
+        "selectors": [
+            "html[data-theme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "kagi.com"
+        ],
+        "selectors": [
+            "html.theme_moon_dark"
+        ]
+    },
+    {
+        "patterns": [
+            "kaosx.us"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "knowledgeatlas.blog"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "launcher.keychron.com"
+        ],
+        "selectors": [
+            "html.dark-theme"
+        ]
+    },
+    {
+        "patterns": [
+            "learn.standardresume.co"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "learngerman.dw.com"
+        ],
+        "selectors": [
+            "html.theme-dark"
+        ]
+    },
+    {
+        "patterns": [
+            "leetcode.com"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "lingoblocks.com"
+        ],
+        "selectors": [
+            "html.dark-mode"
+        ]
+    },
+    {
+        "patterns": [
+            "linkedin.com/analytics",
+            "linkedin.com/explore-career-insights",
+            "linkedin.com/feed",
+            "linkedin.com/games",
+            "linkedin.com/in",
+            "linkedin.com/jobs",
+            "linkedin.com/jobs-tracker",
+            "linkedin.com/mynetwork",
+            "linkedin.com/newsletters",
+            "linkedin.com/search"
+        ],
+        "selectors": [
+            "body[data-color-scheme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "linkedin.com/company",
+            "linkedin.com/events",
+            "linkedin.com/groups",
+            "linkedin.com/job-posting",
+            "linkedin.com/messaging",
+            "linkedin.com/my-items",
+            "linkedin.com/mypreferences",
+            "linkedin.com/notifications",
+            "linkedin.com/premium",
+            "linkedin.com/pulse",
+            "linkedin.com/showcase"
+        ],
+        "selectors": [
+            "html.theme--dark",
+            "html.theme--mercado-dark"
+        ]
+    },
+    {
+        "patterns": [
+            "livecenter.tiktok.com",
+            "tiktok.com"
+        ],
+        "selectors": [
+            "html[data-tux-color-scheme=\"dark\"]",
+            "html[data-theme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "menshealth.pt",
+            "womenshealth.pt"
+        ],
+        "selectors": [
+            "body.sk-dark-theme"
+        ]
+    },
+    {
+        "patterns": [
+            "mermaid.live/edit"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "messages.google.com"
+        ],
+        "selectors": [
+            "body.dark-theme"
+        ]
+    },
+    {
+        "patterns": [
+            "militarnyi.com"
+        ],
+        "selectors": [
+            "body.theme-dark"
+        ]
+    },
+    {
+        "patterns": [
+            "modelcontextprotocol.io"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "motomais.motosport.com.pt",
+            "motosport.com.pt",
+            "mundonautico.pt",
+            "revistacarros.pt"
+        ],
+        "selectors": [
+            "body.jnews-dark-mode"
+        ]
+    },
+    {
+        "patterns": [
+            "music.yandex.*"
+        ],
+        "selectors": [
+            "body.ym-dark-theme"
+        ]
+    },
+    {
+        "patterns": [
+            "my.nextdns.io"
+        ],
+        "selectors": [
+            "html[data-bs-theme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "neetcode.io"
+        ],
+        "selectors": [
+            "html.dark-theme"
+        ]
+    },
+    {
+        "patterns": [
+            "newscientist.com"
+        ],
+        "selectors": [
+            "html[data-theme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "notion.so"
+        ],
+        "selectors": [
+            "body.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "objshadow.is-a.dev",
+            "objshadow.pages.dev",
+            "objshadow.tun.webredirect.org",
+            "shadow.tun.webredirect.org",
+            "shadowobj.eu.org"
+        ],
+        "selectors": [
+            "html[data-scheme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "ominho.pt"
+        ],
+        "selectors": [
+            "body[data-scheme=\"dark\"]",
+            "body[data-site-scheme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "omnivore.app"
+        ],
+        "selectors": [
+            "html.Dark"
+        ]
+    },
+    {
+        "patterns": [
+            "onedrive.live.com",
+            "word-edit.officeapps.live.com"
+        ],
+        "selectors": [
+            "body.UxDarkMode"
+        ]
+    },
+    {
+        "patterns": [
+            "open-meteo.com"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "openrouter.ai"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "ostechnix.com"
+        ],
+        "selectors": [
+            "body.pcdark-mode"
+        ]
+    },
+    {
+        "patterns": [
+            "outlook.live.com",
+            "outlook.office.com"
+        ],
+        "selectors": [
+            "html[style*=\"--black: #FFFFFF\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "overclocking.com"
+        ],
+        "selectors": [
+            "body.darkmode--activated"
+        ]
+    },
+    {
+        "patterns": [
+            "pass.proton.me"
+        ],
+        "selectors": [
+            "body.pass-dark"
+        ]
+    },
+    {
+        "patterns": [
+            "pausehardware.com"
+        ],
+        "selectors": [
+            "html.dark-skin"
+        ]
+    },
+    {
+        "patterns": [
+            "photopea.com"
+        ],
+        "selectors": [
+            "html[style*=\"--base: #474747\"]",
+            "html[style*=\"--base: #404550\"]",
+            "html[style*=\"--base: #222531\"]",
+            "html[style*=\"--base: #4b3e51\"]",
+            "html[style*=\"--base: #353535\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "pixiv.net"
+        ],
+        "selectors": [
+            "html[data-theme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "pkmer.cn"
+        ],
+        "selectors": [
+            "html.theme-dark"
+        ]
+    },
+    {
+        "patterns": [
+            "postal.fandom.com"
+        ],
+        "selectors": [
+            "body[data-theme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "powerthesaurus.org",
+            "*.powerthesaurus.org"
+        ],
+        "selectors": [
+            "body[data-theme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "privacyjournal.net"
+        ],
+        "selectors": [
+            "html[color-mode=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "project2025.observer"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "react.dev"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "reddit.com",
+            "new.reddit.com"
+        ],
+        "selectors": [
+            "html.theme-dark"
+        ]
+    },
+    {
+        "patterns": [
+            "regex101.com"
+        ],
+        "selectors": [
+            "html[data-theme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "regexr.com"
+        ],
+        "selectors": [
+            "link[href*=\"dark.css\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "reichelt.com"
+        ],
+        "selectors": [
+            "html.dark-mode"
+        ]
+    },
+    {
+        "patterns": [
+            "restofworld.org"
+        ],
+        "selectors": [
+            "body.dark-mode"
+        ]
+    },
+    {
+        "patterns": [
+            "satisfactory.wiki.gg"
+        ],
+        "selectors": [
+            "html.theme-dark"
+        ]
+    },
+    {
+        "patterns": [
+            "search.brave.com"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "simplywall.st/article",
+            "simplywall.st/community",
+            "simplywall.st/dashboard",
+            "simplywall.st/discover",
+            "simplywall.st/*/discover",
+            "simplywall.st/gift-card",
+            "simplywall.st/markets",
+            "simplywall.st/news",
+            "simplywall.st/portfolio",
+            "simplywall.st/*/portfolio",
+            "simplywall.st/screener",
+            "simplywall.st/*/screener",
+            "simplywall.st/stocks",
+            "simplywall.st/*/stocks",
+            "simplywall.st/user",
+            "simplywall.st/*/user",
+            "simplywall.st/watchlist"
+        ],
+        "selectors": [
+            "body[data-theme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "slack.com",
+            "*.slack.com"
+        ],
+        "selectors": [
+            "body.sk-client-theme--dark"
+        ]
+    },
+    {
+        "patterns": [
+            "soccer24.com"
+        ],
+        "selectors": [
+            "body.theme--dark"
+        ]
+    },
+    {
+        "patterns": [
+            "sports.ru"
+        ],
+        "selectors": [
+            "body.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "t-j.ru"
+        ],
+        "selectors": [
+            "html.tj-dark-theme"
+        ]
+    },
+    {
+        "patterns": [
+            "takeuforward.org"
+        ],
+        "selectors": [
+            "body.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "teams.live.com"
+        ],
+        "selectors": [
+            "html.theme-tfl-dark"
+        ]
+    },
+    {
+        "patterns": [
+            "telex.hu"
+        ],
+        "selectors": [
+            "html.dark-mode"
+        ]
+    },
+    {
+        "patterns": [
+            "theverge.com"
+        ],
+        "selectors": [
+            "main.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "topachat.com"
+        ],
+        "selectors": [
+            "html[colortheme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "turbo.pt"
+        ],
+        "selectors": [
+            "html.sk-game-dark-theme"
+        ]
+    },
+    {
+        "patterns": [
+            "twitch.tv"
+        ],
+        "selectors": [
+            "body.dark-theme"
+        ]
+    },
+    {
+        "patterns": [
+            "twitter.com"
+        ],
+        "selectors": [
+            "body[style*=\"background-color: rgb(0, 0, 0)\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "uicolors.app"
+        ],
+        "selectors": [
+            "html[data-color-mode=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "universemagazine.com"
+        ],
+        "selectors": [
+            "html.theme-dark"
+        ]
+    },
+    {
+        "patterns": [
+            "vecernji.hr"
+        ],
+        "selectors": [
+            "html[data-theme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "w3schools.com"
+        ],
+        "selectors": [
+            "body.darktheme"
+        ]
+    },
+    {
+        "patterns": [
+            "wccftech.com"
+        ],
+        "selectors": [
+            "html.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "web.telegram.org/a"
+        ],
+        "selectors": [
+            "html.theme-dark"
+        ]
+    },
+    {
+        "patterns": [
+            "web.telegram.org/k"
+        ],
+        "selectors": [
+            "html.night"
+        ]
+    },
+    {
+        "patterns": [
+            "web.whatsapp.com"
+        ],
+        "selectors": [
+            "body.dark"
+        ]
+    },
+    {
+        "patterns": [
+            "windowslatest.com"
+        ],
+        "selectors": [
+            "html[data-user-theme=\"blue\"]",
+            "html[data-user-theme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "x.com"
+        ],
+        "selectors": [
+            "body[style*=\"background-color: rgb(0, 0, 0)\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "yandex.*/maps",
+            "yandex.*/web-maps"
+        ],
+        "selectors": [
+            "body._theme_dark"
+        ]
+    },
+    {
+        "patterns": [
+            "yandex.*/pogoda",
+            "yandex.*/weather"
+        ],
+        "selectors": [
+            "html[data-theme=\"dark\"]"
+        ]
+    },
+    {
+        "patterns": [
+            "youtube.com"
+        ],
+        "selectors": [
+            "html[dark]"
+        ]
+    }
+]);
+    const SYSTEM_THEME_PATTERNS = Object.freeze([
+    "carbuzz.com",
+    "collider.com",
+    "dw.com",
+    "foodbible.com",
+    "gamingbible.com",
+    "ladbible.com",
+    "sportbible.com",
+    "tyla.com",
+    "unilad.com",
+    "uniladtech.com",
+    "howtogeek.com",
+    "msn.com",
+    "music.apple.com",
+    "tv.apple.com",
+    "sapo.pt",
+    "syzygy-tables.info",
+    "xda-developers.com"
+]);
+    const NO_DARK_THEME_PATTERNS = Object.freeze([
+    "*.arxiv.org",
+    "arxiv.org",
+    "*.ldlc.com",
+    "*.ldlc.pro",
+    "*.msi.com",
+    "funtoro.com",
+    "accounts.snapchat.com",
+    "snapchat.com",
+    "altisplay.fr",
+    "android-x86.org",
+    "anker.com",
+    "bandaancha.eu",
+    "benz.store",
+    "olafbenz.com",
+    "calzedonia.com",
+    "cezarywalenciuk.pl",
+    "cia.gov",
+    "dcard.tw",
+    "developer.chrome.com",
+    "dictionary.com",
+    "elettronew.com",
+    "euronext.com",
+    "fitgirl-repacks.site",
+    "focus.de",
+    "gamedev.net",
+    "gimp.org",
+    "gotquestions.org",
+    "hdblog.it",
+    "inkscape.org",
+    "knightedgemedia.com",
+    "magellantv.com",
+    "majorgeeks.com",
+    "manfrotto.com",
+    "materiel.net",
+    "mh.co.za",
+    "next-episode.net",
+    "nomoremister.blogspot.com",
+    "norfolk.citizenspace.com",
+    "nytimes.com",
+    "pcgamesn.com",
+    "philosophicaldisquisitions.blogspot.com",
+    "php.net",
+    "practers.com",
+    "psnprofiles.com",
+    "qobuz.com",
+    "quantamagazine.org",
+    "radboudumc.nl",
+    "rtp.pt",
+    "scrumguides.org",
+    "sevendistrictscoffee.com",
+    "si.edu",
+    "simplywall.st/ai-terms",
+    "simplywall.st/plans",
+    "simplywall.st/*/plans",
+    "simplywall.st/privacy-policy",
+    "simplywall.st/register",
+    "simplywall.st/terms-and-conditions",
+    "simplywall.st/welcome",
+    "sojo.net",
+    "steamgifts.com",
+    "switchbacktravel.com",
+    "thefederalist.com",
+    "thelinuxvault.net",
+    "themoviedb.org",
+    "thesweetbits.com",
+    "thetrevorproject.org",
+    "thurrott.com",
+    "tidal.com/formusic",
+    "tidal.com/partners",
+    "tidal.com/press",
+    "tidal.com/privacy",
+    "tidal.com/supported-devices",
+    "tidal.com/terms",
+    "vocabowl-870366514258.us-west1.run.app",
+    "wiki.greasespot.net",
+    "xtb.com",
+    "zoom.com",
+    "zoom.us"
+]);
 
-    function activeRuleFor(host, document) {
-        const normalizedHost = String(host ?? "").toLowerCase();
-        const rule = RULES.find((candidate) => candidate.hosts.includes(normalizedHost));
+    function normalizeHost(host) {
+        return String(host ?? "")
+            .trim()
+            .toLowerCase()
+            .replace(/^https?:\/\//, "")
+            .split(/[/?#]/, 1)[0]
+            .replace(/:\d+$/, "")
+            .replace(/\.$/, "");
+    }
+
+    function locationParts(value) {
+        if (value && typeof value === "object") {
+            return {
+                host: normalizeHost(value.hostname || value.host),
+                pathname: typeof value.pathname === "string" && value.pathname !== "" ? value.pathname : "/",
+            };
+        }
+
+        const raw = String(value ?? "");
+        const separator = raw.search(/[/?#]/);
+        return separator === -1
+            ? { host: normalizeHost(raw), pathname: "/" }
+            : { host: normalizeHost(raw.slice(0, separator)), pathname: raw.slice(separator).split(/[?#]/, 1)[0] || "/" };
+    }
+
+    function escapeRegExp(value) {
+        return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
+    function wildcardMatches(value, pattern) {
+        const expression = pattern.split("*").map(escapeRegExp).join(".*");
+        return new RegExp(`^${expression}$`, "i").test(value);
+    }
+
+    function hostMatches(value, pattern) {
+        if (pattern.includes("*")) return wildcardMatches(value, pattern);
+        if (value === pattern) return true;
+        return pattern.split(".").length === 2 && value.endsWith(`.${pattern}`);
+    }
+
+    function pathMatches(pathname, pattern) {
+        if (!pattern) return true;
+
+        const exact = pattern.endsWith("$");
+        const normalizedPattern = exact ? pattern.slice(0, -1) : pattern;
+        if (normalizedPattern.includes("*")) {
+            const expression = normalizedPattern.split("*").map(escapeRegExp).join(".*");
+            return new RegExp(`^${expression}${exact ? "$" : "(?:/|$)"}`).test(pathname);
+        }
+        if (exact) return pathname === normalizedPattern;
+        if (normalizedPattern.endsWith("/")) return pathname.startsWith(normalizedPattern);
+        return pathname === normalizedPattern || pathname.startsWith(`${normalizedPattern}/`);
+    }
+
+    function patternMatches(pattern, value) {
+        const { host, pathname } = locationParts(value);
+        const separator = pattern.indexOf("/");
+        const hostPattern = separator === -1 ? pattern : pattern.slice(0, separator);
+        const pathPattern = separator === -1 ? "" : pattern.slice(separator);
+        return hostMatches(host, hostPattern) && pathMatches(pathname, pathPattern);
+    }
+
+    function matchesAnyPattern(patterns, value) {
+        return patterns.some((pattern) => patternMatches(pattern, value));
+    }
+
+    function isDarkByDefaultSite(value) {
+        return matchesAnyPattern(DARK_SITE_PATTERNS, value);
+    }
+
+    function activeRuleFor(value, document) {
+        const rule = ACTIVE_RULES.find((candidate) => matchesAnyPattern(candidate.patterns, value));
         if (!rule) return false;
-        return rule.activeSelectors.some((selector) => {
+        return rule.selectors.some((selector) => {
             try {
                 return document.querySelector?.(selector) != null;
             } catch {
@@ -36,7 +4097,25 @@
         });
     }
 
-    const api = Object.freeze({ RULES, activeRuleFor });
+    function hasKnownDarkAppearance(value, document) {
+        return isDarkByDefaultSite(value) || activeRuleFor(value, document);
+    }
+
+    const api = Object.freeze({
+        ACTIVE_RULES,
+        DARK_SITE_PATTERNS,
+        IMPORTED_DARK_SITE_PATTERNS,
+        MANUAL_DARK_SITE_PATTERNS,
+        NO_DARK_THEME_PATTERNS,
+        RULES: ACTIVE_RULES,
+        SYSTEM_THEME_PATTERNS,
+        activeRuleFor,
+        hasKnownDarkAppearance,
+        isDarkByDefaultHost: isDarkByDefaultSite,
+        isDarkByDefaultSite,
+        locationParts,
+        patternMatches,
+    });
     globalScope.NightshiftKnownDarkSites = api;
     if (typeof module === "object" && module.exports) module.exports = api;
 }(typeof globalThis === "undefined" ? this : globalThis));

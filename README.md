@@ -15,9 +15,9 @@ Nightshift is a completely free, open-source Safari Web Extension for macOS that
 
 Nightshift can also be disabled for individual sites from its Safari toolbar popup. Mode and site changes update open tabs immediately.
 
-When active, Nightshift checks the current rendered page locally after its CSS loads. It automatically disables itself only when the page is visibly using a dark appearance, with a small compatibility registry for sites whose active theme state needs a known selector. Capability signals such as `color-scheme`, a `prefers-color-scheme: dark` rule, or a dark-mode control are not enough by themselves. This avoids double-darkening sites with their own dark appearance without collecting user behavior. You can re-enable Nightshift for any detected site from the toolbar popup.
+When active, Nightshift excludes sites listed in its repo-owned compatibility registry, generated from the vendored Dark Reader snapshot plus the developer-maintained `Config/manual-dark-sites.config` additions. It does not infer native dark mode from arbitrary rendered colors, `color-scheme`, media rules, or controls. You can re-enable any listed site from the toolbar popup.
 
-Manage all excluded websites—including automatically detected and manually added sites—in Nightshift's browser settings page. Open Safari’s extension settings and choose Nightshift’s settings page to add or remove exclusions.
+Manage all excluded websites—including known-list and manually added sites—in Nightshift's browser settings page. Open Safari’s extension settings and choose Nightshift’s settings page to add or remove exclusions.
 
 ## Architecture
 
@@ -51,6 +51,8 @@ make test           # Policy, content-script, and popup tests
 make smoke          # Live WebKit smoke tests for representative popular sites
 make build          # Regenerate and build the app without signing
 make analyze        # Run Xcode's static analyzer
+npm run update:dark-reader  # Import the latest official Dark Reader data, then regenerate
+npm run generate:dark-sites  # Regenerate after editing either source list directly
 ```
 
 To run Nightshift in Safari:
@@ -87,8 +89,9 @@ Use `NIGHTSHIFT_SMOKE_SITE=github` to run one case, or `NIGHTSHIFT_SMOKE_HEADED=
 - `Nightshift/` — SwiftUI macOS container app
 - `Nightshift Extension/` — native Web Extension host and Manifest V3 resources
 - `Tests/` — Node tests for extension behavior
+- `Config/manual-dark-sites.config` — developer-owned additions to the imported compatibility list
 - `Artwork/` — source SVGs and deterministic Safari PNG renderer
-- `Icon/Nightshift Icon.icon` — source-of-truth macOS app icon, hand-authored in Apple Icon Composer
+- `Icon/Nightshift Icon.icon` — source-of-truth macOS app icon authored in Apple Icon Composer with Liquid Glass layers
 - `AppStore/` — versioned listing copy, App Store Connect handoff, review notes, and screenshot production guidance
 - `project.yml` — source of truth for Xcode targets and build settings
 - `.github/workflows/ci.yml` — JavaScript tests plus unsigned builds on macOS 15, 26, and 27 runners
@@ -107,3 +110,4 @@ See [`LAUNCH_CHECKLIST.md`](LAUNCH_CHECKLIST.md) for the remaining App Store, co
 ## License
 
 Nightshift is available under the MIT License. See [`LICENSE`](LICENSE). The original copyright and license notice are retained.
+Embedded Dark Reader compatibility data and its attribution are documented in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).

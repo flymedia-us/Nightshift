@@ -1,6 +1,16 @@
 import { defineConfig, devices } from '@playwright/test';
+import os from 'node:os';
 
-const headed = process.env.NIGHTSHIFT_SMOKE_HEADED === '1';
+const requestedHeaded = process.env.NIGHTSHIFT_SMOKE_HEADED;
+const runningOnMacOS27OrLater =
+  process.platform === 'darwin' && Number.parseInt(os.release(), 10) >= 27;
+
+// Playwright's macOS WebKit headless binary aborts during NSApplication setup
+// on macOS 27. Keep smoke tests reliable locally while retaining an explicit
+// headless override for environments where that WebKit mode is supported.
+const headed =
+  requestedHeaded === '1' ||
+  (requestedHeaded !== '0' && runningOnMacOS27OrLater);
 
 export default defineConfig({
   testDir: '.',

@@ -6,17 +6,16 @@ import { fileURLToPath } from 'node:url';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const resources = path.resolve(here, '../../Nightshift Extension/Resources');
 const knownSitesSource = await readFile(path.join(resources, 'known-dark-sites.js'), 'utf8');
-const detectorSource = await readFile(path.join(resources, 'native-dark-mode-detector.js'), 'utf8');
 
 const cases = [
   {
-    name: 'Cornell News remains eligible while rendered light',
+    name: 'Cornell News is not in the known native-dark registry',
     url: 'https://news.cornell.edu/',
     colorScheme: 'light',
     expectedDark: false,
   },
   {
-    name: 'YouTube is detected when its dark theme is active',
+    name: 'YouTube is in the known native-dark registry when its dark marker is active',
     url: 'https://www.youtube.com/',
     colorScheme: 'dark',
     expectedDark: true,
@@ -32,15 +31,13 @@ for (const site of cases) {
     await page.waitForTimeout(1_000);
     // Evaluate in Playwright's isolated execution channel so the test also works
     // on pages, such as YouTube, that require Trusted Types for injected scripts.
-    await page.evaluate(([knownSource, nativeDetectorSource]) => {
+    await page.evaluate(([knownSource]) => {
       // eslint-disable-next-line no-eval
       eval(knownSource);
-      // eslint-disable-next-line no-eval
-      eval(nativeDetectorSource);
-    }, [knownSitesSource, detectorSource]);
+    }, [knownSitesSource]);
 
     const detected = await page.evaluate(() => (
-      window.NightshiftNativeDarkModeDetector.hasNativeDarkAppearance(document, location.host)
+      window.NightshiftKnownDarkSites.hasKnownDarkAppearance(location, document)
     ));
     expect(detected).toBe(site.expectedDark);
   });

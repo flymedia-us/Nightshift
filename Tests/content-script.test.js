@@ -10,8 +10,10 @@ const resourceDirectory = path.join(__dirname, "..", "Nightshift Extension", "Re
 const policySource = fs.readFileSync(path.join(resourceDirectory, "theme-policy.js"), "utf8");
 const settingsStoreSource = fs.readFileSync(path.join(resourceDirectory, "settings-store.js"), "utf8");
 const contentSource = fs.readFileSync(path.join(resourceDirectory, "content.js"), "utf8");
+const knownDarkSites = require(path.join(resourceDirectory, "known-dark-sites.js"));
+const manualDarkSites = require(path.join(resourceDirectory, "manual-dark-sites.js"));
 
-function createHarness({ host = "example.com", systemIsDark = false, storedSettings = {}, nativeDarkMode = false } = {}) {
+function createHarness({ host = "example.com", systemIsDark = false, storedSettings = {} } = {}) {
     const attributes = new Set();
     let systemListener;
     let storageListener;
@@ -54,7 +56,8 @@ function createHarness({ host = "example.com", systemIsDark = false, storedSetti
         browser,
         console,
         document: { documentElement: root, readyState: "complete" },
-        NightshiftNativeDarkModeDetector: { hasNativeDarkAppearance: () => nativeDarkMode },
+        NightshiftKnownDarkSites: knownDarkSites,
+        NightshiftManualDarkSites: manualDarkSites,
         window: {
             location: { host },
             matchMedia: () => mediaQuery,
@@ -90,12 +93,11 @@ test("content script applies the default System mode before async storage loads"
     assert.equal(createHarness({ systemIsDark: false }).isActive(), false);
 });
 
-test("Google Docs gets a rendering marker without changing the activation policy", () => {
+test("Google Docs keeps its custom rendering marker without being registry-excluded", () => {
     const docs = createHarness({ host: "docs.google.com", systemIsDark: false });
     const otherSite = createHarness({ host: "docs.google.com.evil.example", systemIsDark: false });
     assert.equal(docs.hasGoogleDocsMarker(), true);
     assert.equal(otherSite.hasGoogleDocsMarker(), false);
-    assert.equal(docs.isActive(), false);
 });
 
 test("stored Always Dark activates Nightshift on a light system", async () => {
@@ -132,16 +134,29 @@ test("site exclusions deactivate an already-open page", async () => {
     assert.equal(harness.isActive(), false);
 });
 
-test("native dark-mode pages are automatically excluded after settings load", async () => {
-    const harness = createHarness({ storedSettings: { globalMode: "dark" }, nativeDarkMode: true });
+test("known dark-site entries are automatically excluded after settings load", async () => {
+    const harness = createHarness({ host: "photopea.com", storedSettings: { globalMode: "dark" } });
     await harness.settle();
-    assert.deepEqual(harness.savedSettings.at(-1).autoDisabledSites, ["example.com"]);
+    assert.deepEqual(harness.savedSettings.at(-1).autoDisabledSites, ["photopea.com"]);
 });
 
-test("a stale automatic exclusion is removed when the page is currently light", async () => {
+test("known dark-site entries are excluded even when System is currently light", async () => {
+    const harness = createHarness({ host: "drive.google.com", storedSettings: { globalMode: "system" } });
+    await harness.settle();
+    assert.deepEqual(harness.savedSettings.at(-1).autoDisabledSites, ["drive.google.com"]);
+});
+
+test("Google Drive stays excluded while Google Docs remains enabled", async () => {
+    const drive = createHarness({ host: "drive.google.com", storedSettings: { globalMode: "dark" } });
+    const docs = createHarness({ host: "docs.google.com", storedSettings: { globalMode: "dark" } });
+    await Promise.all([drive.settle(), docs.settle()]);
+    assert.equal(drive.isActive(), false);
+    assert.equal(docs.isActive(), true);
+});
+
+test("a stale known-site exclusion is removed when the site is not listed", async () => {
     const harness = createHarness({
         storedSettings: { globalMode: "dark", autoDisabledSites: ["example.com"] },
-        nativeDarkMode: false,
     });
     await harness.settle();
     assert.deepEqual(harness.savedSettings.at(-1).autoDisabledSites, []);

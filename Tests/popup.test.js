@@ -10,6 +10,8 @@ const resourceDirectory = path.join(__dirname, "..", "Nightshift Extension", "Re
 const policySource = fs.readFileSync(path.join(resourceDirectory, "theme-policy.js"), "utf8");
 const settingsStoreSource = fs.readFileSync(path.join(resourceDirectory, "settings-store.js"), "utf8");
 const popupSource = fs.readFileSync(path.join(resourceDirectory, "popup.js"), "utf8");
+const knownDarkSites = require(path.join(resourceDirectory, "known-dark-sites.js"));
+const manualDarkSites = require(path.join(resourceDirectory, "manual-dark-sites.js"));
 
 function createInput(value = "") {
     const listeners = new Map();
@@ -58,7 +60,7 @@ function createHarness({ tabURL = "https://example.com/page", storedSettings = {
         querySelectorAll: () => modeInputs,
         querySelector: (selector) => elements[selector],
     };
-    const context = vm.createContext({ URL, browser, console, document, structuredClone });
+    const context = vm.createContext({ URL, browser, console, document, structuredClone, NightshiftKnownDarkSites: knownDarkSites, NightshiftManualDarkSites: manualDarkSites });
 
     vm.runInContext(policySource, context);
     vm.runInContext(settingsStoreSource, context);
@@ -118,16 +120,23 @@ test("popup can disable and re-enable Nightshift for the active site", async () 
     assert.deepEqual(harness.savedSettings.at(-1).enabledSites, ["example.com"]);
 });
 
-test("popup explains automatic native-dark-mode exclusions and lets the user override one", async () => {
+test("popup explains known-site exclusions and lets the user override one", async () => {
     const harness = createHarness({ storedSettings: { globalMode: "dark", autoDisabledSites: ["example.com"] } });
     await harness.settle();
     assert.equal(harness.siteEnabledInput.checked, false);
-    assert.match(harness.siteDetail.textContent, /provides its own dark appearance/);
+    assert.match(harness.siteDetail.textContent, /native dark-mode registry/);
 
     harness.siteEnabledInput.checked = true;
     harness.siteEnabledInput.dispatch("change");
     await harness.settle();
     assert.deepEqual(harness.savedSettings.at(-1).enabledSites, ["example.com"]);
+});
+
+test("popup excludes a registry site before its cached exclusion is saved", async () => {
+    const harness = createHarness({ tabURL: "https://drive.google.com/drive/my-drive" });
+    await harness.settle();
+    assert.equal(harness.siteEnabledInput.checked, false);
+    assert.match(harness.siteDetail.textContent, /native dark-mode registry/);
 });
 
 test("popup disables site controls on Safari-internal pages", async () => {

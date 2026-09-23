@@ -3,13 +3,15 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "check": "node --check 'Nightshift Extension/Resources/theme-policy.js' && node --check 'Nightshift Extension/Resources/settings-store.js' && node --check 'Nightshift Extension/Resources/background.js' && node --check 'Nightshift Extension/Resources/known-dark-sites.js' && node --check 'Nightshift Extension/Resources/native-dark-mode-detector.js' && node --check 'Nightshift Extension/Resources/content.js' && node --check 'Nightshift Extension/Resources/popup.js' && node --check 'Nightshift Extension/Resources/options.js'",
+    "check": "node --check 'Scripts/generate-dark-site-registry.mjs' && node --check 'Nightshift Extension/Resources/theme-policy.js' && node --check 'Nightshift Extension/Resources/settings-store.js' && node --check 'Nightshift Extension/Resources/background.js' && node --check 'Nightshift Extension/Resources/manual-dark-sites.js' && node --check 'Nightshift Extension/Resources/known-dark-sites.js' && node --check 'Nightshift Extension/Resources/content.js' && node --check 'Nightshift Extension/Resources/popup.js' && node --check 'Nightshift Extension/Resources/options.js'",
+    "update:dark-reader": "node Scripts/update-dark-reader-lists.mjs && node Scripts/generate-dark-site-registry.mjs",
+    "generate:dark-sites": "node Scripts/generate-dark-site-registry.mjs",
     "test": "node --test Tests/*.test.js",
     "icons": "node Artwork/render-icons.mjs",
     "smoke": "playwright test --config Tests/smoke/playwright.config.js",
     "smoke:install": "playwright install webkit"
   },
   "devDependencies": {
-    "@playwright/test": "^1.55.0"
+    "@playwright/test": "1.63.0"
   }
 }

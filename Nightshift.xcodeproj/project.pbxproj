@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1332607EC1FA4A98854E79E2 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 1529CB9B58ED576899A9BB7F /* manifest.json */; };
-		1B59C0B79C0ADAE42C07A8D3 /* Nightshift.icns in Resources */ = {isa = PBXBuildFile; fileRef = 6EFD0CF66FFE79C377320D27 /* Nightshift.icns */; };
 		28EA4EAE2A379803310A7EF7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9CF00613BE4E48B32A1A2AEE /* Assets.xcassets */; };
 		3B1762ECC496BDE5AF29B385 /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = CF939B46A33A6980CAB1E815 /* popup.html */; };
 		3B8C0B0438B7C315697AD40D /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BEDB290CDE1CC4E45B61AC /* SafariWebExtensionHandler.swift */; };
@@ -21,7 +20,6 @@
 		4F372C061AD76BDCABC5E29A /* content.js in Resources */ = {isa = PBXBuildFile; fileRef = 6E8B45A4F9B8497709DE62BC /* content.js */; };
 		523B87FE97C59AA8FD9FBB51 /* icon-128.png in Resources */ = {isa = PBXBuildFile; fileRef = AF694F57D0E751BC94EEED20 /* icon-128.png */; };
 		5F0E5665334D85572B356D04 /* icon-96.png in Resources */ = {isa = PBXBuildFile; fileRef = BF714A137E145FFBB0CAAEAF /* icon-96.png */; };
-		68096CE403B9969771B0CB15 /* native-dark-mode-detector.js in Resources */ = {isa = PBXBuildFile; fileRef = ED50E9CA2C7C09F4952D08E9 /* native-dark-mode-detector.js */; };
 		6DC31C394727AE2AF8209B36 /* popup.js in Resources */ = {isa = PBXBuildFile; fileRef = 85CCC1941A0D2278B9B96B3C /* popup.js */; };
 		7231092BF797D03F30A801B2 /* options.css in Resources */ = {isa = PBXBuildFile; fileRef = 31C041C23494BF67540BA9CE /* options.css */; };
 		782BC2295DB21C2360D7AED6 /* icon-48.png in Resources */ = {isa = PBXBuildFile; fileRef = 87EC17FA01A3FC5DB52471FC /* icon-48.png */; };
@@ -35,6 +33,7 @@
 		BC90A19ADABFE1A1AABD910E /* known-dark-sites.js in Resources */ = {isa = PBXBuildFile; fileRef = 232E1F820D39E2586A328D81 /* known-dark-sites.js */; };
 		C0C71C9AFD91B3F871FF10E4 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 09D19DE50B812D453660ED72 /* PrivacyInfo.xcprivacy */; };
 		C28EF54BB085BBB188CF3798 /* nightshift.css in Resources */ = {isa = PBXBuildFile; fileRef = 0C49A4FCA399970C82F1E9B0 /* nightshift.css */; };
+		D4CA9121C12A2B411226B98B /* manual-dark-sites.js in Resources */ = {isa = PBXBuildFile; fileRef = 69B396CD818725483FF07B9B /* manual-dark-sites.js */; };
 		D588E50105E1B34AE5C2BB05 /* icon-256.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E84600CD7F58050290106B /* icon-256.png */; };
 		EBA644390F91EFC7A8B32A9F /* settings-store.js in Resources */ = {isa = PBXBuildFile; fileRef = 1975F2761E81E7373D00A779 /* settings-store.js */; };
 		F0DC62A81E5BF39FC9E36233 /* icon-512.png in Resources */ = {isa = PBXBuildFile; fileRef = 643324892784B73BBB3C5065 /* icon-512.png */; };
@@ -82,8 +81,8 @@
 		41B4565DBA2DB83B8B0C6913 /* popup.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = popup.css; sourceTree = "<group>"; };
 		643324892784B73BBB3C5065 /* icon-512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-512.png"; sourceTree = "<group>"; };
 		66BEDB290CDE1CC4E45B61AC /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
+		69B396CD818725483FF07B9B /* manual-dark-sites.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "manual-dark-sites.js"; sourceTree = "<group>"; };
 		6E8B45A4F9B8497709DE62BC /* content.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = content.js; sourceTree = "<group>"; };
-		6EFD0CF66FFE79C377320D27 /* Nightshift.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Nightshift.icns; sourceTree = "<group>"; };
 		7910EBB9BC7ADA569BA327B7 /* background.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = background.js; sourceTree = "<group>"; };
 		7932891AC98E5D73738B4012 /* toolbar-38.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-38.png"; sourceTree = "<group>"; };
 		7EFDC8D0E27C7063CFDE5974 /* options.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = options.js; sourceTree = "<group>"; };
@@ -99,7 +98,6 @@
 		CF939B46A33A6980CAB1E815 /* popup.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = popup.html; sourceTree = "<group>"; };
 		D5E84600CD7F58050290106B /* icon-256.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-256.png"; sourceTree = "<group>"; };
 		EAF70B3FABBD4982B579ABFA /* Nightshift Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Nightshift Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		ED50E9CA2C7C09F4952D08E9 /* native-dark-mode-detector.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "native-dark-mode-detector.js"; sourceTree = "<group>"; };
 		EE1DDB3EBCFCAEBFF159EF7B /* icon-64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-64.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -117,7 +115,7 @@
 				643324892784B73BBB3C5065 /* icon-512.png */,
 				232E1F820D39E2586A328D81 /* known-dark-sites.js */,
 				1529CB9B58ED576899A9BB7F /* manifest.json */,
-				ED50E9CA2C7C09F4952D08E9 /* native-dark-mode-detector.js */,
+				69B396CD818725483FF07B9B /* manual-dark-sites.js */,
 				0C49A4FCA399970C82F1E9B0 /* nightshift.css */,
 				31C041C23494BF67540BA9CE /* options.css */,
 				36A9B6559B8B27E662C52060 /* options.html */,
@@ -177,7 +175,6 @@
 			children = (
 				9CF00613BE4E48B32A1A2AEE /* Assets.xcassets */,
 				886D0FC1D65E9EA7FC9AA7EF /* ContentView.swift */,
-				6EFD0CF66FFE79C377320D27 /* Nightshift.icns */,
 				39E73A4CE1908C0B9E39534F /* NightshiftApp.swift */,
 				AE9098DC0E66750B65B25998 /* PrivacyInfo.xcprivacy */,
 			);
@@ -271,7 +268,6 @@
 			files = (
 				28EA4EAE2A379803310A7EF7 /* Assets.xcassets in Resources */,
 				962C4AE251B29A41FCAB8926 /* Nightshift Icon.icon in Resources */,
-				1B59C0B79C0ADAE42C07A8D3 /* Nightshift.icns in Resources */,
 				3F0244FC910DC018E87B55A1 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -291,7 +287,7 @@
 				5F0E5665334D85572B356D04 /* icon-96.png in Resources */,
 				BC90A19ADABFE1A1AABD910E /* known-dark-sites.js in Resources */,
 				1332607EC1FA4A98854E79E2 /* manifest.json in Resources */,
-				68096CE403B9969771B0CB15 /* native-dark-mode-detector.js in Resources */,
+				D4CA9121C12A2B411226B98B /* manual-dark-sites.js in Resources */,
 				C28EF54BB085BBB188CF3798 /* nightshift.css in Resources */,
 				7231092BF797D03F30A801B2 /* options.css in Resources */,
 				3E9A684D51E3A194EC901D77 /* options.html in Resources */,
@@ -413,7 +409,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
-				MARKETING_VERSION = 1.0.5;
+				MARKETING_VERSION = 1.0.7;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -539,7 +535,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
-				MARKETING_VERSION = 1.0.5;
+				MARKETING_VERSION = 1.0.7;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_CODE_SIGN_FLAGS = "--timestamp";

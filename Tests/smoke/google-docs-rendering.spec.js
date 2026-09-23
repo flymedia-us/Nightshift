@@ -10,7 +10,7 @@ const stylesheet = await readFile(
   'utf8',
 );
 
-test('Google Docs canvas receives the page filter instead of the media correction', async ({ page }) => {
+test('Google Docs receives the page filter without double-inverting its canvases', async ({ page }) => {
   await page.setContent(`
     <div id="docs-editor"><canvas width="120" height="40"></canvas></div>
     <canvas id="ordinary-canvas" width="120" height="40"></canvas>

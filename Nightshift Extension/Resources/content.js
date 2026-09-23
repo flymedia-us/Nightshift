@@ -4,7 +4,8 @@
     const extensionAPI = globalThis.browser ?? globalThis.chrome;
     const policy = globalThis.NightshiftThemePolicy;
     const settingsStore = globalThis.NightshiftSettingsStore;
-    const nativeDarkModeDetector = globalThis.NightshiftNativeDarkModeDetector;
+    const knownDarkSites = globalThis.NightshiftKnownDarkSites;
+    const manualDarkSites = globalThis.NightshiftManualDarkSites;
     const systemAppearance = window.matchMedia("(prefers-color-scheme: dark)");
     let settings = policy.normalizeSettings(policy.DEFAULT_SETTINGS);
     let settingsLoaded = false;
@@ -15,6 +16,22 @@
     function isGoogleDocsHost() {
         return policy.normalizeHost(window.location.host) === GOOGLE_DOCS_HOST;
     }
+    function hasKnownDarkAppearance() {
+        return manualDarkSites?.matches(window.location) === true ||
+            knownDarkSites?.hasKnownDarkAppearance(window.location, document) === true;
+    }
+
+    function effectiveSettings() {
+        const host = policy.normalizeHost(window.location.host);
+        if (!host || settings.enabledSites.includes(host) || !hasKnownDarkAppearance()) {
+            return settings;
+        }
+
+        return {
+            ...settings,
+            autoDisabledSites: [...new Set([...settings.autoDisabledSites, host])],
+        };
+    }
 
     function applyTheme() {
         const root = document.documentElement;
@@ -22,12 +39,11 @@
             return;
         }
 
-        // Docs paints document pages into canvas tiles. The normal canvas media
-        // correction below intentionally cancels Nightshift's page filter, which
-        // would make Docs' dark canvas and dark text equally low-contrast. Keep
-        // this marker separate from the active state so the CSS stays host-scoped.
+        // Docs paints document pages into canvas tiles. Keep this marker
+        // separate from the active state so the canvas-safe correction stays
+        // scoped to Docs while Nightshift remains enabled there.
         root.toggleAttribute("data-nightshift-google-docs", isGoogleDocsHost());
-        const active = policy.shouldApply(settings, window.location.host, systemAppearance.matches);
+        const active = policy.shouldApply(effectiveSettings(), window.location.host, systemAppearance.matches);
         root.toggleAttribute("data-nightshift-active", active);
     }
 
@@ -35,7 +51,7 @@
         settings = policy.normalizeSettings(value);
         settingsLoaded = true;
         applyTheme();
-        autoDisableNativeDarkMode();
+        applyKnownDarkSiteExclusion();
     }
 
     function handleStorageChange(changes, areaName) {
@@ -51,22 +67,17 @@
         });
     }
 
-    function autoDisableNativeDarkMode() {
+    function applyKnownDarkSiteExclusion() {
         const host = policy.normalizeHost(window.location.host);
         if (!settingsLoaded || document.readyState === "loading" || !host || isSavingAutoExclusion || settings.enabledSites.includes(host)) return;
-        const settingsWithoutCurrentAutoExclusion = {
-            ...settings,
-            autoDisabledSites: settings.autoDisabledSites.filter((site) => site !== host),
-        };
-        if (!policy.shouldApply(settingsWithoutCurrentAutoExclusion, host, systemAppearance.matches)) return;
-        const hasNativeDarkAppearance = nativeDarkModeDetector?.hasNativeDarkAppearance(document, host) === true;
+        const hasKnownDarkSite = hasKnownDarkAppearance();
         const isAutoDisabled = settings.autoDisabledSites.includes(host);
-        if (hasNativeDarkAppearance === isAutoDisabled) return;
+        if (hasKnownDarkSite === isAutoDisabled) return;
 
         isSavingAutoExclusion = true;
         settingsStore.save({
             ...settings,
-            autoDisabledSites: hasNativeDarkAppearance
+            autoDisabledSites: hasKnownDarkSite
                 ? [...settings.autoDisabledSites, host]
                 : settings.autoDisabledSites.filter((site) => site !== host),
         }).catch((error) => console.error("Nightshift couldn't save its native-dark-mode exclusion.", error))
@@ -82,20 +93,20 @@
 
     extensionAPI.storage.onChanged.addListener(handleStorageChange);
 
-    // Check after page CSS is available. The detector observes computed colors,
-    // so Nightshift's filter never needs to be removed or flashed off.
-    window.addEventListener("DOMContentLoaded", autoDisableNativeDarkMode, { once: true });
-    window.addEventListener("load", autoDisableNativeDarkMode, { once: true });
+    // Check after page CSS is available so known selector rules can observe the
+    // site's active theme marker without inspecting arbitrary rendered colors.
+    window.addEventListener("DOMContentLoaded", applyKnownDarkSiteExclusion, { once: true });
+    window.addEventListener("load", applyKnownDarkSiteExclusion, { once: true });
 
     // Single-page apps commonly apply their saved theme after load. Re-evaluate
-    // once per mutation burst without permanently excluding a merely capable site.
+    // known selector rules once per mutation burst.
     if (typeof MutationObserver === "function" && document.documentElement) {
         new MutationObserver(() => {
             if (pendingAppearanceCheck) return;
             pendingAppearanceCheck = true;
             queueMicrotask(() => {
                 pendingAppearanceCheck = false;
-                autoDisableNativeDarkMode();
+                applyKnownDarkSiteExclusion();
             });
         }).observe(document.documentElement, { attributes: true, childList: true, subtree: true });
     }

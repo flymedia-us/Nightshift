@@ -13,7 +13,7 @@ settings:
     DEVELOPMENT_TEAM: BJZSH247Q9
     ENABLE_HARDENED_RUNTIME: YES
     MACOSX_DEPLOYMENT_TARGET: "12.3"
-    MARKETING_VERSION: "1.0.5"
+    MARKETING_VERSION: "1.0.7"
     OTHER_CODE_SIGN_FLAGS: --timestamp
     SWIFT_STRICT_CONCURRENCY: complete
     SWIFT_VERSION: "6.0"
@@ -27,6 +27,7 @@ targets:
         excludes:
           - Info.plist
           - Nightshift.entitlements
+          - Nightshift.icns
           - PrivacyInfo.xcprivacy
       - path: Nightshift/PrivacyInfo.xcprivacy
         buildPhase: resources
@@ -57,11 +58,11 @@ targets:
         buildPhase: resources
       - path: Nightshift Extension/Resources/settings-store.js
         buildPhase: resources
+      - path: Nightshift Extension/Resources/manual-dark-sites.js
+        buildPhase: resources
       - path: Nightshift Extension/Resources/known-dark-sites.js
         buildPhase: resources
       - path: Nightshift Extension/Resources/background.js
-        buildPhase: resources
-      - path: Nightshift Extension/Resources/native-dark-mode-detector.js
         buildPhase: resources
       - path: Nightshift Extension/Resources/content.js
         buildPhase: resources
