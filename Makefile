@@ -1,8 +1,9 @@
-.PHONY: setup check test smoke build build-project analyze verify open clean
+.PHONY: setup check test smoke build build-project analyze verify open clean test-native
 
 DERIVED_DATA := .build/DerivedData
 
 setup:
+	npm run generate:dark-sites
 	@command -v xcodegen >/dev/null || (echo "XcodeGen is required: brew install xcodegen" && exit 1)
 	xcodegen generate
 
@@ -11,6 +12,7 @@ check:
 
 test:
 	npm test
+	$(MAKE) test-native
 
 smoke:
 	npm run smoke
@@ -18,6 +20,7 @@ smoke:
 build: setup build-project
 
 build-project:
+	npm run generate:dark-sites
 	xcodebuild \
 		-project Nightshift.xcodeproj \
 		-scheme Nightshift \
@@ -42,3 +45,8 @@ open: setup
 
 clean:
 	xcodebuild -project Nightshift.xcodeproj -scheme Nightshift -derivedDataPath "$(DERIVED_DATA)" clean
+
+test-native:
+	mkdir -p .build/native-tests
+	xcrun swiftc -module-cache-path .build/native-tests/ModuleCache "Nightshift Extension/SharedSettings.swift" Tests/native-settings/main.swift -o .build/native-tests/settings-tests
+	.build/native-tests/settings-tests

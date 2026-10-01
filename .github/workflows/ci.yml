@@ -23,4 +23,5 @@ jobs:
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4
+      - run: make test-native
       - run: make build-project

@@ -171,3 +171,18 @@ test("a stale known-site exclusion is removed when the site is not listed", asyn
     await harness.settle();
     assert.deepEqual(harness.savedSettings.at(-1).autoDisabledSites, []);
 });
+
+test("GitHub is automatically excluded by the shipped manual registry", async () => {
+    const harness = createHarness({ host: "github.com", systemIsDark: true, storedSettings: { globalMode: "dark" } });
+    assert.equal(harness.isActive(), false);
+    await harness.settle();
+    assert.equal(harness.isActive(), false);
+    assert.deepEqual(harness.savedSettings.at(-1).autoDisabledSites, ["github.com"]);
+});
+
+test("a detector saves only its own exclusion without clearing another host's cache", async () => {
+    const harness = createHarness({ host: "github.com", storedSettings: { globalMode: "dark", disabledSites: ["manual.example"], autoDisabledSites: ["docs.google.com", "photopea.com"] } });
+    await harness.settle();
+    assert.deepEqual(harness.savedSettings.at(-1).disabledSites, ["manual.example"]);
+    assert.deepEqual(harness.savedSettings.at(-1).autoDisabledSites, ["docs.google.com", "github.com", "photopea.com"]);
+});

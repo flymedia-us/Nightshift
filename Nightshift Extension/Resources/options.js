@@ -21,9 +21,8 @@
         }));
     }
 
-    function save(nextSettings, message = "Saved") {
-        settings = policy.normalizeSettings(nextSettings);
-        return settingsStore.save(settings).then((savedSettings) => {
+    function save(change, message = "Saved") {
+        return settingsStore.update(change).then((savedSettings) => {
             settings = savedSettings;
             render();
             setStatus(message);
@@ -31,12 +30,7 @@
     }
 
     function remove(host) {
-        save({
-            ...settings,
-            disabledSites: settings.disabledSites.filter((site) => site !== host),
-            autoDisabledSites: settings.autoDisabledSites.filter((site) => site !== host),
-            enabledSites: settings.enabledSites.filter((site) => site !== host),
-        }, "Website removed").catch((error) => setStatus(`Couldn't save: ${error.message}`));
+        save({ type: "removeExcludedSite", host }, "Website removed").catch((error) => setStatus(`Couldn't save: ${error.message}`));
     }
 
     function render() {
@@ -79,11 +73,7 @@
             return;
         }
         hostInput.value = "";
-        save({
-            ...settings,
-            disabledSites: [...settings.disabledSites, host],
-            enabledSites: settings.enabledSites.filter((site) => site !== host),
-        }, "Website excluded").catch((error) => setStatus(`Couldn't save: ${error.message}`));
+        save({ type: "setSiteEnabled", host, enabled: false }, "Website excluded").catch((error) => setStatus(`Couldn't save: ${error.message}`));
     });
 
     settingsStore.load()

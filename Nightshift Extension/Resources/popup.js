@@ -55,16 +55,17 @@
         }
         const automaticallyDisabled = !settings.enabledSites.includes(currentHost) &&
             (settings.autoDisabledSites.includes(currentHost) || knownDarkSite);
-        siteDetail.textContent = automaticallyDisabled
+        siteDetail.textContent = isManuallyDisabled
+            ? "Disabled for this website"
+            : automaticallyDisabled
             ? "Disabled because this site is in Nightshift's native dark-mode registry"
             : "Uses the global appearance setting";
         siteEnabledInput.disabled = false;
         siteEnabledInput.checked = !policy.isSiteDisabled(settings, currentHost) && !automaticallyDisabled;
     }
 
-    async function saveSettings(nextSettings) {
-        settings = policy.normalizeSettings(nextSettings);
-        settings = await settingsStore.save(settings);
+    async function saveSettings(change) {
+        settings = await settingsStore.update(change);
         render();
         setStatus("Saved");
     }
@@ -81,7 +82,7 @@
                 return;
             }
 
-            saveSettings({ ...settings, globalMode: input.value })
+            saveSettings({ type: "setGlobalMode", mode: input.value })
                 .catch((error) => setStatus(`Couldn't save: ${error.message}`));
         });
     }
@@ -91,17 +92,7 @@
             return;
         }
 
-        const disabledSites = new Set(settings.disabledSites);
-        const enabledSites = new Set(settings.enabledSites);
-        if (siteEnabledInput.checked) {
-            disabledSites.delete(currentHost);
-            enabledSites.add(currentHost);
-        } else {
-            disabledSites.add(currentHost);
-            enabledSites.delete(currentHost);
-        }
-
-        saveSettings({ ...settings, disabledSites: [...disabledSites], enabledSites: [...enabledSites] })
+        saveSettings({ type: "setSiteEnabled", host: currentHost, enabled: siteEnabledInput.checked })
             .catch((error) => setStatus(`Couldn't save: ${error.message}`));
     });
 

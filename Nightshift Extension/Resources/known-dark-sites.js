@@ -1316,7 +1316,13 @@
     "zyrenth.dev"
 ]);
     const MANUAL_DARK_SITE_PATTERNS = Object.freeze([
-    "drive.google.com"
+    "drive.google.com",
+    "facebook.com",
+    "flymedia.us",
+    "github.com",
+    "macrumors.com",
+    "tasks.google.com",
+    "x.com"
 ]);
     const DARK_SITE_PATTERNS = Object.freeze([
     "*.cases.gg",
@@ -2628,7 +2634,13 @@
     "ztdp.ca",
     "zunivers.zerator.com",
     "zyrenth.dev",
-    "drive.google.com"
+    "drive.google.com",
+    "facebook.com",
+    "flymedia.us",
+    "github.com",
+    "macrumors.com",
+    "tasks.google.com",
+    "x.com"
 ]);
     const ACTIVE_RULES = Object.freeze([
     {

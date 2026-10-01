@@ -35,6 +35,7 @@
 		C28EF54BB085BBB188CF3798 /* nightshift.css in Resources */ = {isa = PBXBuildFile; fileRef = 0C49A4FCA399970C82F1E9B0 /* nightshift.css */; };
 		D4CA9121C12A2B411226B98B /* manual-dark-sites.js in Resources */ = {isa = PBXBuildFile; fileRef = 69B396CD818725483FF07B9B /* manual-dark-sites.js */; };
 		D588E50105E1B34AE5C2BB05 /* icon-256.png in Resources */ = {isa = PBXBuildFile; fileRef = D5E84600CD7F58050290106B /* icon-256.png */; };
+		E7052D62BAE2E34648197233 /* SharedSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A462B0027F345178AF845B /* SharedSettings.swift */; };
 		EBA644390F91EFC7A8B32A9F /* settings-store.js in Resources */ = {isa = PBXBuildFile; fileRef = 1975F2761E81E7373D00A779 /* settings-store.js */; };
 		F0DC62A81E5BF39FC9E36233 /* icon-512.png in Resources */ = {isa = PBXBuildFile; fileRef = 643324892784B73BBB3C5065 /* icon-512.png */; };
 		F126DAAC4780ACCE4345341B /* background.js in Resources */ = {isa = PBXBuildFile; fileRef = 7910EBB9BC7ADA569BA327B7 /* background.js */; };
@@ -97,6 +98,7 @@
 		BF714A137E145FFBB0CAAEAF /* icon-96.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-96.png"; sourceTree = "<group>"; };
 		CF939B46A33A6980CAB1E815 /* popup.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = popup.html; sourceTree = "<group>"; };
 		D5E84600CD7F58050290106B /* icon-256.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-256.png"; sourceTree = "<group>"; };
+		E6A462B0027F345178AF845B /* SharedSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedSettings.swift; sourceTree = "<group>"; };
 		EAF70B3FABBD4982B579ABFA /* Nightshift Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Nightshift Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EE1DDB3EBCFCAEBFF159EF7B /* icon-64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-64.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -146,6 +148,7 @@
 			children = (
 				09D19DE50B812D453660ED72 /* PrivacyInfo.xcprivacy */,
 				66BEDB290CDE1CC4E45B61AC /* SafariWebExtensionHandler.swift */,
+				E6A462B0027F345178AF845B /* SharedSettings.swift */,
 				60FE14D7F490CB74F7B9D518 /* Resources */,
 			);
 			path = "Nightshift Extension";
@@ -188,6 +191,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = EF1A8EE3F41FEAD81CB84FC6 /* Build configuration list for PBXNativeTarget "Nightshift Extension" */;
 			buildPhases = (
+				D10FACAA6A967993B55F4168 /* Generate native dark-site registries */,
 				4D5A30A4583B899796978B29 /* Sources */,
 				BF25C7A4FB28795B5CC0068E /* Resources */,
 			);
@@ -306,12 +310,35 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		D10FACAA6A967993B55F4168 /* Generate native dark-site registries */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Generate native dark-site registries";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"\ncd \"$SRCROOT\"\nnode Scripts/generate-dark-site-registry.mjs\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		4D5A30A4583B899796978B29 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				3B8C0B0438B7C315697AD40D /* SafariWebExtensionHandler.swift in Sources */,
+				E7052D62BAE2E34648197233 /* SharedSettings.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -388,7 +415,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 20;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = BJZSH247Q9;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -409,7 +436,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
-				MARKETING_VERSION = 1.0.7;
+				MARKETING_VERSION = 1.0.8;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -520,7 +547,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 19;
+				CURRENT_PROJECT_VERSION = 20;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = BJZSH247Q9;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -535,7 +562,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
-				MARKETING_VERSION = 1.0.7;
+				MARKETING_VERSION = 1.0.8;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_CODE_SIGN_FLAGS = "--timestamp";

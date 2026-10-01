@@ -65,6 +65,41 @@
         );
     }
 
+    // Apply one intent to the latest settings, never a tab's stale snapshot.
+    function applyChange(value, change) {
+        const settings = normalizeSettings(value);
+        if (change?.type === "setGlobalMode") {
+            settings.globalMode = normalizeMode(change.mode);
+            return settings;
+        }
+        const host = normalizeHost(change?.host);
+        if (!host) throw new Error("Invalid website address");
+        const setMembership = (key, included) => {
+            settings[key] = normalizeDisabledSites([
+                ...settings[key].filter((site) => site !== host),
+                ...(included ? [host] : []),
+            ]);
+        };
+        switch (change.type) {
+        case "setSiteEnabled":
+            setMembership("disabledSites", change.enabled !== true);
+            setMembership("enabledSites", change.enabled === true);
+            break;
+        case "setAutoDisabled":
+            // A delayed detector must never undo an explicit user override.
+            setMembership("autoDisabledSites", change.excluded === true && !settings.enabledSites.includes(host));
+            break;
+        case "removeExcludedSite":
+            setMembership("disabledSites", false);
+            setMembership("autoDisabledSites", false);
+            setMembership("enabledSites", true);
+            break;
+        default:
+            throw new Error("Unknown settings change");
+        }
+        return settings;
+    }
+
     function shouldApply(settings, host, systemIsDark) {
         const normalizedSettings = normalizeSettings(settings);
 
@@ -84,6 +119,7 @@
     }
 
     const api = Object.freeze({
+        applyChange,
         DEFAULT_SETTINGS,
         MODES,
         isSiteDisabled,

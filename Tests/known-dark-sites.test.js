@@ -20,7 +20,13 @@ test("known dark-by-default entries exclude a listed site", () => {
 
 test("imported and manual registries remain separate", () => {
     assert.equal(knownSites.IMPORTED_DARK_SITE_PATTERNS.includes("darkreader.org"), true);
-    assert.deepEqual(knownSites.MANUAL_DARK_SITE_PATTERNS, ["drive.google.com"]);
+    const fs = require("node:fs");
+    const path = require("node:path");
+    const lines = (file) => fs.readFileSync(path.join(__dirname, "..", file), "utf8")
+        .split(/\r?\n/).map((line) => line.trim()).filter((line) => line && !line.startsWith("#") && !line.startsWith("//"));
+    assert.deepEqual(knownSites.IMPORTED_DARK_SITE_PATTERNS, lines("Vendor/DarkReader/dark-sites.config"));
+    assert.deepEqual(knownSites.MANUAL_DARK_SITE_PATTERNS, lines("Config/manual-dark-sites.config"));
+    assert.deepEqual(manualDarkSites.PATTERNS, lines("Config/manual-dark-sites.config"));
     assert.equal(knownSites.DARK_SITE_PATTERNS.includes("drive.google.com"), true);
 });
 
@@ -46,4 +52,13 @@ test("Dark Reader site patterns preserve wildcard subdomains and paths", () => {
     assert.equal(knownSites.patternMatches("*.wikipedia.org", { hostname: "en.wikipedia.org", pathname: "/wiki/Dark_mode" }), true);
     assert.equal(knownSites.patternMatches("discord.com/app", { hostname: "discord.com", pathname: "/app" }), true);
     assert.equal(knownSites.patternMatches("discord.com/app", { hostname: "discord.com", pathname: "/login" }), false);
+});
+
+test("GitHub and every developer-maintained host ship in both generated registries", () => {
+    for (const host of ["github.com", "facebook.com", "flymedia.us", "macrumors.com", "tasks.google.com", "x.com"]) {
+        const url = new URL(`https://${host}/page`);
+        assert.equal(manualDarkSites.matches(url), true, host);
+        assert.equal(knownSites.hasKnownDarkAppearance(url, null), true, host);
+        assert.equal(manualDarkSites.matches(new URL(`https://${host}.evil.example/`)), false);
+    }
 });

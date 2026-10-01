@@ -4,7 +4,13 @@
     // GENERATED DATA: run npm run generate:dark-sites after updating
     // Config/manual-dark-sites.config.
     const patterns = Object.freeze([
-    "drive.google.com"
+    "drive.google.com",
+    "facebook.com",
+    "flymedia.us",
+    "github.com",
+    "macrumors.com",
+    "tasks.google.com",
+    "x.com"
 ]);
     const api = Object.freeze({
         PATTERNS: patterns,

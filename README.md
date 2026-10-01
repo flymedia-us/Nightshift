@@ -23,6 +23,8 @@ Manage all excluded websites—including known-list and manually added sites—i
 
 - A Manifest V3 Safari Web Extension implements the toolbar popup, saved preferences, per-site policy, and page styling.
 - A small SwiftUI container app explains the extension and opens Safari's extension settings.
+- Each preference change is applied to the latest settings by a shared native store, protected by a file lock and atomic writes. Profile caches keep pending changes through native-service failures and worker restarts; sequence numbers prevent delayed retries from undoing newer edits. Existing exclusions migrate from previous builds.
+- Native dark-site registries regenerate during every Xcode build, and tests verify that the shipped lists match the imported and manually maintained source files.
 - Shared, framework-free JavaScript policy code is covered by Node's built-in test runner.
 - The Xcode project is generated from `project.yml` with XcodeGen and remains checked in for CI and contributors who do not have XcodeGen installed.
 
@@ -47,7 +49,7 @@ Or run individual steps:
 
 ```sh
 make check          # JavaScript syntax checks
-make test           # Policy, content-script, and popup tests
+make test           # JavaScript behavior and native persistence regression tests
 make smoke          # Live WebKit smoke tests for representative popular sites
 make build          # Regenerate and build the app without signing
 make analyze        # Run Xcode's static analyzer
@@ -62,6 +64,8 @@ To run Nightshift in Safari:
 3. Build and run the app.
 4. In Safari, open **Settings → Extensions**, enable Nightshift, and grant website access.
 5. Use the Nightshift toolbar item to choose an appearance mode or disable Nightshift for the current site.
+
+When testing a change, install the freshly built app in `/Applications/Nightshift.app` and verify the version in Safari’s extension settings. Quit Safari before replacing the entire app bundle (copying over an old Debug bundle can leave extra binaries that invalidate the signature). Use Apple Development signing for local development. Developer ID distribution requires signing, notarization, and stapling before Safari verification. Keep unsigned analyzer builds out of the active app/extension registration.
 
 If Safari still shows a generic extension icon after rebuilding, quit Safari and run the newly built
 container app once. Safari caches registered extension bundles; each Nightshift build uses an incremented

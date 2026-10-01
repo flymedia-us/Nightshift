@@ -75,17 +75,10 @@
         const host = policy.normalizeHost(window.location.host);
         if (!settingsLoaded || document.readyState === "loading" || !host || isSavingAutoExclusion || settings.enabledSites.includes(host)) return;
         const hasKnownDarkSite = hasKnownDarkAppearance();
-        const autoDisabledSites = settings.autoDisabledSites.filter((site) => site !== GOOGLE_DOCS_HOST);
-        const isAutoDisabled = autoDisabledSites.includes(host);
-        if (hasKnownDarkSite === isAutoDisabled && autoDisabledSites.length === settings.autoDisabledSites.length) return;
+        if (hasKnownDarkSite === settings.autoDisabledSites.includes(host)) return;
 
         isSavingAutoExclusion = true;
-        settingsStore.save({
-            ...settings,
-            autoDisabledSites: hasKnownDarkSite
-                ? [...new Set([...autoDisabledSites, host])]
-                : autoDisabledSites.filter((site) => site !== host),
-        }).catch((error) => console.error("Nightshift couldn't save its native-dark-mode exclusion.", error))
+        settingsStore.update({ type: "setAutoDisabled", host, excluded: hasKnownDarkSite }).catch((error) => console.error("Nightshift couldn't save its native-dark-mode exclusion.", error))
             .finally(() => { isSavingAutoExclusion = false; });
     }
 

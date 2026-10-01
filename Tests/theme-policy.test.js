@@ -58,3 +58,18 @@ test("native-dark-mode exclusions apply unless the user explicitly re-enables th
     assert.equal(policy.shouldApply(settings, "example.com", true), false);
     assert.equal(policy.shouldApply({ ...settings, enabledSites: ["example.com"] }, "example.com", true), true);
 });
+
+test("targeted detector changes preserve manual exclusions and explicit enables", () => {
+    const original = { globalMode: "dark", disabledSites: ["github.com"], enabledSites: ["photopea.com"] };
+    const next = policy.applyChange(original, { type: "setAutoDisabled", host: "photopea.com", excluded: true });
+    assert.deepEqual(next.disabledSites, ["github.com"]);
+    assert.deepEqual(next.autoDisabledSites, []);
+    assert.equal(next.globalMode, "dark");
+});
+
+test("removing an excluded registry site persists an explicit override", () => {
+    const next = policy.applyChange({ disabledSites: ["github.com"], autoDisabledSites: ["github.com"] }, { type: "removeExcludedSite", host: "github.com" });
+    assert.deepEqual(next.disabledSites, []);
+    assert.deepEqual(next.autoDisabledSites, []);
+    assert.deepEqual(next.enabledSites, ["github.com"]);
+});
