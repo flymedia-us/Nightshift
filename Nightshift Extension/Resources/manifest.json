@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Nightshift",
   "description": "Choose when websites use a dark appearance.",
-  "version": "1.0.8",
+  "version": "1.0.11",
   "icons": {
     "48": "icon-48.png",
     "64": "icon-64.png",
@@ -53,6 +53,8 @@
         "settings-store.js",
         "manual-dark-sites.js",
         "known-dark-sites.js",
+        "darkreader.js",
+        "theme-engine.js",
         "content.js"
       ],
       "css": [

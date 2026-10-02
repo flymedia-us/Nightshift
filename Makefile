@@ -1,4 +1,4 @@
-.PHONY: setup check test smoke build build-project analyze verify open clean test-native
+.PHONY: setup check test smoke build build-project analyze verify open clean test-native test-packaging release beta
 
 DERIVED_DATA := .build/DerivedData
 
@@ -13,6 +13,7 @@ check:
 test:
 	npm test
 	$(MAKE) test-native
+	$(MAKE) test-packaging
 
 smoke:
 	npm run smoke
@@ -50,3 +51,12 @@ test-native:
 	mkdir -p .build/native-tests
 	xcrun swiftc -module-cache-path .build/native-tests/ModuleCache "Nightshift Extension/SharedSettings.swift" Tests/native-settings/main.swift -o .build/native-tests/settings-tests
 	.build/native-tests/settings-tests
+
+release: setup
+	python3 Scripts/package-nightshift.py
+
+beta: setup
+	python3 Scripts/package-nightshift.py --beta
+
+test-packaging:
+	PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s Tests -p "*_test.py"

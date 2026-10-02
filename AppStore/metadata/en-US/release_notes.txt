@@ -6,3 +6,5 @@ Nightshift has been rebuilt for modern Safari and macOS.
 • Update open tabs immediately when settings change
 • New SwiftUI companion app and Safari Web Extension architecture
 • Native support for Apple silicon and Intel Macs
+• Darken interface backgrounds, text, and borders without inverting photos
+• Preserve Gmail theme images, CSS background images, and canvas pixels

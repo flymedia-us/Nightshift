@@ -8,6 +8,25 @@
     const NATIVE_MESSAGE_TIMEOUT_MS = 5000;
     let pendingRequest = Promise.resolve();
 
+    async function loadThemeStylesheet(value) {
+        const controller = new AbortController();
+        const timeoutID = setTimeout(() => controller.abort(), 10000);
+        try {
+            const url = new URL(value);
+            if (!["http:", "https:"].includes(url.protocol)) throw new Error("Unsupported stylesheet URL.");
+            const response = await fetch(url.href, { credentials: "omit", signal: controller.signal });
+            if (!response.ok) throw new Error(`Stylesheet request failed (${response.status}).`);
+            if (!/^(text\/(css|plain)|application\/x-css)(;|$)/i.test(response.headers.get("Content-Type") ?? "")) {
+                throw new Error("The resource is not a CSS stylesheet.");
+            }
+            return { css: await response.text() };
+        } catch (error) {
+            return { error: error.message };
+        } finally {
+            clearTimeout(timeoutID);
+        }
+    }
+
     async function sendNativeMessage(message) {
         let timeoutID;
         try {
@@ -74,6 +93,7 @@
     }
 
     extensionAPI.runtime.onMessage.addListener((message) => {
+        if (message?.type === "loadThemeStylesheet") return loadThemeStylesheet(message.url);
         if (message?.type !== "loadSettings" && message?.type !== "updateSettings") return undefined;
         const request = pendingRequest.then(() => syncSettings(message.type === "updateSettings" ? message.change : null));
         // Reads and writes share the queue so a slow load cannot undo a save.

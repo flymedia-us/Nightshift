@@ -1,23 +1,5 @@
+/* The dynamic theme engine recolors surfaces, text, and borders. Never filter
+   the page or apply compensating filters to images and background photos. */
 html[data-nightshift-active] {
-    /* Keep one shared baseline; a future preference can override this value. */
-    --nightshift-dark-filter: invert(0.85) hue-rotate(165deg);
-    background-color: rgb(217, 217, 217) !important;
-    filter: var(--nightshift-dark-filter) !important;
-}
-
-html[data-nightshift-active] img,
-html[data-nightshift-active] video,
-html[data-nightshift-active] canvas,
-html[data-nightshift-active] svg,
-html[data-nightshift-active] [role="img"] {
-    filter: invert(1) hue-rotate(-165deg) !important;
-}
-
-/* Google Docs renders document pages and text into canvas tiles. The page
-   filter should reach those pixels, but the generic media correction must not
-   invert the tiles a second time. */
-html[data-nightshift-active][data-nightshift-google-docs] #docs-editor canvas,
-html[data-nightshift-active][data-nightshift-google-docs] .kix-canvas-tile-content,
-html[data-nightshift-active][data-nightshift-google-docs] canvas.kix-canvas-tile {
-    filter: none !important;
+    color-scheme: dark;
 }

@@ -1,14 +1,11 @@
 import { expect, test } from '@playwright/test';
-import { mkdir, readFile } from 'node:fs/promises';
+import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { installNightshift } from './theme-helper.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(here, '../..');
-const stylesheetPath = path.join(
-  repositoryRoot,
-  'Nightshift Extension/Resources/nightshift.css',
-);
 const screenshotDirectory = path.join(repositoryRoot, '.build/smoke');
 const requestedSite = process.env.NIGHTSHIFT_SMOKE_SITE?.trim().toLowerCase();
 
@@ -39,8 +36,6 @@ if (requestedSite && sites.length === 0) {
   throw new Error(`Unknown NIGHTSHIFT_SMOKE_SITE: ${requestedSite}`);
 }
 
-const stylesheet = await readFile(stylesheetPath, 'utf8');
-
 for (const site of sites) {
   test(`${site.name} accepts the Nightshift treatment`, async ({ page }) => {
     const response = await page.goto(site.url, {
@@ -54,8 +49,9 @@ for (const site of sites) {
     // Let client-side redirects and challenge pages settle before simulating the
     // content script. Otherwise a site can replace the document after injection.
     await page.waitForTimeout(750);
-    await page.addStyleTag({ content: stylesheet });
-    await page.evaluate(() => document.documentElement.setAttribute('data-nightshift-active', ''));
+    await installNightshift(page);
+    await expect(page.locator('html')).toHaveAttribute('data-nightshift-active', '');
+    await expect(page.locator('html')).toHaveAttribute('data-darkreader-scheme', 'dark');
 
     const result = await page.evaluate(() => {
       const root = document.documentElement;
@@ -77,9 +73,9 @@ for (const site of sites) {
 
     expect(result.title, `${site.name} rendered no page title`).not.toBe('');
     expect(result.active).toBe(true);
-    expect(result.rootFilter).toContain('invert');
+    expect(result.rootFilter).toBe('none');
     if (result.mediaFilter !== null) {
-      expect(result.mediaFilter).toContain('invert');
+      expect(result.mediaFilter).not.toContain('invert');
     }
     expect(result.horizontalOverflow, 'Nightshift introduced substantial horizontal overflow').toBeLessThan(4);
 

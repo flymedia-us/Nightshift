@@ -19,6 +19,7 @@ function createHarness({ host = "example.com", systemIsDark = false, storedSetti
     let storageListener;
     const pageListeners = new Map();
     const savedSettings = [];
+    const themeStates = [];
 
     const root = {
         toggleAttribute(name, force) {
@@ -58,6 +59,7 @@ function createHarness({ host = "example.com", systemIsDark = false, storedSetti
         document: { documentElement: root, readyState: "complete" },
         NightshiftKnownDarkSites: knownDarkSites,
         NightshiftManualDarkSites: manualDarkSites,
+        NightshiftThemeEngine: { setActive(active) { themeStates.push(active); } },
         window: {
             location: { host },
             matchMedia: () => mediaQuery,
@@ -85,6 +87,7 @@ function createHarness({ host = "example.com", systemIsDark = false, storedSetti
             storageListener(changes, "local");
         },
         savedSettings,
+        themeStates,
     };
 }
 
@@ -132,6 +135,7 @@ test("site exclusions deactivate an already-open page", async () => {
 
     harness.updateStorage({ disabledSites: { newValue: ["example.com"] } });
     assert.equal(harness.isActive(), false);
+    assert.equal(harness.themeStates.at(-1), false);
 });
 
 test("known dark-site entries are automatically excluded after settings load", async () => {

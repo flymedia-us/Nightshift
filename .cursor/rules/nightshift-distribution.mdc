@@ -1,0 +1,6 @@
+---
+description: Always apply Nightshift's verified cross-Mac Safari packaging and release requirements
+alwaysApply: true
+---
+
+Follow the persistent distribution, signing, backup, and local Safari verification instructions in the repository's `AGENTS.md`. Use `make beta` for the user's selected unsigned-beta handoff to the other Mac, and `make release` only when notarization and stapling can succeed. Never distribute a raw, unnotarized Developer ID build as a portable release.

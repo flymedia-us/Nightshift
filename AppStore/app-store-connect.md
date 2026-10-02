@@ -1,4 +1,4 @@
-# Nightshift 1.0 — App Store Connect handoff
+# Nightshift — App Store Connect handoff
 
 This is the source of truth for the first public Mac App Store submission. It intentionally excludes screenshots; see [`screenshots/README.md`](screenshots/README.md) for the manual capture plan.
 
@@ -15,7 +15,7 @@ This is the source of truth for the first public Mac App Store submission. It in
 - **Content rights:** Nightshift does not bundle, redistribute, or present third-party website content in its own interface. It applies local appearance styling to pages the user opens in Safari. Review this declaration against the final App Store Connect prompt before saving it.
 - **License agreement:** Apple standard EULA; do not add a custom EULA.
 
-## Version 1.0 metadata — English (U.S.)
+## Version metadata — English (U.S.)
 
 The exact field values are the text files in [`metadata/en-US/`](metadata/en-US/):
 
@@ -28,7 +28,7 @@ The exact field values are the text files in [`metadata/en-US/`](metadata/en-US/
 - [`review_notes.txt`](metadata/en-US/review_notes.txt)
 - [`urls.txt`](metadata/en-US/urls.txt)
 
-Set version to `1.0.0` and select the uploaded build whose short version and build number match the archive. Use the attached release notes only for a later update; Apple does not require “What’s New” copy for the first version.
+Use the marketing version and build number from `project.yml` (currently `1.0.11`, build `24`) and select the uploaded App Store archive whose versions match. The local development build and unsigned testing beta are not App Store submission artifacts. Use the attached release notes only for a later update; Apple does not require “What’s New” copy for the first version.
 
 ## Price, availability, and release
 

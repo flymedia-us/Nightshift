@@ -19,6 +19,10 @@
 - [x] Swift 6 strict-concurrency build
 - [x] Apple silicon and Intel Release build
 - [x] Automated policy, content-script, popup, and manifest tests
+- [x] Dynamic dark theme without whole-page or background-image inversion
+- [x] Deterministic WebKit image-preservation and theme restoration checks
+- [x] Development-signed 1.0.11 (24) verified in local Safari 27, including Gmail's background image
+- [x] Universal unsigned-beta packaging, registration repair, and release notarization gates
 - [ ] Run signed website smoke tests on macOS 15, 26, and 27
 - [ ] Test websites with video, SVG, canvas, sticky positioning, native dark themes, and cross-origin frames
 - [ ] Run VoiceOver and keyboard-only checks for the companion app and popup

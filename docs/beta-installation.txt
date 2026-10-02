@@ -1,0 +1,13 @@
+Nightshift 1.0.11 (build 24) — unsigned Safari testing beta
+
+1. Transfer Nightshift.zip to the other Mac and double-click it. Open the extracted Nightshift Beta folder, which contains the app, these instructions, and the registration repair.
+2. Quit Safari. Preserve the previous app, then move the new Nightshift.app into Applications. Replace the entire bundle.
+3. Open Applications/Nightshift.app. If macOS requires app approval, use System Settings > Privacy & Security for this app.
+4. Start Safari. Under Settings > Advanced, enable Show features for web developers if needed.
+5. Under Settings > Developer, enable Allow unsigned extensions AFTER starting Safari. Quitting Safari resets this permission.
+6. Return to Nightshift and click Open Safari Extension Settings.
+7. If Nightshift is missing, keep Safari open and double-click Repair Nightshift Safari Registration.command from the extracted folder. It refreshes only Nightshift's registration without changing any security settings. Then click the app's settings button again.
+8. Select Nightshift in Safari Extensions and enable it for the desired profiles and websites. After each Safari restart, repeat step 5, and step 7 if needed.
+
+This beta uses ad-hoc signatures on both the app and its embedded extension. It is intentionally not a Developer ID release.
+A normal public release requires Developer ID signing, notarization, and a stapled ticket.

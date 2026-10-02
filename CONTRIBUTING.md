@@ -15,10 +15,14 @@ Do not include screenshots, page source, or browser data that contain private in
 Nightshift targets macOS 12.3 or later. The supported release matrix is macOS 15, 26, and 27. See the local-development section in [README.md](README.md), then run:
 
 ```sh
+npm ci --ignore-scripts
+npm run check:theme-engine
 make verify
 ```
 
 The icon masters live in `Artwork/`; regenerate their PNG renditions with `npm run icons` after changing either SVG. Run `npm run smoke:install` once, then `make smoke` for the opt-in WebKit compatibility run. Smoke screenshots are generated locally in `.build/smoke/` and are not committed.
+
+The generated Dark Reader engine is committed so Xcode builds do not need to download JavaScript. Change its pinned npm dependency or `Scripts/bundle-theme-engine.mjs`, run `npm run bundle:theme-engine`, and include the resulting resource and lockfile in the same change. CI verifies reproducibility. Keep image analysis and page-wide inversion disabled, and run the image-preservation WebKit checks described in the README when changing page styling.
 
 ## Pull requests
 

@@ -1,5 +1,20 @@
 # Third-party notices
 
+## Dark Reader dynamic theme engine
+
+Nightshift bundles the MIT-licensed Dark Reader API engine, pinned to npm version
+4.9.133. The source is generated into `Nightshift Extension/Resources/darkreader.js`
+by `npm run bundle:theme-engine` after `npm ci`. Its full license is included in
+the bundled resource. The wrapper isolates its browser-message shim from Safari;
+guarded patches make its global image-ignore rule apply to inline images and
+preserve relative image URLs from external stylesheets. Another guarded patch
+suppresses page-world proxy injection when both proxy options are disabled.
+Nightshift disables image analysis and inversion fixes. No remote JavaScript is
+downloaded or executed. Run `npm run check:theme-engine` to verify the committed
+resource against the pinned dependency and local patches.
+
+Upstream: <https://github.com/darkreader/darkreader>
+
 ## Dark Reader compatibility data
 
 Nightshift vendors complete snapshots of the following Dark Reader configuration
@@ -14,8 +29,8 @@ runtime registry. Developer-owned additions are kept separately in
 `Config/manual-dark-sites.config` and are not represented as Dark Reader data.
 The generated runtime registry is stored in
 `Nightshift Extension/Resources/known-dark-sites.js`. Nightshift uses its own
-small matcher and does not ship Dark Reader's parser or runtime service. The
-snapshot was reviewed on 2026-09-22; run `npm run generate:dark-sites` after
+small matcher for the registry. The snapshot was reviewed on 2026-09-22; run
+`npm run generate:dark-sites` after
 updating either source file.
 
 Dark Reader is distributed under the MIT License:

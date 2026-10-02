@@ -9,12 +9,12 @@ const { randomUUID } = require("node:crypto");
 const policy = require("../Nightshift Extension/Resources/theme-policy.js");
 const resources = path.join(__dirname, "..", "Nightshift Extension", "Resources");
 
-function createHarness({ local = {}, native } = {}) {
+function createHarness({ local = {}, native, fetchStylesheet } = {}) {
     const cache = structuredClone(local);
     let listener;
     const messages = [];
     const context = vm.createContext({
-        URL, console, crypto: { randomUUID }, importScripts() {}, clearTimeout,
+        URL, console, AbortController, fetch: fetchStylesheet, crypto: { randomUUID }, importScripts() {}, clearTimeout,
         // Exercise the timeout branch without waiting five seconds per test.
         setTimeout(callback) { return setTimeout(callback, 10); },
         browser: {
@@ -35,8 +35,33 @@ function createHarness({ local = {}, native } = {}) {
     vm.runInContext(fs.readFileSync(path.join(resources, "theme-policy.js"), "utf8"), context);
     vm.runInContext(fs.readFileSync(path.join(resources, "background.js"), "utf8"), context);
     return { cache, messages, load: () => listener({ type: "loadSettings" }),
-        update: (change) => listener({ type: "updateSettings", change }) };
+        update: (change) => listener({ type: "updateSettings", change }),
+        loadStylesheet: (url) => listener({ type: "loadThemeStylesheet", url }) };
 }
+
+test("the theme can read CDN stylesheets without sending cookies or queuing behind settings", async () => {
+    const harness = createHarness({ fetchStylesheet: async (url, options) => {
+        assert.equal(url, "https://cdn.example.com/theme.css");
+        assert.equal(options.credentials, "omit");
+        return new Response("body { color: black; }", { headers: { "Content-Type": "text/css; charset=utf-8" } });
+    } });
+    const result = await harness.loadStylesheet("https://cdn.example.com/theme.css");
+    assert.equal(result.css, "body { color: black; }");
+    assert.equal(harness.messages.length, 0);
+});
+
+test("theme requests reject non-web URLs, non-CSS responses, and failed requests", async () => {
+    let calls = 0;
+    const harness = createHarness({ fetchStylesheet: async () => {
+        calls++;
+        return new Response("<html>private document</html>", { headers: { "Content-Type": "text/html" } });
+    } });
+    assert.match((await harness.loadStylesheet("file:///etc/hosts")).error, /Unsupported/);
+    assert.equal(calls, 0);
+    assert.match((await harness.loadStylesheet("https://example.com/")).error, /not a CSS/);
+    const offline = createHarness({ fetchStylesheet: async () => { throw new Error("offline"); } });
+    assert.equal((await offline.loadStylesheet("https://example.com/theme.css")).error, "offline");
+});
 
 function sharedService(initial = {}) {
     let settings = policy.normalizeSettings(initial);

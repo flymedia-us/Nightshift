@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Nightshift image preservation check</title>
+<link rel="stylesheet" href="styles/photos.css">
+<style>
+  :root { --surface: #ffffff; --ink: #171717; --photo: url('photo.svg'); }
+  body { margin: 30px; background-color: white; color: #171717; font: 18px system-ui; }
+  .panel { background-color: var(--surface); color: var(--ink); border: 2px solid #ddd; padding: 16px; margin: 16px 0; }
+  .photos { display: flex; gap: 20px; flex-wrap: wrap; }
+  .photo, img, canvas { width: 180px; height: 120px; background-size: cover; }
+  #css-photo { background-image: url('photo.svg'); }
+  #variable-photo { background-image: var(--photo); }
+  #pseudo-photo::before { content: ''; display: block; width: 180px; height: 120px; background: url('photo.svg') center / cover; }
+  #dark-surface { background: #202124; color: #e8eaed; }
+  #site-effect { filter: brightness(0.8); }
+  button, input { font: inherit; padding: 8px; }
+</style>
+<h1>Nightshift image preservation check</h1>
+<p>Each picture should keep the same dark blue, red, and yellow colors with Nightshift on or off.</p>
+<div class="photos">
+  <div><p>CSS background</p><div id="css-photo" class="photo"></div></div>
+  <div><p>Inline background</p><div id="inline-photo" class="photo" style="background-image: url('photo.svg')"></div></div>
+  <div><p>CSS variable</p><div id="variable-photo" class="photo"></div></div>
+  <div><p>Pseudo element</p><div id="pseudo-photo" class="photo"></div></div>
+  <div><p>Image element</p><img id="image" src="photo.svg" alt="Original color reference"></div>
+  <div><p>Canvas pixels</p><canvas id="canvas" width="180" height="120"></canvas></div>
+  <div><p>External stylesheet</p><div id="external-photo" class="photo"></div></div>
+</div>
+<div class="panel" id="light-surface">Light interface surface with dark text</div>
+<div class="panel" id="dark-surface">Already dark interface surface</div>
+<div class="panel" id="site-effect">Website-owned brightness filter should remain unchanged</div>
+<input aria-label="Test input" placeholder="Form control">
+<button id="add-content">Add dynamic interface content</button>
+<div id="dynamic"></div>
+<p id="report" aria-live="polite">Waiting for rendering check</p>
+<script>
+  const canvas = document.querySelector('#canvas');
+  const ctx = canvas.getContext('2d');
+  const image = document.querySelector('#image');
+  image.addEventListener('load', () => ctx.drawImage(image, 0, 0, 180, 120));
+  if (image.complete) ctx.drawImage(image, 0, 0, 180, 120);
+  document.querySelector('#add-content').onclick = () => {
+    const panel = document.createElement('div');
+    panel.className = 'panel';
+    panel.style.cssText = 'background-color: #fff; color: #111';
+    panel.textContent = 'Dynamically added interface content';
+    document.querySelector('#dynamic').append(panel);
+  };
+  function report() {
+    const root = document.documentElement;
+    const media = [...document.querySelectorAll('.photo, img, canvas')];
+    const preserved = getComputedStyle(root).filter === 'none' && media.every(el => getComputedStyle(el).filter === 'none');
+    const active = root.hasAttribute('data-nightshift-active');
+    const background = getComputedStyle(document.querySelector('#light-surface')).backgroundColor;
+    const text = `${preserved ? 'PASS: no image inversion' : 'FAIL: image filter detected'} | Nightshift ${active ? 'ON' : 'OFF'} | Interface ${background}`;
+    if (document.querySelector('#report').textContent !== text) document.querySelector('#report').textContent = text;
+  }
+  setInterval(report, 500);
+</script>
+</html>

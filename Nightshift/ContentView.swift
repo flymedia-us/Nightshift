@@ -36,6 +36,14 @@ struct ContentView: View {
             .foregroundStyle(.secondary)
             .frame(maxWidth: 390, alignment: .leading)
 
+            if Bundle.main.object(forInfoDictionaryKey: "NightshiftUnsignedBeta") as? Bool == true {
+                Text("After each Safari restart, enable Allow unsigned extensions in Safari Settings → Developer. If Nightshift is missing, run the registration repair included with this beta, then open extension settings below.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .frame(maxWidth: 390)
+            }
+
             Button("Open Safari Extension Settings") {
                 model.openSafariExtensionSettings()
             }

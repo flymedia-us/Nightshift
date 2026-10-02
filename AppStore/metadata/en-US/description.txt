@@ -17,4 +17,4 @@ Features:
 • Native SwiftUI companion app
 • Support for Apple silicon and Intel Macs
 
-Nightshift uses a visual color filter to transform websites. Some pages with complex graphics or custom styling may look different than expected, and websites that already provide their own dark theme may work best with Nightshift disabled for that site.
+Nightshift recolors website backgrounds, text, and borders while preserving background photos and media. Some pages with complex graphics or custom styling may look different than expected, and websites that already provide their own dark theme may work best with Nightshift disabled for that site.

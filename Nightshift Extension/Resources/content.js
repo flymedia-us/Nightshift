@@ -6,6 +6,7 @@
     const settingsStore = globalThis.NightshiftSettingsStore;
     const knownDarkSites = globalThis.NightshiftKnownDarkSites;
     const manualDarkSites = globalThis.NightshiftManualDarkSites;
+    const themeEngine = globalThis.NightshiftThemeEngine;
     const systemAppearance = window.matchMedia("(prefers-color-scheme: dark)");
     let settings = policy.normalizeSettings(policy.DEFAULT_SETTINGS);
     let settingsLoaded = false;
@@ -43,12 +44,12 @@
             return;
         }
 
-        // Docs paints document pages into canvas tiles. Keep this marker
-        // separate from the active state so the canvas-safe correction stays
-        // scoped to Docs while Nightshift remains enabled there.
+        // Docs remains enabled for its interface. Canvas document pixels are
+        // preserved like other media, without a page-wide filter.
         root.toggleAttribute("data-nightshift-google-docs", isGoogleDocsHost());
         const active = policy.shouldApply(effectiveSettings(), window.location.host, systemAppearance.matches);
         root.toggleAttribute("data-nightshift-active", active);
+        themeEngine.setActive(active);
     }
 
     function updateSettings(value) {
