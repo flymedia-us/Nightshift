@@ -41,9 +41,9 @@ jobs:
         with:
           node-version: 24
       # macOS 15 defaults to Xcode 16, which cannot compile the .icon input.
-      - name: Select Xcode 26 on macOS 15
+      - name: Select Xcode 26.2 on macOS 15
         if: matrix.runner == 'macos-15'
-        run: echo "DEVELOPER_DIR=/Applications/Xcode_26.3.app/Contents/Developer" >> "$GITHUB_ENV"
+        run: echo "DEVELOPER_DIR=/Applications/Xcode_26.2.app/Contents/Developer" >> "$GITHUB_ENV"
       - run: xcodebuild -version
       - run: make test-native
       - run: make build-project
