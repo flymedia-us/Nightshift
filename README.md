@@ -37,7 +37,7 @@ Nightshift requires macOS 13.7.7 or later and Safari 18.6 or later. This exclude
 
 Requirements:
 
-- macOS 15 or later for supported local development
+- macOS 26 or later for full application builds (the Icon Composer asset compiler crashes on macOS 15 build hosts; native storage tests still run there)
 - Xcode 26 or later
 - Node.js 24 (see `.node-version`)
 - [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`)
@@ -130,7 +130,7 @@ These checks compare rendered image pixels with Nightshift on and off, cover CSS
 - `Icon/Nightshift Icon.icon` — source-of-truth macOS app icon authored in Apple Icon Composer with Liquid Glass layers
 - `AppStore/` — versioned listing copy, App Store Connect handoff, review notes, and screenshot production guidance
 - `project.yml` — source of truth for Xcode targets and build settings
-- `.github/workflows/ci.yml` — JavaScript tests plus unsigned builds on macOS 15/26 and the Xcode 27 preview runner
+- `.github/workflows/ci.yml` — JavaScript/WebKit tests, native storage tests on macOS 15/26 and the Xcode 27 preview runner, and full unsigned builds on macOS 26/Xcode 27
 
 ## Repository setup
 

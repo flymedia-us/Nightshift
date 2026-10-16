@@ -12,7 +12,7 @@ Do not include screenshots, page source, or browser data that contain private in
 
 ## Development
 
-Nightshift requires macOS 13.7.7 or later and Safari 18.6 or later. The supported release matrix is macOS 15, 26, and 27. See the local-development section in [README.md](README.md), then run:
+Nightshift requires macOS 13.7.7 or later and Safari 18.6 or later. The supported release matrix is macOS 15, 26, and 27. Full app builds require a macOS 26 or later host because Apple’s Icon Composer asset compiler crashes on macOS 15; native storage regressions still run on macOS 15. See the local-development section in [README.md](README.md), then run:
 
 ```sh
 npm ci --ignore-scripts
