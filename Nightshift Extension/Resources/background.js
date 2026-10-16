@@ -6,7 +6,10 @@
     const extensionAPI = globalThis.browser ?? globalThis.chrome;
     const policy = globalThis.NightshiftThemePolicy;
     const NATIVE_MESSAGE_TIMEOUT_MS = 5000;
+    const NATIVE_RETRY_DELAY_MS = 15000;
     let pendingRequest = Promise.resolve();
+    let pendingRead = null;
+    let retryNativeAfter = 0;
 
     async function loadThemeStylesheet(value) {
         const controller = new AbortController();
@@ -53,10 +56,17 @@
             settingsClientID: "",
             settingsSequence: 0,
         });
+        async function saveLocal(values) {
+            const changed = Object.fromEntries(Object.entries(values).filter(([key, value]) =>
+                JSON.stringify(localValues[key]) !== JSON.stringify(value)));
+            if (Object.keys(changed).length === 0) return;
+            await extensionAPI.storage.local.set(changed);
+            Object.assign(localValues, changed);
+        }
         let settings = policy.normalizeSettings(localValues);
         const clientID = localValues.settingsClientID || crypto.randomUUID();
         if (!localValues.settingsClientID) {
-            await extensionAPI.storage.local.set({ settingsClientID: clientID });
+            await saveLocal({ settingsClientID: clientID });
         }
         const pendingChanges = [...localValues.pendingSettingsChanges];
         if (change) {
@@ -65,39 +75,54 @@
             pendingChanges.push({ ...change, clientID, sequence });
             // Persist the intent before contacting native storage. A timeout or
             // worker restart leaves it available for replay on the next request.
-            await extensionAPI.storage.local.set({
+            await saveLocal({
                 ...settings,
                 settingsClientID: clientID,
                 settingsSequence: sequence,
                 pendingSettingsChanges: pendingChanges,
             });
         }
-        const response = await sendNativeMessage({
+        const response = Date.now() < retryNativeAfter ? null : await sendNativeMessage({
             type: "loadSettings",
             clientID,
             fallback: settings,
             mergeFallback: localValues.sharedSettingsMigrated !== true,
             changes: pendingChanges,
         });
-        if (response?.settings && Array.isArray(response.settings.disabledSites)) {
+        const synchronized = response?.settings && Array.isArray(response.settings.disabledSites);
+        if (synchronized) {
+            retryNativeAfter = 0;
             settings = policy.normalizeSettings(response.settings);
-            await extensionAPI.storage.local.set({
+            await saveLocal({
                 ...settings,
                 sharedSettingsMigrated: true,
                 pendingSettingsChanges: [],
             });
+        } else if (Date.now() >= retryNativeAfter) {
+            // An unavailable native service must not make each frame and tab
+            // wait another timeout before a toolbar save can reach the queue.
+            retryNativeAfter = Date.now() + NATIVE_RETRY_DELAY_MS;
         }
         // Never replace the cache with an older shared snapshot after a failed
         // write, nor mark an already migrated profile as unmigrated on timeout.
-        return settings;
+        return synchronized ? settings : { ...settings, syncPending: pendingChanges.length > 0 };
     }
 
-    extensionAPI.runtime.onMessage.addListener((message) => {
+    extensionAPI.runtime.onMessage.addListener((message, sender) => {
         if (message?.type === "loadThemeStylesheet") return loadThemeStylesheet(message.url);
         if (message?.type !== "loadSettings" && message?.type !== "updateSettings") return undefined;
-        const request = pendingRequest.then(() => syncSettings(message.type === "updateSettings" ? message.change : null));
+        const isRead = message.type === "loadSettings";
+        const request = isRead && pendingRead ? pendingRead :
+            pendingRequest.then(() => syncSettings(isRead ? null : message.change));
         // Reads and writes share the queue so a slow load cannot undo a save.
         pendingRequest = request.catch(() => {});
-        return request;
+        pendingRead = isRead ? request : null;
+        request.finally(() => { if (pendingRead === request) pendingRead = null; }).catch(() => {});
+        return request.then((settings) => {
+            // Frame scripts use their embedding tab's host so disabling a site
+            // also disables Nightshift in third-party embedded documents.
+            const tabHost = policy.normalizeHost(sender?.tab?.url);
+            return tabHost ? { ...settings, tabHost } : settings;
+        });
     });
 }());

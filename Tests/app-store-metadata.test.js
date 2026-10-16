@@ -34,3 +34,17 @@ test("planned public listing URLs are HTTPS Fly Media URLs", () => {
     assert.equal(urls.length, 3);
     assert.ok(urls.every((url) => new URL(url).hostname === "apps.flymedia.us"));
 });
+
+test("submission metadata, generated project, and web manifest agree on the delivered version", () => {
+    const root = path.join(__dirname, "..");
+    const project = fs.readFileSync(path.join(root, "project.yml"), "utf8");
+    const version = project.match(/MARKETING_VERSION: "([^"]+)"/)[1];
+    const build = project.match(/CURRENT_PROJECT_VERSION: "([^"]+)"/)[1];
+    const generated = fs.readFileSync(path.join(root, "Nightshift.xcodeproj/project.pbxproj"), "utf8");
+    const manifest = JSON.parse(fs.readFileSync(path.join(root, "Nightshift Extension/Resources/manifest.json"), "utf8"));
+    assert.equal(manifest.version, version);
+    assert.ok(generated.includes(`MARKETING_VERSION = ${version};`));
+    assert.ok(generated.includes(`CURRENT_PROJECT_VERSION = ${build};`));
+    const handoff = fs.readFileSync(path.join(root, "AppStore/app-store-connect.md"), "utf8");
+    assert.ok(handoff.includes(`currently \`${version}\`, build \`${build}\``));
+});

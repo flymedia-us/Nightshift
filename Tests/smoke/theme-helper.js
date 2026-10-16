@@ -7,11 +7,11 @@ const scripts = ['theme-policy.js', 'settings-store.js', 'manual-dark-sites.js',
 const sources = await Promise.all(scripts.map((name) => readFile(path.join(resources, name), 'utf8')));
 const css = await readFile(path.join(resources, 'nightshift.css'), 'utf8');
 
-export async function installNightshift(page) {
+export async function installNightshift(page, { tabHost = '' } = {}) {
   await page.addStyleTag({ content: css });
-  await page.evaluate((sources) => {
+  await page.evaluate(({ sources, tabHost }) => {
     let listener;
-    const settings = { globalMode: 'dark', enabledSites: [location.hostname], disabledSites: [], autoDisabledSites: [] };
+    const settings = { globalMode: 'dark', enabledSites: [location.hostname], disabledSites: [], autoDisabledSites: [], tabHost };
     window.browser = {
       storage: {
         local: { get: async () => settings, set: async (value) => Object.assign(settings, value) },
@@ -28,6 +28,10 @@ export async function installNightshift(page) {
       settings.globalMode = mode;
       listener({ globalMode: { newValue: mode } }, 'local');
     };
+    window.setNightshiftTestSettings = (values) => {
+      Object.assign(settings, values);
+      listener(Object.fromEntries(Object.entries(values).map(([key, newValue]) => [key, { newValue }])), 'local');
+    };
     window.originalNightshiftTestTransport = window.browser.runtime.sendMessage;
     window.originalNightshiftInsertRule = CSSStyleSheet.prototype.insertRule;
     window.chrome = { runtime: { sendMessage: window.originalNightshiftTestTransport, onMessage: { addListener() {} } } };
@@ -35,5 +39,5 @@ export async function installNightshift(page) {
       // Use the execution channel so tests also work under a page's script CSP.
       (0, eval)(source);
     }
-  }, sources);
+  }, { sources, tabHost });
 }

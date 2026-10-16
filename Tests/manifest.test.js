@@ -17,6 +17,7 @@ test("manifest declares the expected Safari Web Extension entry points", () => {
     assert.equal(manifest.action.default_icon["16"], "toolbar-16.png");
     assert.deepEqual(manifest.permissions.sort(), ["activeTab", "nativeMessaging", "storage"]);
     assert.equal(manifest.background.service_worker, "background.js");
+    assert.equal(manifest.content_scripts[0].all_frames, true);
     assert.deepEqual(manifest.host_permissions.sort(), ["http://*/*", "https://*/*"]);
     assert.deepEqual(manifest.content_scripts[0].js, ["theme-policy.js", "settings-store.js", "manual-dark-sites.js", "known-dark-sites.js", "darkreader.js", "theme-engine.js", "content.js"]);
 });

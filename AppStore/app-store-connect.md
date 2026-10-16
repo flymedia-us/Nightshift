@@ -8,11 +8,14 @@ This is the source of truth for the first public Mac App Store submission. It in
 - **App name:** Nightshift for Safari
 - **Bundle ID:** `com.FlyMedia.Nightshift`
 - **SKU:** `FM-NIGHTSHIFT-MAC`
+- **Apple ID:** `6823064390`
+- **Record:** https://appstoreconnect.apple.com/apps/6823064390/distribution
+- **Listing:** New Fly Media record, created October 15, 2026; not a transfer of the original listing.
 - **Primary language:** English (U.S.)
 - **Primary category:** Utilities
 - **Secondary category:** None
 - **Copyright:** `© 2026 Fly Media LLC. Original work © 2020 Aleksei Maslakov.`
-- **Content rights:** Nightshift does not bundle, redistribute, or present third-party website content in its own interface. It applies local appearance styling to pages the user opens in Safari. Review this declaration against the final App Store Connect prompt before saving it.
+- **Content rights:** Yes, the app has the necessary rights to third-party content. The bundle includes MIT-licensed source and compatibility data with preserved notices; the extension accesses webpages only for user-authorized local styling and does not redistribute website media. This is separate from the age-rating web-access question, which concerns navigation within the app.
 - **License agreement:** Apple standard EULA; do not add a custom EULA.
 
 ## Version metadata — English (U.S.)
@@ -28,7 +31,7 @@ The exact field values are the text files in [`metadata/en-US/`](metadata/en-US/
 - [`review_notes.txt`](metadata/en-US/review_notes.txt)
 - [`urls.txt`](metadata/en-US/urls.txt)
 
-Use the marketing version and build number from `project.yml` (currently `1.0.11`, build `24`) and select the uploaded App Store archive whose versions match. The local development build and unsigned testing beta are not App Store submission artifacts. Use the attached release notes only for a later update; Apple does not require “What’s New” copy for the first version.
+Use the marketing version and build number from `project.yml` (currently `1.0.13`, build `28`) and select the uploaded App Store archive whose versions match. The local development build and unsigned testing beta are not App Store submission artifacts. Use the attached release notes only for a later update; Apple does not require “What’s New” copy for the first version.
 
 ## Price, availability, and release
 
@@ -57,6 +60,18 @@ Use the marketing version and build number from `project.yml` (currently `1.0.11
 - **Notes for review:** Paste [`metadata/en-US/review_notes.txt`](metadata/en-US/review_notes.txt) exactly. It explains the Safari permission flow, toolbar placement, modes, and protected-page limitation.
 - **Attachment:** None required.
 - **Export compliance:** Select no non-exempt encryption. `ITSAppUsesNonExemptEncryption` is `false` in the app bundle.
+
+## Reproducible App Store build
+
+Run `make app-store-archive`, then `make app-store-export`. The archive is `.build/AppStore/Nightshift.xcarchive` and the exported store package is `.build/AppStore/Export/Nightshift.pkg`. Export uses Fly Media automatic App Store signing and exports locally; it does not upload or submit. The export target verifies the package against all current extension resources, both architectures, sandboxing, privacy declarations, bundle versions, and the minimum OS. Re-run verification with `python3 Scripts/verify-app-store.py .build/AppStore/Export/Nightshift.pkg`.
+
+Preserve existing archives before rebuilding. The development-signed archive is suitable for local installation; the exported, store-signed package is the submission artifact. Developer ID notarization and the ad-hoc beta are separate distribution paths.
+
+Nightshift requires macOS 13.7.7 or later and Safari 18.6 or later. This avoids offering an install to Monterey users whose Safari cannot load the extension. The required release-test matrix remains macOS 15, 26, and 27.
+
+## Current draft status — October 15, 2026
+
+Build 1.0.13 (28) uploaded successfully, finished processing, and is attached to the draft. Product metadata, App Review business contact, Utilities, 4+ age rating, Data Not Collected, policy URL, free pricing, all 175 territories, and manual release are saved. Apple's Add for Review validation reports only: “You must upload at least one screenshot.” The draft remains unsubmitted. See `../docs/launch-readiness.md` for exact QA coverage and its limits.
 
 ## Pre-submit confirmations
 

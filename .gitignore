@@ -14,3 +14,21 @@ DerivedData
 .DS_Store
 .build/
 node_modules/
+
+# Local secrets, signing material, and distribution artifacts
+.env
+.env.*
+!.env.example
+*.p8
+*.p12
+*.pfx
+*.pem
+*.key
+*.cer
+*.mobileprovision
+*.provisionprofile
+*.xcarchive/
+*.ipa
+*.pkg
+*.dmg
+__pycache__/

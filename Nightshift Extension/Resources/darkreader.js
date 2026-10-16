@@ -9384,6 +9384,24 @@ _______|_______/__/ ____ \\__\\__|___\\__\\__|___\\__\\____
         }
     })();
     function enable(themeOptions = {}, fixes = null) {
+        if (location.hostname === "docs.google.com") {
+            fixes = {
+                ...fixes,
+                ignoreInlineStyle: [...(fixes?.ignoreInlineStyle || []), ".cell-input", ".cell-input *", ".goog-palette-colorswatch"],
+                css: (fixes?.css || "") + `
+                    html[data-nightshift-google-docs] .cell-input,
+                    html[data-nightshift-google-docs] #t-formula-bar-input .cell-input {
+                        color: #000;
+                        background-color: #fff;
+                    }
+                    @media screen {
+                        html[data-nightshift-google-docs] .cell-input {
+                            filter: invert(1) hue-rotate(180deg) contrast(0.74);
+                        }
+                    }
+                `
+            };
+        }
         const theme = {...DEFAULT_THEME, ...themeOptions};
         if (theme.engine !== ThemeEngine.dynamicTheme) {
             throw new Error("Theme engine is not supported.");

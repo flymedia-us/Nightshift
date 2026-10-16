@@ -67,7 +67,7 @@
     async function saveSettings(change) {
         settings = await settingsStore.update(change);
         render();
-        setStatus("Saved");
+        setStatus(settings.syncPending ? "Saved in this profile; sharing with other profiles will retry." : "Saved");
     }
 
     async function loadCurrentHost() {
@@ -83,7 +83,7 @@
             }
 
             saveSettings({ type: "setGlobalMode", mode: input.value })
-                .catch((error) => setStatus(`Couldn't save: ${error.message}`));
+                .catch((error) => { render(); setStatus(`Couldn't save: ${error.message}`); });
         });
     }
 
@@ -93,7 +93,26 @@
         }
 
         saveSettings({ type: "setSiteEnabled", host: currentHost, enabled: siteEnabledInput.checked })
-            .catch((error) => setStatus(`Couldn't save: ${error.message}`));
+            .catch((error) => { render(); setStatus(`Couldn't save: ${error.message}`); });
+    });
+
+    document.querySelector("#manage-sites").addEventListener("click", () => {
+        // Safari can reuse an options tab belonging to another profile (or an
+        // outdated extension origin). Create this profile's own settings tab.
+        extensionAPI.tabs.create({ url: extensionAPI.runtime.getURL("options.html") })
+            .catch((error) => setStatus(`Couldn't open settings: ${error.message}`));
+    });
+
+    settingsStore.watch((storedSettings) => {
+        settings = storedSettings;
+        render();
+    });
+
+    extensionAPI.storage.onChanged.addListener((changes, areaName) => {
+        if (areaName !== "local" || !Object.keys(policy.DEFAULT_SETTINGS).some((key) => key in changes)) return;
+        settings = policy.normalizeSettings(Object.fromEntries(Object.keys(policy.DEFAULT_SETTINGS).map((key) =>
+            [key, changes[key]?.newValue ?? settings[key]])));
+        render();
     });
 
     Promise.all([

@@ -3,3 +3,16 @@
 html[data-nightshift-active] {
     color-scheme: dark;
 }
+
+/* Google paints document text and spreadsheet cells into canvases, where CSS
+   colors cannot reach them. Treat only the editor's drawing tiles: never the
+   editor container (which also contains images), generic canvases, or the page.
+   White cells become gray (#212121), black text becomes light (#dedede).
+   Graphics painted inside these same tiles necessarily share this treatment;
+   their underlying pixels and the document's saved formatting stay unchanged. */
+@media screen {
+    html[data-nightshift-active][data-nightshift-google-docs] .kix-canvas-tile-content,
+    html[data-nightshift-active][data-nightshift-google-docs] .grid-container [id$="-grid-table-container"] > canvas {
+        filter: invert(1) hue-rotate(180deg) contrast(0.74) !important;
+    }
+}

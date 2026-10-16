@@ -10,6 +10,7 @@
     const systemAppearance = window.matchMedia("(prefers-color-scheme: dark)");
     let settings = policy.normalizeSettings(policy.DEFAULT_SETTINGS);
     let settingsLoaded = false;
+    let tabHost = "";
     let isSavingAutoExclusion = false;
     let pendingAppearanceCheck = false;
     const GOOGLE_DOCS_HOST = "docs.google.com";
@@ -44,15 +45,17 @@
             return;
         }
 
-        // Docs remains enabled for its interface. Canvas document pixels are
-        // preserved like other media, without a page-wide filter.
+        // Scope the Docs/Sheets canvas contrast fix to this exact host. Other
+        // media and background images retain the dynamic engine's preservation.
         root.toggleAttribute("data-nightshift-google-docs", isGoogleDocsHost());
-        const active = policy.shouldApply(effectiveSettings(), window.location.host, systemAppearance.matches);
+        const active = !policy.isSiteDisabled(settings, tabHost) &&
+            policy.shouldApply(effectiveSettings(), window.location.host, systemAppearance.matches);
         root.toggleAttribute("data-nightshift-active", active);
         themeEngine.setActive(active);
     }
 
     function updateSettings(value) {
+        if (value.tabHost) tabHost = value.tabHost;
         settings = policy.normalizeSettings(value);
         settingsLoaded = true;
         applyTheme();
@@ -63,6 +66,7 @@
         if (areaName !== "local") {
             return;
         }
+        if (!Object.keys(policy.DEFAULT_SETTINGS).some((key) => key in changes)) return;
 
         updateSettings({
             globalMode: changes.globalMode?.newValue ?? settings.globalMode,
@@ -91,6 +95,7 @@
         .catch((error) => console.error("Nightshift couldn't load its settings.", error));
 
     extensionAPI.storage.onChanged.addListener(handleStorageChange);
+    settingsStore.watch(updateSettings);
 
     // Check after page CSS is available so known selector rules can observe the
     // site's active theme marker without inspecting arbitrary rendered colors.

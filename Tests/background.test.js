@@ -9,35 +9,14 @@ const { randomUUID } = require("node:crypto");
 const policy = require("../Nightshift Extension/Resources/theme-policy.js");
 const resources = path.join(__dirname, "..", "Nightshift Extension", "Resources");
 
-function createHarness({ local = {}, native, fetchStylesheet } = {}) {
-    const cache = structuredClone(local);
-    let listener;
-    const messages = [];
-    const context = vm.createContext({
-        URL, console, AbortController, fetch: fetchStylesheet, crypto: { randomUUID }, importScripts() {}, clearTimeout,
-        // Exercise the timeout branch without waiting five seconds per test.
-        setTimeout(callback) { return setTimeout(callback, 10); },
-        browser: {
-            storage: { local: {
-                async get(defaults) { return { ...structuredClone(defaults), ...structuredClone(cache) }; },
-                async set(value) { Object.assign(cache, structuredClone(value)); },
-            } },
-            runtime: {
-                async sendNativeMessage(applicationID, message) {
-                    assert.equal(applicationID, "com.FlyMedia.Nightshift");
-                    messages.push(structuredClone(message));
-                    return native ? native(message) : new Promise(() => {});
-                },
-                onMessage: { addListener(value) { listener = value; } },
-            },
-        },
-    });
-    vm.runInContext(fs.readFileSync(path.join(resources, "theme-policy.js"), "utf8"), context);
-    vm.runInContext(fs.readFileSync(path.join(resources, "background.js"), "utf8"), context);
-    return { cache, messages, load: () => listener({ type: "loadSettings" }),
-        update: (change) => listener({ type: "updateSettings", change }),
-        loadStylesheet: (url) => listener({ type: "loadThemeStylesheet", url }) };
-}
+const { createHarness } = require("./helpers/background-harness.cjs");
+
+test("frame settings carry the embedding tab host from Safari's trusted sender", async () => {
+    const harness = createHarness({ native: () => ({ settings: policy.DEFAULT_SETTINGS }) });
+    const frameSettings = await harness.load({ tab: { url: "https://EXAMPLE.com/page" }, url: "https://embed.example/frame" });
+    assert.equal(frameSettings.tabHost, "example.com");
+    assert.equal(harness.cache.tabHost, undefined, "Tab context must not be persisted across unrelated tabs");
+});
 
 test("the theme can read CDN stylesheets without sending cookies or queuing behind settings", async () => {
     const harness = createHarness({ fetchStylesheet: async (url, options) => {
@@ -149,4 +128,15 @@ test("failed native writes keep pending changes rather than accepting an empty r
     assert.deepEqual(harness.cache.disabledSites, ["github.com"]);
     assert.equal(harness.cache.pendingSettingsChanges.length, 1);
     assert.equal(harness.cache.sharedSettingsMigrated, undefined);
+});
+
+test("unavailable native storage coalesces frame reads and keeps toolbar saves responsive", async () => {
+    const harness = createHarness();
+    await Promise.all(Array.from({ length: 20 }, () => harness.load()));
+    assert.equal(harness.messages.length, 1, "Concurrent frames must share one native read");
+    const result = await harness.update({ type: "setGlobalMode", mode: "dark" });
+    assert.equal(result.globalMode, "dark");
+    assert.equal(result.syncPending, true);
+    assert.equal(harness.messages.length, 1, "Native failure must back off without delaying durable saves");
+    assert.equal(harness.cache.pendingSettingsChanges.length, 1);
 });

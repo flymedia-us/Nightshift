@@ -34,10 +34,14 @@ function createHarness({ tabURL = "https://example.com/page", storedSettings = {
     const siteName = { textContent: "" };
     const siteDetail = { textContent: "" };
     const status = { textContent: "" };
+    const manageSites = createInput();
+    let openedSettings = false;
+    let storageListener;
     const savedSettings = [];
 
     const browser = {
         storage: {
+            onChanged: { addListener(listener) { storageListener = listener; } },
             local: {
                 get: async () => storedSettings,
                 set: async (settings) => {
@@ -45,8 +49,13 @@ function createHarness({ tabURL = "https://example.com/page", storedSettings = {
                 },
             },
         },
+        runtime: { getURL: (path) => `safari-web-extension://profile-origin/${path}` },
         tabs: {
             query: async () => [{ url: tabURL }],
+            async create({ url }) {
+                assert.equal(url, "safari-web-extension://profile-origin/options.html");
+                openedSettings = true;
+            },
         },
     };
 
@@ -55,6 +64,7 @@ function createHarness({ tabURL = "https://example.com/page", storedSettings = {
         "#site-name": siteName,
         "#site-detail": siteDetail,
         "#status": status,
+        "#manage-sites": manageSites,
     };
     const document = {
         querySelectorAll: () => modeInputs,
@@ -73,6 +83,9 @@ function createHarness({ tabURL = "https://example.com/page", storedSettings = {
         siteName,
         siteDetail,
         status,
+        manageSites,
+        openedSettings: () => openedSettings,
+        updateStorage: (changes) => storageListener(changes, "local"),
         async settle() {
             await new Promise((resolve) => setImmediate(resolve));
         },
@@ -86,6 +99,17 @@ test("popup renders stored mode and the active site", async () => {
     assert.equal(harness.modeInputs.find((input) => input.value === "dark").checked, true);
     assert.equal(harness.siteName.textContent, "example.com");
     assert.equal(harness.siteEnabledInput.checked, true);
+});
+
+test("popup opens excluded website management and follows changes from other tabs", async () => {
+    const harness = createHarness();
+    await harness.settle();
+    harness.manageSites.dispatch("click");
+    await harness.settle();
+    assert.equal(harness.openedSettings(), true);
+    harness.updateStorage({ globalMode: { newValue: "dark" }, disabledSites: { newValue: ["example.com"] } });
+    assert.equal(harness.modeInputs.find((input) => input.value === "dark").checked, true);
+    assert.equal(harness.siteEnabledInput.checked, false);
 });
 
 test("popup saves a new global mode", async () => {

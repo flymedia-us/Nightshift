@@ -7,7 +7,7 @@ Nightshift is a completely free, open-source Safari Web Extension for macOS that
 - Privacy policy: <https://apps.flymedia.us/nightshift/privacy/>
 - Report a bug or suggest a feature: <https://github.com/flymedia-us/Nightshift/issues>
 
-The current development and unsigned beta version is **1.0.11 (24)**. Its dynamic theme replaces whole-page inversion, preserving background photos such as Gmail's theme image. This beta is not a notarized public release.
+The current development and unsigned beta version is **1.0.13 (28)**. Its dynamic theme replaces whole-page inversion, preserving background photos such as Gmail's theme image. This beta is not a notarized public release.
 
 ## Appearance modes
 
@@ -15,7 +15,7 @@ The current development and unsigned beta version is **1.0.11 (24)**. Its dynami
 - **Always Dark** applies Nightshift's dynamic dark theme at all times.
 - **System** applies Nightshift whenever macOS is using Dark Mode.
 
-Nightshift can also be disabled for individual sites from its Safari toolbar popup. Mode and site changes update open tabs immediately.
+Nightshift can also be disabled for individual sites from its Safari toolbar popup. Mode and site changes update open tabs immediately within a profile. Settings persist across Safari restarts and are shared across profiles on this Mac. Other profiles refresh when a page regains focus or becomes visible, and at most every 15 seconds while visible. Enable Nightshift and grant website access separately in each Safari profile.
 
 When active, Nightshift excludes sites listed in its repo-owned compatibility registry, generated from the vendored Dark Reader snapshot plus the developer-maintained `Config/manual-dark-sites.config` additions. It does not infer native dark mode from arbitrary rendered colors, `color-scheme`, media rules, or controls. You can re-enable any listed site from the toolbar popup.
 
@@ -23,7 +23,7 @@ Manage all excluded websites—including known-list and manually added sites—i
 
 ## Architecture
 
-- A bundled, pinned Dark Reader dynamic engine recolors CSS surfaces, text, and borders without page inversion. Background images and media keep their pixels; canvas-rendered document pages retain their original appearance.
+- A bundled, pinned Dark Reader dynamic engine recolors CSS surfaces, text, and borders without page inversion. Background images and ordinary media keep their pixels. A host-scoped screen-only filter gives Google Docs text and Google Sheets cells light-on-gray contrast. Only the editor drawing tiles are filtered; graphics painted into those tiles share the treatment. Saved formatting, separate images, and other canvases are unchanged; the canvas filters apply only on screen. Sheets editing ink and color swatches are preserved because Sheets reads them back into saved formatting.
 - A Manifest V3 Safari Web Extension implements the toolbar popup, saved preferences, per-site policy, and page styling.
 - A small SwiftUI container app explains the extension and opens Safari's extension settings.
 - Each preference change is applied to the latest settings by a shared native store, protected by a file lock and atomic writes. Profile caches keep pending changes through native-service failures and worker restarts; sequence numbers prevent delayed retries from undoing newer edits. Existing exclusions migrate from previous builds.
@@ -31,7 +31,7 @@ Manage all excluded websites—including known-list and manually added sites—i
 - Shared, framework-free JavaScript policy code is covered by Node's built-in test runner.
 - The Xcode project is generated from `project.yml` with XcodeGen and remains checked in for CI and contributors who do not have XcodeGen installed.
 
-The deployment target is macOS 12.3, the first macOS release with Safari 15.4's Manifest V3 support. Compatibility below the release-test matrix is best effort. macOS 15, 26, and 27 are the required release targets.
+Nightshift requires macOS 13.7.7 or later and Safari 18.6 or later. This excludes Monterey, whose Safari cannot load the extension. Compatibility below the release-test matrix is best effort; macOS 15, 26, and 27 are the required release targets.
 
 ## Local development
 
@@ -39,7 +39,7 @@ Requirements:
 
 - macOS 15 or later for supported local development
 - Xcode 26 or later
-- Node.js 20 or later
+- Node.js 24 (see `.node-version`)
 - [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`)
 
 Run the full local verification suite:
@@ -62,9 +62,10 @@ npm run update:dark-reader  # Import the latest official Dark Reader data, then 
 npm run generate:dark-sites  # Regenerate after editing either source list directly
 npm run bundle:theme-engine # Regenerate the bundled engine after changing its pinned dependency or patches
 npm run check:theme-engine  # Verify the committed engine matches the pinned dependency and patches
+npm run test:webkit        # Deterministic rendering, embedded-frame, and settings UI regressions
 ```
 
-`Nightshift Extension/Resources/darkreader.js` is a committed build input, generated from the pinned npm package. Do not edit it directly. The bundler isolates its messaging shim and applies guarded patches for inline background images, relative image URLs, and page API isolation. CI checks the generated resource against that source. Updating the compatibility lists with `npm run update:dark-reader` does not update the engine; those are separate inputs.
+`Nightshift Extension/Resources/darkreader.js` is a committed build input, generated from the pinned npm package. Do not edit it directly. The bundler isolates its messaging shim and applies guarded patches for inline background images, relative image URLs, page API isolation, and original Google Sheets editing ink. CI checks the generated resource against that source. Updating the compatibility lists with `npm run update:dark-reader` does not update the engine; those are separate inputs.
 
 To run Nightshift in Safari:
 
@@ -79,6 +80,10 @@ When testing a change, install the freshly built app in `/Applications/Nightshif
 If Safari still shows a generic extension icon after rebuilding, quit Safari and run the newly built
 container app once. Safari caches registered extension bundles; each Nightshift build uses an incremented
 bundle version so the current toolbar artwork replaces any previously registered copy.
+
+## App Store builds
+
+Use `make app-store-archive` followed by `make app-store-export`. This exports a universal, App Store-signed package locally and verifies its exact bundled resources, versions, privacy manifests, signing team, sandbox, and architectures. It does not upload or submit. See [`AppStore/app-store-connect.md`](AppStore/app-store-connect.md) for account and listing requirements.
 
 ## Builds for another Mac
 
@@ -113,7 +118,7 @@ Run the deterministic image-preservation checks without contacting public websit
 npx playwright test --config Tests/smoke/playwright.config.js image-preservation.spec.js google-docs-rendering.spec.js
 ```
 
-These checks compare rendered image pixels with Nightshift on and off, cover CSS and inline backgrounds, CSS variables, pseudo-elements, external stylesheet image paths, images, and canvases, and verify dynamic content and restoration of the original colors. They exercise the bundled scripts in WebKit; installation and activation must also be checked in Safari. On October 2, 2026, the development-signed 1.0.11 (24) was verified in local Safari 27, including Gmail's starfield background, its popup, mode switching, and all three existing profiles. That verification does not establish installation or runtime activation of the unsigned beta on another Mac.
+These checks compare rendered image pixels with Nightshift on and off, cover CSS and inline backgrounds, CSS variables, pseudo-elements, external stylesheet image paths, images, and canvases, and verify dynamic content and restoration of the original colors. They exercise the bundled scripts in WebKit; installation and activation must also be checked in Safari. On October 2, 2026, the development-signed 1.0.11 (24) was verified in local Safari 27, including Gmail's starfield background, its popup, mode switching, and all three existing profiles. On October 4, development-signed 1.0.12 (27) was verified in local Safari 27: existing/new Docs text, Sheets cells and formula-bar contrast, original saved Sheets ink in Light mode, Gmail’s unchanged starfield and unfiltered CSS backgrounds, all three enabled profiles, System mode restored, and unsigned extensions off. These checks do not establish installation or runtime activation of the unsigned beta on another Mac.
 
 ## Project structure
 
@@ -125,7 +130,7 @@ These checks compare rendered image pixels with Nightshift on and off, cover CSS
 - `Icon/Nightshift Icon.icon` — source-of-truth macOS app icon authored in Apple Icon Composer with Liquid Glass layers
 - `AppStore/` — versioned listing copy, App Store Connect handoff, review notes, and screenshot production guidance
 - `project.yml` — source of truth for Xcode targets and build settings
-- `.github/workflows/ci.yml` — JavaScript tests plus unsigned builds on macOS 15, 26, and 27 runners
+- `.github/workflows/ci.yml` — JavaScript tests plus unsigned builds on macOS 15/26 and the Xcode 27 preview runner
 
 ## Repository setup
 

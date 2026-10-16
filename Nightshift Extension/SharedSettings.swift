@@ -21,9 +21,10 @@ final class SharedSettings {
         defer { flock(descriptor, LOCK_UN) }
 
         let file = directory.appendingPathComponent("settings.json")
+        let savedData = FileManager.default.fileExists(atPath: file.path) ? try Data(contentsOf: file) : nil
         var state: [String: Any]
-        if FileManager.default.fileExists(atPath: file.path) {
-            guard let saved = try JSONSerialization.jsonObject(with: Data(contentsOf: file)) as? [String: Any] else {
+        if let savedData {
+            guard let saved = try JSONSerialization.jsonObject(with: savedData) as? [String: Any] else {
                 throw CocoaError(.fileReadCorruptFile)
             }
             state = saved
@@ -34,8 +35,13 @@ final class SharedSettings {
         var settings = state["settings"] as? [String: Any] ?? fallback
         var migratedClients = Set(state["migratedClients"] as? [String] ?? [])
         if mergeFallback && !migratedClients.contains(clientID) {
+            // A profile that has not run since an upgrade may carry an older
+            // snapshot. Existing manual decisions in shared storage win over
+            // that snapshot; subsequent explicit changes still apply below.
+            let decidedSites = Set(sites(settings, "disabledSites") + sites(settings, "enabledSites"))
             for key in ["disabledSites", "autoDisabledSites", "enabledSites"] {
-                settings[key] = Array(Set(sites(settings, key)).union(sites(fallback, key))).sorted()
+                let incoming = sites(fallback, key).filter { !decidedSites.contains($0) }
+                settings[key] = Array(Set(sites(settings, key)).union(incoming)).sorted()
             }
             // Migration must favor a manual exclusion over a stale enable.
             settings["enabledSites"] = sites(settings, "enabledSites").filter { !sites(settings, "disabledSites").contains($0) }
@@ -53,7 +59,10 @@ final class SharedSettings {
         }
         settings = Self.normalized(settings)
         state = ["settings": settings, "sequences": sequences, "migratedClients": Array(migratedClients).sorted()]
-        try JSONSerialization.data(withJSONObject: state, options: [.sortedKeys]).write(to: file, options: .atomic)
+        let data = try JSONSerialization.data(withJSONObject: state, options: [.sortedKeys])
+        // Visible tabs periodically read shared preferences. An unchanged read
+        // must not rewrite the file or generate needless disk activity.
+        if data != savedData { try data.write(to: file, options: .atomic) }
         return settings
     }
 

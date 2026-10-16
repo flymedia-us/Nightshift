@@ -12,6 +12,12 @@
 
     function setStatus(message) { status.textContent = message; }
 
+    settingsStore.watch((storedSettings) => {
+        if (JSON.stringify(settings) === JSON.stringify(storedSettings)) return;
+        settings = storedSettings;
+        render();
+    });
+
     function excludedSites() {
         const manual = new Set(settings.disabledSites);
         const detected = new Set(settings.autoDisabledSites.filter((host) => !settings.enabledSites.includes(host)));
@@ -25,7 +31,7 @@
         return settingsStore.update(change).then((savedSettings) => {
             settings = savedSettings;
             render();
-            setStatus(message);
+            setStatus(savedSettings.syncPending ? "Saved in this profile; sharing with other profiles will retry." : message);
         });
     }
 
@@ -72,8 +78,10 @@
             hostInput.focus();
             return;
         }
-        hostInput.value = "";
-        save({ type: "setSiteEnabled", host, enabled: false }, "Website excluded").catch((error) => setStatus(`Couldn't save: ${error.message}`));
+        const entered = hostInput.value;
+        save({ type: "setSiteEnabled", host, enabled: false }, "Website excluded")
+            .then(() => { if (hostInput.value === entered) hostInput.value = ""; })
+            .catch((error) => setStatus(`Couldn't save: ${error.message}`));
     });
 
     settingsStore.load()
@@ -85,6 +93,7 @@
 
     extensionAPI.storage.onChanged.addListener((changes, areaName) => {
         if (areaName !== "local") return;
+        if (!Object.keys(policy.DEFAULT_SETTINGS).some((key) => key in changes)) return;
         settings = policy.normalizeSettings({
             globalMode: changes.globalMode?.newValue ?? settings.globalMode,
             disabledSites: changes.disabledSites?.newValue ?? settings.disabledSites,

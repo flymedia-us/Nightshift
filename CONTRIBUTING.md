@@ -12,7 +12,7 @@ Do not include screenshots, page source, or browser data that contain private in
 
 ## Development
 
-Nightshift targets macOS 12.3 or later. The supported release matrix is macOS 15, 26, and 27. See the local-development section in [README.md](README.md), then run:
+Nightshift requires macOS 13.7.7 or later and Safari 18.6 or later. The supported release matrix is macOS 15, 26, and 27. See the local-development section in [README.md](README.md), then run:
 
 ```sh
 npm ci --ignore-scripts

@@ -19,6 +19,12 @@ struct ContentView: View {
                 Text("Choose when websites use Nightshift from the Safari toolbar.")
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.secondary)
+
+                Text("Requires Safari 18.6 or later. Enable Nightshift in each Safari profile you use; appearance and website settings are shared on this Mac.")
+                    .font(.footnote)
+                    .multilineTextAlignment(.center)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: 390)
             }
 
             VStack(alignment: .leading, spacing: 10) {

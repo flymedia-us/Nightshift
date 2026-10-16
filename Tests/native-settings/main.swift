@@ -8,6 +8,19 @@ func change(_ type: String, _ host: String, _ client: String, _ sequence: Int, _
     ["type": type, "host": host, "clientID": client, "sequence": sequence].merging(extra) { _, new in new }
 }
 
+// Test the production JavaScript/native protocol across independent processes.
+if CommandLine.arguments.count == 3 && CommandLine.arguments[1] == "--request" {
+    let message = try JSONSerialization.jsonObject(with: FileHandle.standardInput.readDataToEndOfFile()) as! [String: Any]
+    let store = SharedSettings(directory: URL(fileURLWithPath: CommandLine.arguments[2]), legacyDefaults: UserDefaults(suiteName: "NightshiftNativeBridgeTests")!)
+    let settings = try store.load(fallback: message["fallback"] as? [String: Any] ?? [:],
+                                  mergeFallback: message["mergeFallback"] as? Bool == true,
+                                  changes: message["changes"] as? [[String: Any]] ?? [],
+                                  clientID: message["clientID"] as? String ?? "legacy")
+    let response = try JSONSerialization.data(withJSONObject: ["settings": settings])
+    FileHandle.standardOutput.write(response)
+    exit(0)
+}
+
 if CommandLine.arguments.count == 5 && CommandLine.arguments[1] == "--writer" {
     let directory = URL(fileURLWithPath: CommandLine.arguments[2])
     let independent = SharedSettings(directory: directory, legacyDefaults: UserDefaults(suiteName: CommandLine.arguments[3])!)
@@ -42,6 +55,13 @@ _ = try retryStore.load(fallback: ["disabledSites": ["github.com"]], mergeFallba
 _ = try retryStore.load(fallback: [:], mergeFallback: true, changes: [change("setSiteEnabled", "github.com", "B", 1, ["enabled": true])], clientID: "B")
 let retriedMigration = try retryStore.load(fallback: ["disabledSites": ["github.com"]], mergeFallback: true, changes: [disable], clientID: "A")
 expect(!(retriedMigration["disabledSites"] as! [String]).contains("github.com"), "Retry must not repeat a completed profile migration")
+
+let staleProfile = try retryStore.load(fallback: ["disabledSites": ["github.com", "new.example"]], mergeFallback: true, changes: [], clientID: "old-profile")
+expect(!(staleProfile["disabledSites"] as! [String]).contains("github.com"), "A newly migrated stale profile must not undo a shared enable")
+expect((staleProfile["disabledSites"] as! [String]).contains("new.example"), "Migration must retain previously unknown exclusions")
+_ = try retryStore.load(fallback: [:], mergeFallback: false, changes: [change("setSiteEnabled", "blocked.example", "B", 2, ["enabled": false])], clientID: "B")
+let staleEnable = try retryStore.load(fallback: ["enabledSites": ["blocked.example"]], mergeFallback: true, changes: [], clientID: "another-old-profile")
+expect(!(staleEnable["enabledSites"] as! [String]).contains("blocked.example"), "Migration must not undo a shared disable")
 
 // Launch independent processes so this exercises the file lock, not a JS queue.
 var children: [Process] = []
