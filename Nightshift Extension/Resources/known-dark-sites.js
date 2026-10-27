@@ -1322,7 +1322,28 @@
     "github.com",
     "macrumors.com",
     "tasks.google.com",
-    "x.com"
+    "x.com",
+    "4khdhub.one",
+    "acermovies.fun",
+    "app.clickup.com",
+    "beta.keeweb.info",
+    "bsky.app",
+    "calendar.google.com",
+    "chatgpt.com",
+    "console.tailscale.com",
+    "cornellseven.com",
+    "en.wikipedia.org",
+    "fmhy.net",
+    "grok.com",
+    "grokipedia.com",
+    "instapaper.com",
+    "photos.google.com",
+    "robinhood.com",
+    "teams.cloud.microsoft",
+    "vault.bitwarden.com",
+    "www.facebook.com",
+    "www.instagram.com",
+    "www.samfriedman.art"
 ]);
     const DARK_SITE_PATTERNS = Object.freeze([
     "*.cases.gg",
@@ -2640,7 +2661,28 @@
     "github.com",
     "macrumors.com",
     "tasks.google.com",
-    "x.com"
+    "x.com",
+    "4khdhub.one",
+    "acermovies.fun",
+    "app.clickup.com",
+    "beta.keeweb.info",
+    "bsky.app",
+    "calendar.google.com",
+    "chatgpt.com",
+    "console.tailscale.com",
+    "cornellseven.com",
+    "en.wikipedia.org",
+    "fmhy.net",
+    "grok.com",
+    "grokipedia.com",
+    "instapaper.com",
+    "photos.google.com",
+    "robinhood.com",
+    "teams.cloud.microsoft",
+    "vault.bitwarden.com",
+    "www.facebook.com",
+    "www.instagram.com",
+    "www.samfriedman.art"
 ]);
     const ACTIVE_RULES = Object.freeze([
     {
@@ -4094,7 +4136,7 @@
     }
 
     function isDarkByDefaultSite(value) {
-        return matchesAnyPattern(DARK_SITE_PATTERNS, value);
+        return Boolean(staticSourceFor(value));
     }
 
     function activeRuleFor(value, document) {
@@ -4102,7 +4144,7 @@
         if (!rule) return false;
         return rule.selectors.some((selector) => {
             try {
-                return document.querySelector?.(selector) != null;
+                return document?.querySelector?.(selector) != null;
             } catch {
                 return false;
             }
@@ -4111,6 +4153,19 @@
 
     function hasKnownDarkAppearance(value, document) {
         return isDarkByDefaultSite(value) || activeRuleFor(value, document);
+    }
+
+    function staticSourceFor(value) {
+        const { host } = locationParts(value);
+        if (MANUAL_DARK_SITE_PATTERNS.some((pattern) => host === pattern || host.endsWith(`.${pattern}`))) return "Nightshift";
+        if (matchesAnyPattern(IMPORTED_DARK_SITE_PATTERNS, value)) return "Dark Reader";
+        return "";
+    }
+
+    // Older builds cached bundled-list hits as detections. Hide those legacy
+    // entries in the detected list, including hosts with path-specific rules.
+    function isRegistryHost(host) {
+        return staticSourceFor(host) === "Nightshift" || IMPORTED_DARK_SITE_PATTERNS.some((pattern) => patternMatches(pattern.split("/", 1)[0], host));
     }
 
     const api = Object.freeze({
@@ -4127,6 +4182,8 @@
         isDarkByDefaultSite,
         locationParts,
         patternMatches,
+        staticSourceFor,
+        isRegistryHost,
     });
     globalScope.NightshiftKnownDarkSites = api;
     if (typeof module === "object" && module.exports) module.exports = api;

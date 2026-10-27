@@ -1,18 +1,19 @@
 {
   "name": "nightshift",
-  "version": "1.0.13",
+  "version": "1.0.18",
   "private": true,
   "scripts": {
-    "check": "node --check 'Scripts/generate-dark-site-registry.mjs' && node --check 'Nightshift Extension/Resources/theme-policy.js' && node --check 'Nightshift Extension/Resources/settings-store.js' && node --check 'Nightshift Extension/Resources/background.js' && node --check 'Nightshift Extension/Resources/manual-dark-sites.js' && node --check 'Nightshift Extension/Resources/known-dark-sites.js' && node --check 'Nightshift Extension/Resources/content.js' && node --check 'Nightshift Extension/Resources/popup.js' && node --check 'Nightshift Extension/Resources/options.js' && node --check 'Scripts/bundle-theme-engine.mjs' && node --check 'Nightshift Extension/Resources/darkreader.js' && node --check 'Nightshift Extension/Resources/theme-engine.js'",
+    "check": "node --check 'Scripts/import-maintainer-exclusions.mjs' && node --check 'Nightshift Extension/Resources/exclusion-export.js' && node --check 'Scripts/generate-dark-site-registry.mjs' && node --check 'Nightshift Extension/Resources/theme-policy.js' && node --check 'Nightshift Extension/Resources/settings-store.js' && node --check 'Nightshift Extension/Resources/background.js' && node --check 'Nightshift Extension/Resources/manual-dark-sites.js' && node --check 'Nightshift Extension/Resources/known-dark-sites.js' && node --check 'Nightshift Extension/Resources/content.js' && node --check 'Nightshift Extension/Resources/popup.js' && node --check 'Nightshift Extension/Resources/options.js' && node --check 'Scripts/bundle-theme-engine.mjs' && node --check 'Nightshift Extension/Resources/darkreader.js' && node --check 'Nightshift Extension/Resources/theme-engine.js'",
     "update:dark-reader": "node Scripts/update-dark-reader-lists.mjs && node Scripts/generate-dark-site-registry.mjs",
     "generate:dark-sites": "node Scripts/generate-dark-site-registry.mjs",
     "test": "node --test Tests/*.test.js",
     "icons": "node Artwork/render-icons.mjs",
+    "icons:settings": "xcrun swift -module-cache-path .build/sf-symbols-cache Artwork/render-settings-symbol.swift",
     "smoke": "playwright test --config Tests/smoke/playwright.config.js",
     "smoke:install": "playwright install webkit",
     "bundle:theme-engine": "node Scripts/bundle-theme-engine.mjs",
     "check:theme-engine": "node Scripts/bundle-theme-engine.mjs --check",
-    "test:webkit": "playwright test --config Tests/smoke/playwright.config.js image-preservation.spec.js google-docs-rendering.spec.js settings-ui.spec.js embedded-content.spec.js"
+    "test:webkit": "playwright test --config Tests/smoke/playwright.config.js image-preservation.spec.js google-docs-rendering.spec.js settings-ui.spec.js embedded-content.spec.js exclusions-runtime.spec.js"
   },
   "devDependencies": {
     "@playwright/test": "1.64.0",

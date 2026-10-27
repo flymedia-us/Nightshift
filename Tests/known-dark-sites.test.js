@@ -62,3 +62,15 @@ test("GitHub and every developer-maintained host ship in both generated registri
         assert.equal(manualDarkSites.matches(new URL(`https://${host}.evil.example/`)), false);
     }
 });
+
+test("personal MacBook public exclusions ship in the master list with no IPs or local hosts", () => {
+    for (const host of ["4khdhub.one", "acermovies.fun", "app.clickup.com", "beta.keeweb.info", "bsky.app", "calendar.google.com", "chatgpt.com", "console.tailscale.com", "cornellseven.com", "en.wikipedia.org", "fmhy.net", "grok.com", "grokipedia.com", "instapaper.com", "photos.google.com", "robinhood.com", "tasks.google.com", "teams.cloud.microsoft", "vault.bitwarden.com", "www.facebook.com", "www.instagram.com", "www.samfriedman.art"]) {
+        assert.ok(manualDarkSites.PATTERNS.includes(host), host);
+        assert.equal(manualDarkSites.matches(new URL(`https://${host}/`)), true);
+    }
+    const { publicHost } = require("../Nightshift Extension/Resources/exclusion-export.js");
+    assert.ok(manualDarkSites.PATTERNS.every((host) => publicHost(host) === host));
+    assert.equal(manualDarkSites.matches("192.168.50.249:8000"), false);
+    assert.equal(knownSites.staticSourceFor(new URL("https://chatgpt.com")), "Nightshift");
+    assert.equal(knownSites.staticSourceFor(new URL("https://photopea.com")), "Dark Reader");
+});

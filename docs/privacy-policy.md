@@ -14,4 +14,6 @@ Nightshift bundles its theme engine locally. It does not download or execute rem
 
 Appearance mode and site preferences are stored on the Mac in a shared native settings store, with Safari extension storage caches for each profile. They are not sent to Fly Media.
 
+You can explicitly copy your public manual exclusions from settings. This export omits local names, IP addresses, and automatic exclusions. Copying does not transmit data. The maintainer separately reviews personal exports before adding domains to a bundled compatibility list; ordinary installations have no ability to update that list.
+
 The companion app uses SafariServices only to open Safari's extension settings. It makes no network requests.

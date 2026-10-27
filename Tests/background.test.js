@@ -15,7 +15,9 @@ test("frame settings carry the embedding tab host from Safari's trusted sender",
     const harness = createHarness({ native: () => ({ settings: policy.DEFAULT_SETTINGS }) });
     const frameSettings = await harness.load({ tab: { url: "https://EXAMPLE.com/page" }, url: "https://embed.example/frame" });
     assert.equal(frameSettings.tabHost, "example.com");
+    assert.equal(frameSettings.tabURL, "https://EXAMPLE.com/page");
     assert.equal(harness.cache.tabHost, undefined, "Tab context must not be persisted across unrelated tabs");
+    assert.equal(harness.cache.tabURL, undefined);
 });
 
 test("the theme can read CDN stylesheets without sending cookies or queuing behind settings", async () => {

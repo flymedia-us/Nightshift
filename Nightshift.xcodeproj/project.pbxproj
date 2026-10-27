@@ -17,9 +17,11 @@
 		436FBA54D662E57A1D145032 /* theme-policy.js in Resources */ = {isa = PBXBuildFile; fileRef = 32C396469B4C47CAAC08EBBF /* theme-policy.js */; };
 		459CC00FE19A9CD9CED8993C /* toolbar-19.png in Resources */ = {isa = PBXBuildFile; fileRef = 1596FA1A2E09B87360F2F5B3 /* toolbar-19.png */; };
 		472F8C3B0171FF0A39B2972B /* toolbar-38.png in Resources */ = {isa = PBXBuildFile; fileRef = 7932891AC98E5D73738B4012 /* toolbar-38.png */; };
+		48791B28B48326B6E27721E1 /* settings-gear-fill.png in Resources */ = {isa = PBXBuildFile; fileRef = 1E1B8F920A952308C4887F8F /* settings-gear-fill.png */; };
 		4F372C061AD76BDCABC5E29A /* content.js in Resources */ = {isa = PBXBuildFile; fileRef = 6E8B45A4F9B8497709DE62BC /* content.js */; };
 		523B87FE97C59AA8FD9FBB51 /* icon-128.png in Resources */ = {isa = PBXBuildFile; fileRef = AF694F57D0E751BC94EEED20 /* icon-128.png */; };
 		5F0E5665334D85572B356D04 /* icon-96.png in Resources */ = {isa = PBXBuildFile; fileRef = BF714A137E145FFBB0CAAEAF /* icon-96.png */; };
+		66AFF864E35A539BAEE80BBC /* exclusion-export.js in Resources */ = {isa = PBXBuildFile; fileRef = D43E4B37DF94B2F9B7C07B81 /* exclusion-export.js */; };
 		6DC31C394727AE2AF8209B36 /* popup.js in Resources */ = {isa = PBXBuildFile; fileRef = 85CCC1941A0D2278B9B96B3C /* popup.js */; };
 		7231092BF797D03F30A801B2 /* options.css in Resources */ = {isa = PBXBuildFile; fileRef = 31C041C23494BF67540BA9CE /* options.css */; };
 		782BC2295DB21C2360D7AED6 /* icon-48.png in Resources */ = {isa = PBXBuildFile; fileRef = 87EC17FA01A3FC5DB52471FC /* icon-48.png */; };
@@ -74,6 +76,7 @@
 		1529CB9B58ED576899A9BB7F /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = manifest.json; sourceTree = "<group>"; };
 		1596FA1A2E09B87360F2F5B3 /* toolbar-19.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-19.png"; sourceTree = "<group>"; };
 		1975F2761E81E7373D00A779 /* settings-store.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "settings-store.js"; sourceTree = "<group>"; };
+		1E1B8F920A952308C4887F8F /* settings-gear-fill.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings-gear-fill.png"; sourceTree = "<group>"; };
 		232E1F820D39E2586A328D81 /* known-dark-sites.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "known-dark-sites.js"; sourceTree = "<group>"; };
 		2A9D1D99543F3A09359D7429 /* toolbar-16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar-16.png"; sourceTree = "<group>"; };
 		2C492D32A3AFAFD5C0FF8D94 /* Nightshift Icon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = "Nightshift Icon.icon"; sourceTree = "<group>"; };
@@ -101,6 +104,7 @@
 		BF714A137E145FFBB0CAAEAF /* icon-96.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-96.png"; sourceTree = "<group>"; };
 		CB725C907DFD0152279A8F0C /* theme-engine.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "theme-engine.js"; sourceTree = "<group>"; };
 		CF939B46A33A6980CAB1E815 /* popup.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = popup.html; sourceTree = "<group>"; };
+		D43E4B37DF94B2F9B7C07B81 /* exclusion-export.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = "exclusion-export.js"; sourceTree = "<group>"; };
 		D5E84600CD7F58050290106B /* icon-256.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-256.png"; sourceTree = "<group>"; };
 		E6A462B0027F345178AF845B /* SharedSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedSettings.swift; sourceTree = "<group>"; };
 		EAF70B3FABBD4982B579ABFA /* Nightshift Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Nightshift Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -114,6 +118,7 @@
 				7910EBB9BC7ADA569BA327B7 /* background.js */,
 				6E8B45A4F9B8497709DE62BC /* content.js */,
 				336A2C834BD91200B15A2DFD /* darkreader.js */,
+				D43E4B37DF94B2F9B7C07B81 /* exclusion-export.js */,
 				87EC17FA01A3FC5DB52471FC /* icon-48.png */,
 				EE1DDB3EBCFCAEBFF159EF7B /* icon-64.png */,
 				BF714A137E145FFBB0CAAEAF /* icon-96.png */,
@@ -130,6 +135,7 @@
 				41B4565DBA2DB83B8B0C6913 /* popup.css */,
 				CF939B46A33A6980CAB1E815 /* popup.html */,
 				85CCC1941A0D2278B9B96B3C /* popup.js */,
+				1E1B8F920A952308C4887F8F /* settings-gear-fill.png */,
 				1975F2761E81E7373D00A779 /* settings-store.js */,
 				CB725C907DFD0152279A8F0C /* theme-engine.js */,
 				32C396469B4C47CAAC08EBBF /* theme-policy.js */,
@@ -290,6 +296,7 @@
 				F126DAAC4780ACCE4345341B /* background.js in Resources */,
 				4F372C061AD76BDCABC5E29A /* content.js in Resources */,
 				932E8BF49EFCB7B618925895 /* darkreader.js in Resources */,
+				66AFF864E35A539BAEE80BBC /* exclusion-export.js in Resources */,
 				523B87FE97C59AA8FD9FBB51 /* icon-128.png in Resources */,
 				D588E50105E1B34AE5C2BB05 /* icon-256.png in Resources */,
 				782BC2295DB21C2360D7AED6 /* icon-48.png in Resources */,
@@ -306,6 +313,7 @@
 				90238DE4ADDF0C2117E8C6A4 /* popup.css in Resources */,
 				3B1762ECC496BDE5AF29B385 /* popup.html in Resources */,
 				6DC31C394727AE2AF8209B36 /* popup.js in Resources */,
+				48791B28B48326B6E27721E1 /* settings-gear-fill.png in Resources */,
 				EBA644390F91EFC7A8B32A9F /* settings-store.js in Resources */,
 				93FF44F196BCE108978025A0 /* theme-engine.js in Resources */,
 				436FBA54D662E57A1D145032 /* theme-policy.js in Resources */,
@@ -423,7 +431,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 28;
+				CURRENT_PROJECT_VERSION = 33;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = BJZSH247Q9;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -444,7 +452,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 13.7.7;
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 1.0.18;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -555,7 +563,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 28;
+				CURRENT_PROJECT_VERSION = 33;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = BJZSH247Q9;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -570,7 +578,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 13.7.7;
-				MARKETING_VERSION = 1.0.13;
+				MARKETING_VERSION = 1.0.18;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_CODE_SIGN_FLAGS = "--timestamp";

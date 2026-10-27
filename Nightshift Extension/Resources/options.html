@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="options.css">
     <script src="theme-policy.js" defer></script>
     <script src="settings-store.js" defer></script>
+    <script src="manual-dark-sites.js" defer></script>
+    <script src="known-dark-sites.js" defer></script>
+    <script src="exclusion-export.js" defer></script>
     <script src="options.js" defer></script>
 </head>
 <body>
@@ -15,22 +18,85 @@
             <img src="icon-64.png" alt="" width="40" height="40">
             <div>
                 <h1>Nightshift Settings</h1>
-                <p>Control which websites Nightshift leaves unchanged.</p>
             </div>
         </header>
 
-        <section aria-labelledby="excluded-sites-title">
-            <h2 id="excluded-sites-title">Excluded websites</h2>
-            <p class="intro">Known sites have their own dark appearance. Manual exclusions always stay off.</p>
-            <form id="add-excluded-site">
-                <label for="excluded-site-host">Website address</label>
-                <div class="input-row">
-                    <input id="excluded-site-host" name="host" type="text" inputmode="url" placeholder="example.com" autocomplete="off">
-                    <button type="submit">Exclude website</button>
-                </div>
-            </form>
-            <p id="form-status" role="status" aria-live="polite"></p>
-            <ul id="excluded-sites" aria-live="polite"></ul>
+        <section aria-labelledby="appearance-title">
+            <h2 id="appearance-title">Appearance</h2>
+            <p class="intro">Choose when Nightshift darkens websites.</p>
+            <fieldset class="mode-options" aria-label="Nightshift appearance">
+                <label>
+                    <input type="radio" name="global-mode" value="light">
+                    <span><strong>Always Light</strong><small>Leave websites unchanged</small></span>
+                </label>
+                <label>
+                    <input type="radio" name="global-mode" value="dark">
+                    <span><strong>Always Dark</strong><small>Apply Nightshift at all times</small></span>
+                </label>
+                <label>
+                    <input type="radio" name="global-mode" value="system">
+                    <span><strong>System</strong><small>Follow your Mac's appearance</small></span>
+                </label>
+            </fieldset>
+            <p id="appearance-status" aria-live="polite"></p>
+        </section>
+
+        <section class="exclusion-settings" aria-labelledby="website-settings-title">
+            <h2 id="website-settings-title">Excluded websites</h2>
+
+            <section aria-labelledby="excluded-sites-title">
+                <h3 id="excluded-sites-title">Your manual exclusions</h3>
+                <p class="intro">Websites you exclude here or from the toolbar. These preferences stay on this Mac. Manual exclusions take priority over every automatic rule.</p>
+                <form id="add-excluded-site">
+                    <label for="excluded-site-host">Website address</label>
+                    <div class="input-row">
+                        <input id="excluded-site-host" name="host" type="text" inputmode="url" placeholder="example.com" autocomplete="off">
+                        <button type="submit">Exclude website</button>
+                    </div>
+                </form>
+                <p id="form-status" role="status" aria-live="polite"></p>
+                <ul id="excluded-sites" class="site-list" aria-live="polite"></ul>
+                <details id="export-section">
+                    <summary>Export manual exclusions</summary>
+                    <p class="intro">Only public domains from your manual list are included. Local addresses, IP addresses, and automatic exclusions are omitted. Nothing is sent automatically.</p>
+                    <label for="exclusion-export">Public manual exclusions</label>
+                    <textarea id="exclusion-export" readonly rows="5" spellcheck="false"></textarea>
+                    <button id="copy-exclusions" class="secondary" type="button">Copy public exclusions</button>
+                </details>
+                <details id="enabled-overrides">
+                    <summary>Websites you explicitly enabled <span id="override-count"></span></summary>
+                    <p class="intro">These websites bypass bundled lists and auto-detection. You can return them to automatic rules.</p>
+                    <ul id="enabled-sites" class="site-list"></ul>
+                </details>
+            </section>
+
+            <section aria-labelledby="detected-sites-title">
+                <h3 id="detected-sites-title">Auto-detected exclusions <span id="detected-count"></span></h3>
+                <p class="intro">A known, site-specific dark-theme marker was found on your last visit. Nightshift checks it again on each page; it never guesses from background colors or images. Override an exclusion here if detection was incorrect.</p>
+                <ul id="detected-sites" class="site-list" aria-live="polite"></ul>
+            </section>
+
+            <section aria-labelledby="nightshift-sites-title">
+                <h3 id="nightshift-sites-title">Nightshift exclusion list</h3>
+                <p class="intro">Compatibility exclusions reviewed by Nightshift’s maintainer and bundled with updates. Your manual exclusions are independent of this list.</p>
+                <details id="nightshift-registry">
+                    <summary>Browse Nightshift list <span id="nightshift-count"></span></summary>
+                    <label for="nightshift-search">Search Nightshift list</label>
+                    <input id="nightshift-search" type="search" placeholder="Filter by domain">
+                    <ul id="nightshift-sites" class="site-list registry-list"></ul>
+                </details>
+            </section>
+
+            <section aria-labelledby="dark-reader-sites-title">
+                <h3 id="dark-reader-sites-title">Dark Reader exclusion list</h3>
+                <p class="intro">The upstream compatibility list bundled with Nightshift. Patterns may include subdomains or specific paths. Bundled lists are read-only; use the toolbar to enable Nightshift on an individual website.</p>
+                <details id="dark-reader-registry">
+                    <summary>Browse Dark Reader list <span id="dark-reader-count"></span></summary>
+                    <label for="dark-reader-search">Search Dark Reader list</label>
+                    <input id="dark-reader-search" type="search" placeholder="Filter by domain or path">
+                    <ul id="dark-reader-sites" class="site-list registry-list"></ul>
+                </details>
+            </section>
         </section>
     </main>
 </body>

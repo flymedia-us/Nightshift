@@ -47,6 +47,8 @@ let replayed = try restarted.load(fallback: [:], mergeFallback: false, changes: 
 expect(!(replayed["disabledSites"] as! [String]).contains("github.com"), "Retry must not undo another profile's newer override")
 let detected = try restarted.load(fallback: [:], mergeFallback: false, changes: [change("setAutoDisabled", "github.com", "A", 2, ["excluded": true])])
 expect(!(detected["autoDisabledSites"] as! [String]).contains("github.com"), "Delayed detection must respect user enable")
+let automatic = try restarted.load(fallback: [:], mergeFallback: false, changes: [change("resetSiteOverride", "github.com", "A", 3)])
+expect(!(automatic["enabledSites"] as! [String]).contains("github.com"), "Restoring automatic rules must clear explicit enable")
 
 // A lost acknowledgement during first migration must not re-import the old
 // profile snapshot when a newer profile has already re-enabled that host.
@@ -82,12 +84,12 @@ for index in 0..<12 {
 }
 expect(persisted["globalMode"] as? String == "dark", "Auto exclusions must not reset global mode")
 
-let removed = try restarted.load(fallback: [:], mergeFallback: false, changes: [change("removeExcludedSite", "site0.example", "A", 3)])
+let removed = try restarted.load(fallback: [:], mergeFallback: false, changes: [change("removeExcludedSite", "site0.example", "A", 4)])
 expect(!(removed["disabledSites"] as! [String]).contains("site0.example"), "Removal must clear the manual exclusion")
 expect((removed["enabledSites"] as! [String]).contains("site0.example"), "Removal must persist an override against re-detection")
 let before = try Data(contentsOf: temporary.appendingPathComponent("settings.json"))
 do {
-    _ = try restarted.load(fallback: [:], mergeFallback: false, changes: [change("invalid", "github.com", "A", 4)])
+    _ = try restarted.load(fallback: [:], mergeFallback: false, changes: [change("invalid", "github.com", "A", 5)])
     fatalError("Invalid change was accepted")
 } catch {}
 let after = try Data(contentsOf: temporary.appendingPathComponent("settings.json"))

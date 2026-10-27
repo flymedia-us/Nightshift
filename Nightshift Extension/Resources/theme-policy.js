@@ -81,6 +81,9 @@
             ]);
         };
         switch (change.type) {
+        case "resetSiteOverride":
+            setMembership("enabledSites", false);
+            break;
         case "setSiteEnabled":
             setMembership("disabledSites", change.enabled !== true);
             setMembership("enabledSites", change.enabled === true);

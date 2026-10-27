@@ -3,7 +3,7 @@
     font: -apple-system-body;
     --accent: rgb(88, 86, 214);
     --border: rgba(127, 127, 127, 0.25);
-    --secondary: GrayText;
+    --secondary: color-mix(in srgb, CanvasText 65%, Canvas);
     --surface: rgba(127, 127, 127, 0.1);
 }
 
@@ -22,6 +22,7 @@ main {
     display: grid;
     gap: 16px;
     padding: 18px;
+    padding-bottom: 12px;
 }
 
 header {
@@ -29,6 +30,9 @@ header {
     align-items: center;
     gap: 10px;
 }
+
+.header-text { min-width: 0; flex: 1; }
+header p { overflow-wrap: anywhere; }
 
 .mark {
     width: 34px;
@@ -51,17 +55,30 @@ small,
     color: var(--secondary);
 }
 
-#manage-sites {
-    justify-self: start;
+#open-settings {
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
     padding: 0;
     border: 0;
+    border-radius: 7px;
     background: transparent;
-    color: LinkText;
+    color: CanvasText;
     font: inherit;
-    font-size: 12px;
-    text-align: start;
     cursor: pointer;
 }
+
+.settings-symbol {
+    display: block;
+    width: 24px;
+    height: 24px;
+    background: currentColor;
+    -webkit-mask: url("settings-gear-fill.png") center / contain no-repeat;
+    mask: url("settings-gear-fill.png") center / contain no-repeat;
+}
+#open-settings:hover { background: var(--surface); }
 
 :focus-visible {
     outline: 2px solid Highlight;
@@ -107,20 +124,26 @@ label span {
     gap: 2px;
 }
 
+.site-control label span { min-width: 0; }
+#site-domain { color: CanvasText; overflow-wrap: anywhere; }
+
 input {
     accent-color: var(--accent);
 }
 
 .site-control {
     border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
 }
 
 .site-control label {
     padding-inline: 0;
+    padding-bottom: 0;
 }
 
 #status {
-    min-height: 15px;
     font-size: 11px;
+    line-height: 1.3;
+    margin-top: -8px;
 }
+
+#status:empty { display: none; }

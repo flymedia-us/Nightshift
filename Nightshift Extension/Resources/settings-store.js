@@ -12,6 +12,7 @@
         if (value.syncPending === true) settings.syncPending = true;
         const tabHost = policy.normalizeHost(value.tabHost);
         if (tabHost) settings.tabHost = tabHost;
+        if (tabHost && typeof value.tabURL === "string" && policy.normalizeHost(value.tabURL) === tabHost) settings.tabURL = value.tabURL;
         return settings;
     }
 

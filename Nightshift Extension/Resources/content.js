@@ -11,6 +11,7 @@
     let settings = policy.normalizeSettings(policy.DEFAULT_SETTINGS);
     let settingsLoaded = false;
     let tabHost = "";
+    let tabURL = "";
     let isSavingAutoExclusion = false;
     let pendingAppearanceCheck = false;
     const GOOGLE_DOCS_HOST = "docs.google.com";
@@ -18,18 +19,24 @@
     function isGoogleDocsHost() {
         return policy.normalizeHost(window.location.host) === GOOGLE_DOCS_HOST;
     }
-    function hasKnownDarkAppearance() {
+    function hasDetectedDarkAppearance() {
         if (isGoogleDocsHost()) {
             return false;
         }
-        return manualDarkSites?.matches(window.location) === true ||
-            knownDarkSites?.hasKnownDarkAppearance(window.location, document) === true;
+        return knownDarkSites?.activeRuleFor(window.location, document) === true;
+    }
+
+    function hasStaticExclusion() {
+        return !isGoogleDocsHost() && (manualDarkSites?.matches(window.location) === true ||
+            Boolean(knownDarkSites?.staticSourceFor(window.location)));
     }
 
     function effectiveSettings() {
         const host = policy.normalizeHost(window.location.host);
-        const autoDisabledSites = settings.autoDisabledSites.filter((site) => site !== GOOGLE_DOCS_HOST);
-        if (!host || isGoogleDocsHost() || settings.enabledSites.includes(host) || !hasKnownDarkAppearance()) {
+        // Stored detections describe the last visit. Re-evaluate this page's
+        // exact path and theme marker so stale caches cannot exclude light pages.
+        const autoDisabledSites = settings.autoDisabledSites.filter((site) => site !== host && site !== GOOGLE_DOCS_HOST);
+        if (!host || isGoogleDocsHost() || settings.enabledSites.includes(host) || !(hasStaticExclusion() || hasDetectedDarkAppearance())) {
             return { ...settings, autoDisabledSites };
         }
 
@@ -48,7 +55,14 @@
         // Scope the Docs/Sheets canvas contrast fix to this exact host. Other
         // media and background images retain the dynamic engine's preservation.
         root.toggleAttribute("data-nightshift-google-docs", isGoogleDocsHost());
-        const active = !policy.isSiteDisabled(settings, tabHost) &&
+        let parentExcluded = policy.isSiteDisabled(settings, tabHost);
+        if (tabHost && tabHost !== GOOGLE_DOCS_HOST && !settings.enabledSites.includes(tabHost)) {
+            try {
+                const parentLocation = new URL(tabURL || `https://${tabHost}/`);
+                parentExcluded ||= manualDarkSites?.matches(parentLocation) === true || Boolean(knownDarkSites?.staticSourceFor(parentLocation));
+            } catch { /* Ignore an unavailable embedding tab URL. */ }
+        }
+        const active = !(tabHost !== policy.normalizeHost(window.location.host) && parentExcluded) &&
             policy.shouldApply(effectiveSettings(), window.location.host, systemAppearance.matches);
         root.toggleAttribute("data-nightshift-active", active);
         themeEngine.setActive(active);
@@ -56,6 +70,7 @@
 
     function updateSettings(value) {
         if (value.tabHost) tabHost = value.tabHost;
+        if (value.tabURL) tabURL = value.tabURL;
         settings = policy.normalizeSettings(value);
         settingsLoaded = true;
         applyTheme();
@@ -78,13 +93,23 @@
 
     function applyKnownDarkSiteExclusion() {
         const host = policy.normalizeHost(window.location.host);
-        if (!settingsLoaded || document.readyState === "loading" || !host || isSavingAutoExclusion || settings.enabledSites.includes(host)) return;
-        const hasKnownDarkSite = hasKnownDarkAppearance();
-        if (hasKnownDarkSite === settings.autoDisabledSites.includes(host)) return;
+        if (!settingsLoaded || document.readyState === "loading" || !host) return;
+        applyTheme();
+        if (isSavingAutoExclusion) return;
+        const detected = !hasStaticExclusion() && !settings.enabledSites.includes(host) && hasDetectedDarkAppearance();
+        if (detected === settings.autoDisabledSites.includes(host)) return;
 
         isSavingAutoExclusion = true;
-        settingsStore.update({ type: "setAutoDisabled", host, excluded: hasKnownDarkSite }).catch((error) => console.error("Nightshift couldn't save its native-dark-mode exclusion.", error))
-            .finally(() => { isSavingAutoExclusion = false; });
+        let succeeded = false;
+        settingsStore.update({ type: "setAutoDisabled", host, excluded: detected })
+            .then((saved) => { settings = policy.normalizeSettings(saved); succeeded = true; applyTheme(); })
+            .catch((error) => console.error("Nightshift couldn't save its detected exclusion.", error))
+            .finally(() => {
+                isSavingAutoExclusion = false;
+                // A theme marker can change while the native write is in flight.
+                // Reconcile after a successful write; failures retry on a later event.
+                if (succeeded) applyKnownDarkSiteExclusion();
+            });
     }
 
     applyTheme();

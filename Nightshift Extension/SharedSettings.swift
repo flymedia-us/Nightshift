@@ -91,6 +91,8 @@ final class SharedSettings {
             settings[key] = Array(values).sorted()
         }
         switch change["type"] as? String {
+        case "resetSiteOverride":
+            membership("enabledSites", false)
         case "setSiteEnabled":
             let enabled = change["enabled"] as? Bool == true
             membership("disabledSites", !enabled)

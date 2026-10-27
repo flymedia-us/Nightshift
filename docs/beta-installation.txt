@@ -1,4 +1,4 @@
-Nightshift 1.0.11 (build 24) — unsigned Safari testing beta
+Nightshift 1.0.18 (build 33) — unsigned Safari testing beta
 
 1. Transfer Nightshift.zip to the other Mac and double-click it. Open the extracted Nightshift Beta folder, which contains the app, these instructions, and the registration repair.
 2. Quit Safari. Preserve the previous app, then move the new Nightshift.app into Applications. Replace the entire bundle.

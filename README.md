@@ -7,7 +7,7 @@ Nightshift is a completely free, open-source Safari Web Extension for macOS that
 - Privacy policy: <https://apps.flymedia.us/nightshift/privacy/>
 - Report a bug or suggest a feature: <https://github.com/flymedia-us/Nightshift/issues>
 
-The current development and unsigned beta version is **1.0.13 (28)**. Its dynamic theme replaces whole-page inversion, preserving background photos such as Gmail's theme image. This beta is not a notarized public release.
+The current development and unsigned beta version is **1.0.18 (33)**. The popup and settings page follow Nightshift’s selected appearance and controls the global appearance and separates the four exclusion sources, the popup has a top-right settings icon and shows the domain for its website control, and public manual exclusions can be exported for explicit maintainer review. Its dynamic theme preserves background photos such as Gmail's theme image. This beta is not a notarized public release.
 
 ## Appearance modes
 
@@ -19,7 +19,9 @@ Nightshift can also be disabled for individual sites from its Safari toolbar pop
 
 When active, Nightshift excludes sites listed in its repo-owned compatibility registry, generated from the vendored Dark Reader snapshot plus the developer-maintained `Config/manual-dark-sites.config` additions. It does not infer native dark mode from arbitrary rendered colors, `color-scheme`, media rules, or controls. You can re-enable any listed site from the toolbar popup.
 
-Manage all excluded websites—including known-list and manually added sites—in Nightshift's browser settings page. Open Safari’s extension settings and choose Nightshift’s settings page to add or remove exclusions.
+Click the **settings icon** at the top right of Nightshift's toolbar popup to manage exclusions. The same settings page separates your manual exclusions, auto-detected exclusions, Nightshift's bundled list, and Dark Reader's bundled list. Bundled lists are searchable and read-only. You can enable a false-positive detection, override a bundled exclusion from the toolbar, or restore automatic rules. Manual exclusions always win.
+
+The maintainer's personal MacBook can export its public manual exclusions for explicit promotion into the Nightshift master list. No user's preferences are uploaded or added automatically. See [the maintainer workflow](docs/maintainer-exclusions.md).
 
 ## Architecture
 
@@ -147,3 +149,5 @@ See [`LAUNCH_CHECKLIST.md`](LAUNCH_CHECKLIST.md) for the remaining App Store, co
 
 Nightshift is available under the MIT License. See [`LICENSE`](LICENSE). The original copyright and license notice are retained.
 The bundled Dark Reader engine, compatibility data, local patches, and their attribution are documented in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
+
+The popup settings cog is Apple’s `gearshape.fill` SF Symbol, rendered with AppKit. Regenerate the bundled mask on macOS with `npm run icons:settings`; see [third-party notices](THIRD_PARTY_NOTICES.md).

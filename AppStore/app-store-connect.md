@@ -31,7 +31,7 @@ The exact field values are the text files in [`metadata/en-US/`](metadata/en-US/
 - [`review_notes.txt`](metadata/en-US/review_notes.txt)
 - [`urls.txt`](metadata/en-US/urls.txt)
 
-Use the marketing version and build number from `project.yml` (currently `1.0.13`, build `28`) and select the uploaded App Store archive whose versions match. The local development build and unsigned testing beta are not App Store submission artifacts. Use the attached release notes only for a later update; Apple does not require “What’s New” copy for the first version.
+Use the marketing version and build number from `project.yml` (currently `1.0.18`, build `33`) and select the uploaded App Store archive whose versions match. The local development build and unsigned testing beta are not App Store submission artifacts. Use the attached release notes only for a later update; Apple does not require “What’s New” copy for the first version.
 
 ## Price, availability, and release
 

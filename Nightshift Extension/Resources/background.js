@@ -122,7 +122,7 @@
             // Frame scripts use their embedding tab's host so disabling a site
             // also disables Nightshift in third-party embedded documents.
             const tabHost = policy.normalizeHost(sender?.tab?.url);
-            return tabHost ? { ...settings, tabHost } : settings;
+            return tabHost ? { ...settings, tabHost, tabURL: sender.tab.url } : settings;
         });
     });
 }());

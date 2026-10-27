@@ -9,6 +9,7 @@
     const modeInputs = [...document.querySelectorAll('input[name="global-mode"]')];
     const siteEnabledInput = document.querySelector("#site-enabled");
     const siteName = document.querySelector("#site-name");
+    const siteDomain = document.querySelector("#site-domain");
     const siteDetail = document.querySelector("#site-detail");
     const status = document.querySelector("#status");
     let settings = policy.normalizeSettings(policy.DEFAULT_SETTINGS);
@@ -20,9 +21,14 @@
     }
 
     function render() {
+        // Match settings: explicit Nightshift modes override macOS, while
+        // System lets native Canvas colors follow appearance changes live.
+        document.documentElement.style.colorScheme = settings.globalMode === policy.MODES.SYSTEM
+            ? "light dark" : settings.globalMode === policy.MODES.DARK ? "dark" : "light";
         for (const input of modeInputs) {
             input.checked = input.value === settings.globalMode;
         }
+        siteDomain.textContent = currentHost || "No website available";
 
         if (currentHost === "") {
             siteName.textContent = "This Safari page isn't available to extensions";
@@ -43,22 +49,19 @@
             siteEnabledInput.checked = !isManuallyDisabled;
             return;
         }
-        let knownDarkSite = false;
+        let staticSource = "";
         try {
             const location = new URL(currentURL);
-            knownDarkSite = !isGoogleDocs && (
-                manualDarkSites?.matches(location) === true ||
-                knownDarkSites?.hasKnownDarkAppearance(location, null) === true
-            );
+            staticSource = manualDarkSites?.matches(location) === true ? "Nightshift" : knownDarkSites?.staticSourceFor(location) ?? "";
         } catch {
             // Safari-internal and malformed URLs are handled by the host check below.
         }
         const automaticallyDisabled = !settings.enabledSites.includes(currentHost) &&
-            (settings.autoDisabledSites.includes(currentHost) || knownDarkSite);
+            (settings.autoDisabledSites.includes(currentHost) || Boolean(staticSource));
         siteDetail.textContent = isManuallyDisabled
-            ? "Disabled for this website"
+            ? "Manually excluded by you"
             : automaticallyDisabled
-            ? "Disabled because this site is in Nightshift's native dark-mode registry"
+            ? staticSource ? `Excluded by the ${staticSource} list` : "Auto-detected: a known site theme marker was found"
             : "Uses the global appearance setting";
         siteEnabledInput.disabled = false;
         siteEnabledInput.checked = !policy.isSiteDisabled(settings, currentHost) && !automaticallyDisabled;
@@ -96,12 +99,13 @@
             .catch((error) => { render(); setStatus(`Couldn't save: ${error.message}`); });
     });
 
-    document.querySelector("#manage-sites").addEventListener("click", () => {
+    function openSettings() {
         // Safari can reuse an options tab belonging to another profile (or an
         // outdated extension origin). Create this profile's own settings tab.
         extensionAPI.tabs.create({ url: extensionAPI.runtime.getURL("options.html") })
             .catch((error) => setStatus(`Couldn't open settings: ${error.message}`));
-    });
+    }
+    document.querySelector("#open-settings").addEventListener("click", openSettings);
 
     settingsStore.watch((storedSettings) => {
         settings = storedSettings;

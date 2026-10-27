@@ -33,8 +33,9 @@ function createHarness({ tabURL = "https://example.com/page", storedSettings = {
     const siteEnabledInput = createInput();
     const siteName = { textContent: "" };
     const siteDetail = { textContent: "" };
+    const siteDomain = { textContent: "" };
     const status = { textContent: "" };
-    const manageSites = createInput();
+    const openSettings = createInput();
     let openedSettings = false;
     let storageListener;
     const savedSettings = [];
@@ -62,11 +63,13 @@ function createHarness({ tabURL = "https://example.com/page", storedSettings = {
     const elements = {
         "#site-enabled": siteEnabledInput,
         "#site-name": siteName,
+        "#site-domain": siteDomain,
         "#site-detail": siteDetail,
         "#status": status,
-        "#manage-sites": manageSites,
+        "#open-settings": openSettings,
     };
     const document = {
+        documentElement: { style: {} },
         querySelectorAll: () => modeInputs,
         querySelector: (selector) => elements[selector],
     };
@@ -77,13 +80,15 @@ function createHarness({ tabURL = "https://example.com/page", storedSettings = {
     vm.runInContext(popupSource, context);
 
     return {
+        colorScheme: () => document.documentElement.style.colorScheme,
         modeInputs,
         savedSettings,
         siteEnabledInput,
         siteName,
+        siteDomain,
         siteDetail,
         status,
-        manageSites,
+        openSettings,
         openedSettings: () => openedSettings,
         updateStorage: (changes) => storageListener(changes, "local"),
         async settle() {
@@ -93,23 +98,29 @@ function createHarness({ tabURL = "https://example.com/page", storedSettings = {
 }
 
 test("popup renders stored mode and the active site", async () => {
-    const harness = createHarness({ storedSettings: { globalMode: "dark" } });
+    const harness = createHarness({ tabURL: "https://sub.example.com:8443/path", storedSettings: { globalMode: "dark" } });
     await harness.settle();
 
     assert.equal(harness.modeInputs.find((input) => input.value === "dark").checked, true);
-    assert.equal(harness.siteName.textContent, "example.com");
+    assert.equal(harness.siteName.textContent, "sub.example.com:8443");
+    assert.equal(harness.siteDomain.textContent, "sub.example.com:8443");
     assert.equal(harness.siteEnabledInput.checked, true);
+    assert.equal(harness.colorScheme(), "dark");
 });
 
 test("popup opens excluded website management and follows changes from other tabs", async () => {
     const harness = createHarness();
     await harness.settle();
-    harness.manageSites.dispatch("click");
+    harness.openSettings.dispatch("click");
     await harness.settle();
     assert.equal(harness.openedSettings(), true);
+    assert.equal(harness.colorScheme(), "light dark");
     harness.updateStorage({ globalMode: { newValue: "dark" }, disabledSites: { newValue: ["example.com"] } });
     assert.equal(harness.modeInputs.find((input) => input.value === "dark").checked, true);
     assert.equal(harness.siteEnabledInput.checked, false);
+    assert.equal(harness.colorScheme(), "dark");
+    harness.updateStorage({ globalMode: { newValue: "light" } });
+    assert.equal(harness.colorScheme(), "light");
 });
 
 test("popup saves a new global mode", async () => {
@@ -148,7 +159,7 @@ test("popup explains known-site exclusions and lets the user override one", asyn
     const harness = createHarness({ storedSettings: { globalMode: "dark", autoDisabledSites: ["example.com"] } });
     await harness.settle();
     assert.equal(harness.siteEnabledInput.checked, false);
-    assert.match(harness.siteDetail.textContent, /native dark-mode registry/);
+    assert.match(harness.siteDetail.textContent, /Auto-detected/);
 
     harness.siteEnabledInput.checked = true;
     harness.siteEnabledInput.dispatch("change");
@@ -160,7 +171,7 @@ test("popup excludes a registry site before its cached exclusion is saved", asyn
     const harness = createHarness({ tabURL: "https://drive.google.com/drive/my-drive" });
     await harness.settle();
     assert.equal(harness.siteEnabledInput.checked, false);
-    assert.match(harness.siteDetail.textContent, /native dark-mode registry/);
+    assert.match(harness.siteDetail.textContent, /Nightshift list/);
 });
 
 test("popup keeps Google Docs enabled even with a stale cached exclusion", async () => {
@@ -178,5 +189,6 @@ test("popup disables site controls on Safari-internal pages", async () => {
     await harness.settle();
 
     assert.equal(harness.siteEnabledInput.disabled, true);
+    assert.equal(harness.siteDomain.textContent, "No website available");
     assert.match(harness.siteName.textContent, /isn't available/);
 });

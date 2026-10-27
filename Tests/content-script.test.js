@@ -13,7 +13,7 @@ const contentSource = fs.readFileSync(path.join(resourceDirectory, "content.js")
 const knownDarkSites = require(path.join(resourceDirectory, "known-dark-sites.js"));
 const manualDarkSites = require(path.join(resourceDirectory, "manual-dark-sites.js"));
 
-function createHarness({ host = "example.com", systemIsDark = false, storedSettings = {} } = {}) {
+function createHarness({ host = "example.com", systemIsDark = false, storedSettings = {}, tabURL = "" } = {}) {
     const attributes = new Set();
     let systemListener;
     let storageListener;
@@ -69,6 +69,8 @@ function createHarness({ host = "example.com", systemIsDark = false, storedSetti
         },
     });
 
+    if (tabURL) browser.runtime = { sendMessage: async () => ({ disabledSites: [], ...storedSettings, tabHost: new URL(tabURL).host, tabURL }) };
+
     vm.runInContext(policySource, context);
     vm.runInContext(settingsStoreSource, context);
     vm.runInContext(contentSource, context);
@@ -94,6 +96,24 @@ function createHarness({ host = "example.com", systemIsDark = false, storedSetti
 test("content script applies the default System mode before async storage loads", () => {
     assert.equal(createHarness({ systemIsDark: true }).isActive(), true);
     assert.equal(createHarness({ systemIsDark: false }).isActive(), false);
+});
+
+test("bundled parent exclusions apply to third-party frames without a detection cache", async () => {
+    const frame = createHarness({ tabURL: "https://chatgpt.com/c/example", storedSettings: { globalMode: "dark" } });
+    await frame.settle();
+    assert.equal(frame.isActive(), false);
+    assert.equal(frame.savedSettings.length, 0);
+    const enabledFrame = createHarness({ tabURL: "https://chatgpt.com/c/example", storedSettings: { globalMode: "dark", enabledSites: ["chatgpt.com"] } });
+    await enabledFrame.settle();
+    assert.equal(enabledFrame.isActive(), true);
+});
+
+test("path-specific parent exclusions do not disable unrelated parent paths", async () => {
+    const app = createHarness({ tabURL: "https://discord.com/app", storedSettings: { globalMode: "dark" } });
+    const login = createHarness({ tabURL: "https://discord.com/blog", storedSettings: { globalMode: "dark" } });
+    await Promise.all([app.settle(), login.settle()]);
+    assert.equal(app.isActive(), false);
+    assert.equal(login.isActive(), true);
 });
 
 test("Google Docs keeps its custom rendering marker without being registry-excluded", () => {
@@ -138,16 +158,18 @@ test("site exclusions deactivate an already-open page", async () => {
     assert.equal(harness.themeStates.at(-1), false);
 });
 
-test("known dark-site entries are automatically excluded after settings load", async () => {
+test("bundled entries are excluded without being saved as detections", async () => {
     const harness = createHarness({ host: "photopea.com", storedSettings: { globalMode: "dark" } });
     await harness.settle();
-    assert.deepEqual(harness.savedSettings.at(-1).autoDisabledSites, ["photopea.com"]);
+    assert.equal(harness.isActive(), false);
+    assert.equal(harness.savedSettings.length, 0);
 });
 
 test("known dark-site entries are excluded even when System is currently light", async () => {
     const harness = createHarness({ host: "drive.google.com", storedSettings: { globalMode: "system" } });
     await harness.settle();
-    assert.deepEqual(harness.savedSettings.at(-1).autoDisabledSites, ["drive.google.com"]);
+    assert.equal(harness.isActive(), false);
+    assert.equal(harness.savedSettings.length, 0);
 });
 
 test("Google Drive stays excluded while Google Docs remains enabled", async () => {
@@ -181,12 +203,12 @@ test("GitHub is automatically excluded by the shipped manual registry", async ()
     assert.equal(harness.isActive(), false);
     await harness.settle();
     assert.equal(harness.isActive(), false);
-    assert.deepEqual(harness.savedSettings.at(-1).autoDisabledSites, ["github.com"]);
+    assert.equal(harness.savedSettings.length, 0);
 });
 
-test("a detector saves only its own exclusion without clearing another host's cache", async () => {
-    const harness = createHarness({ host: "github.com", storedSettings: { globalMode: "dark", disabledSites: ["manual.example"], autoDisabledSites: ["docs.google.com", "photopea.com"] } });
+test("clearing a legacy registry cache preserves other hosts and manual exclusions", async () => {
+    const harness = createHarness({ host: "github.com", storedSettings: { globalMode: "dark", disabledSites: ["manual.example"], autoDisabledSites: ["docs.google.com", "github.com", "photopea.com"] } });
     await harness.settle();
     assert.deepEqual(harness.savedSettings.at(-1).disabledSites, ["manual.example"]);
-    assert.deepEqual(harness.savedSettings.at(-1).autoDisabledSites, ["docs.google.com", "github.com", "photopea.com"]);
+    assert.deepEqual(harness.savedSettings.at(-1).autoDisabledSites, ["docs.google.com", "photopea.com"]);
 });

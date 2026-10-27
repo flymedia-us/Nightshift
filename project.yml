@@ -8,12 +8,12 @@ options:
 
 settings:
   base:
-    CURRENT_PROJECT_VERSION: "28"
+    CURRENT_PROJECT_VERSION: "33"
     CODE_SIGN_INJECT_BASE_ENTITLEMENTS: NO
     DEVELOPMENT_TEAM: BJZSH247Q9
     ENABLE_HARDENED_RUNTIME: YES
     MACOSX_DEPLOYMENT_TARGET: "13.7.7"
-    MARKETING_VERSION: "1.0.13"
+    MARKETING_VERSION: "1.0.18"
     OTHER_CODE_SIGN_FLAGS: --timestamp
     SWIFT_STRICT_CONCURRENCY: complete
     SWIFT_VERSION: "6.0"
@@ -82,6 +82,8 @@ targets:
         buildPhase: resources
       - path: Nightshift Extension/Resources/popup.html
         buildPhase: resources
+      - path: Nightshift Extension/Resources/settings-gear-fill.png
+        buildPhase: resources
       - path: Nightshift Extension/Resources/popup.css
         buildPhase: resources
       - path: Nightshift Extension/Resources/popup.js
@@ -89,6 +91,8 @@ targets:
       - path: Nightshift Extension/Resources/options.html
         buildPhase: resources
       - path: Nightshift Extension/Resources/options.css
+        buildPhase: resources
+      - path: Nightshift Extension/Resources/exclusion-export.js
         buildPhase: resources
       - path: Nightshift Extension/Resources/options.js
         buildPhase: resources

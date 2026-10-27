@@ -73,3 +73,8 @@ test("removing an excluded registry site persists an explicit override", () => {
     assert.deepEqual(next.autoDisabledSites, []);
     assert.deepEqual(next.enabledSites, ["github.com"]);
 });
+
+test("restoring automatic rules removes only the selected enabled override", () => {
+    const next = policy.applyChange({ disabledSites: ["manual.org"], enabledSites: ["youtube.com", "github.com"], autoDisabledSites: ["detected.org"] }, { type: "resetSiteOverride", host: "youtube.com" });
+    assert.deepEqual(next, { globalMode: "system", disabledSites: ["manual.org"], enabledSites: ["github.com"], autoDisabledSites: ["detected.org"] });
+});

@@ -70,6 +70,9 @@ test("Safari profile workers persist, merge, migrate, and retry through the real
         assert.deepEqual(restarted.cache.pendingSettingsChanges, []);
         assert.ok(!restarted.cache.disabledSites.includes("retry.example"));
         assert.ok(restarted.cache.enabledSites.includes("retry.example"));
+        await restarted.update({ type: "resetSiteOverride", host: "retry.example" });
+        const refreshed = await second.load();
+        assert.ok(!refreshed.enabledSites.includes("retry.example"));
 
         const before = await readFile(path.join(directory, "settings.json"), "utf8");
         const writes = restarted.writes.length;

@@ -59,3 +59,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+## Apple SF Symbols
+
+The popup settings control uses Apple's unmodified `gearshape.fill` SF Symbol,
+rendered by AppKit into `Nightshift Extension/Resources/settings-gear-fill.png`
+for this macOS application's extension UI. Regenerate it on macOS with
+`npm run icons:settings`. Apple's symbol artwork is not covered by this
+repository's MIT license.
+
+Source: [Apple SF Symbols](https://developer.apple.com/sf-symbols/).
+Rendering API: [AppKit system symbol images](https://developer.apple.com/documentation/appkit/nsimage/init(systemsymbolname:accessibilitydescription:)).
