@@ -84,10 +84,10 @@
         if (!Object.keys(policy.DEFAULT_SETTINGS).some((key) => key in changes)) return;
 
         updateSettings({
-            globalMode: changes.globalMode?.newValue ?? settings.globalMode,
-            disabledSites: changes.disabledSites?.newValue ?? settings.disabledSites,
-            autoDisabledSites: changes.autoDisabledSites?.newValue ?? settings.autoDisabledSites,
-            enabledSites: changes.enabledSites?.newValue ?? settings.enabledSites,
+            globalMode: "globalMode" in changes ? changes.globalMode.newValue : settings.globalMode,
+            disabledSites: "disabledSites" in changes ? changes.disabledSites.newValue : settings.disabledSites,
+            autoDisabledSites: "autoDisabledSites" in changes ? changes.autoDisabledSites.newValue : settings.autoDisabledSites,
+            enabledSites: "enabledSites" in changes ? changes.enabledSites.newValue : settings.enabledSites,
         });
     }
 
@@ -120,7 +120,12 @@
         .catch((error) => console.error("Nightshift couldn't load its settings.", error));
 
     extensionAPI.storage.onChanged.addListener(handleStorageChange);
-    settingsStore.watch(updateSettings);
+
+    // A page restored from Safari's back/forward cache may have missed events.
+    window.addEventListener("pageshow", (event) => {
+        if (event.persisted) settingsStore.load().then(updateSettings)
+            .catch((error) => console.error("Nightshift couldn't reload its preferences.", error));
+    });
 
     // Check after page CSS is available so known selector rules can observe the
     // site's active theme marker without inspecting arbitrary rendered colors.

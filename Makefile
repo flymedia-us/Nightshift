@@ -1,4 +1,4 @@
-.PHONY: setup check test smoke build build-project analyze verify open clean test-native test-packaging release beta app-store-archive app-store-export
+.PHONY: setup check test smoke build build-project analyze verify open clean test-packaging release beta app-store-archive app-store-export
 
 DERIVED_DATA := .build/DerivedData
 APP_STORE_ARCHIVE := .build/AppStore/Nightshift.xcarchive
@@ -13,7 +13,6 @@ check:
 
 test:
 	npm test
-	$(MAKE) test-native
 	$(MAKE) test-packaging
 
 smoke:
@@ -47,12 +46,6 @@ open: setup
 
 clean:
 	xcodebuild -project Nightshift.xcodeproj -scheme Nightshift -derivedDataPath "$(DERIVED_DATA)" clean
-
-test-native:
-	mkdir -p .build/native-tests
-	xcrun swiftc -module-cache-path .build/native-tests/ModuleCache "Nightshift Extension/SharedSettings.swift" Tests/native-settings/main.swift -o .build/native-tests/settings-tests
-	.build/native-tests/settings-tests
-	node --test Tests/native-settings/bridge.test.cjs
 
 release: setup
 	python3 Scripts/package-nightshift.py

@@ -15,17 +15,11 @@
 
     function setStatus(message, target = status) { target.textContent = message; }
 
-    settingsStore.watch((storedSettings) => {
-        if (JSON.stringify(settings) === JSON.stringify(storedSettings)) return;
-        settings = storedSettings;
-        render();
-    });
-
     function save(change, message = "Saved", target = status) {
         return settingsStore.update(change).then((savedSettings) => {
             settings = savedSettings;
             render();
-            setStatus(savedSettings.syncPending ? "Saved in this profile; sharing with other profiles will retry." : message, target);
+            setStatus(message, target);
         });
     }
 
@@ -148,10 +142,10 @@
         if (areaName !== "local") return;
         if (!Object.keys(policy.DEFAULT_SETTINGS).some((key) => key in changes)) return;
         settings = policy.normalizeSettings({
-            globalMode: changes.globalMode?.newValue ?? settings.globalMode,
-            disabledSites: changes.disabledSites?.newValue ?? settings.disabledSites,
-            autoDisabledSites: changes.autoDisabledSites?.newValue ?? settings.autoDisabledSites,
-            enabledSites: changes.enabledSites?.newValue ?? settings.enabledSites,
+            globalMode: "globalMode" in changes ? changes.globalMode.newValue : settings.globalMode,
+            disabledSites: "disabledSites" in changes ? changes.disabledSites.newValue : settings.disabledSites,
+            autoDisabledSites: "autoDisabledSites" in changes ? changes.autoDisabledSites.newValue : settings.autoDisabledSites,
+            enabledSites: "enabledSites" in changes ? changes.enabledSites.newValue : settings.enabledSites,
         });
         render();
     });

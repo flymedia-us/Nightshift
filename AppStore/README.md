@@ -2,6 +2,8 @@
 
 This directory keeps the small, reviewable source of truth for Nightshift's App Store listing. Public copy belongs here because it ships with the product and benefits from the same review history as the code.
 
+The Mac App Store is the exclusive official binary distribution channel. Keep the source public and source builds supported; do not offer official direct app/ZIP/DMG downloads. Existing private maintainer testing artifacts remain separate from public distribution. Changes to the bundled master exclusion list reach public users through an App Store update.
+
 ## What is versioned here
 
 - English App Store metadata and App Review notes

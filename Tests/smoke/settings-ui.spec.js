@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import policy from '../../Nightshift Extension/Resources/theme-policy.js';
+import backgroundHarness from '../helpers/background-harness.cjs';
 
 const resources = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../Nightshift Extension/Resources');
 
@@ -15,12 +15,13 @@ async function extensionPage(context, name, service, tabURL = 'https://example.c
     await route.fulfill({ body, contentType });
   });
   await page.exposeFunction('settingsTransport', service);
+  await page.exposeFunction('storageTransport', (defaults) => service.storage.get(defaults));
   await page.addInitScript(({ tabURL }) => {
-    let cache = {};
     const listeners = [];
+    window.dispatchExtensionStorage = (changes) => listeners.forEach((listener) => listener(changes, 'local'));
     window.browser = {
       storage: {
-        local: { async get(defaults) { return { ...defaults, ...cache }; } },
+        local: { async get(defaults) { return window.storageTransport(defaults); } },
         onChanged: { addListener(listener) { listeners.push(listener); } },
       },
       tabs: {
@@ -30,26 +31,21 @@ async function extensionPage(context, name, service, tabURL = 'https://example.c
       runtime: {
         getURL(path) { return `https://nightshift.test/${path}`; },
         async sendMessage(message) {
-          const next = await window.settingsTransport(message);
-          const changes = Object.fromEntries(Object.entries(next).filter(([key, value]) => JSON.stringify(cache[key]) !== JSON.stringify(value))
-            .map(([key, newValue]) => [key, { newValue }]));
-          cache = next;
-          if (Object.keys(changes).length) listeners.forEach((listener) => listener(changes, 'local'));
-          return next;
+          return window.settingsTransport(message);
         },
       },
     };
   }, { tabURL });
+  const unsubscribe = service.subscribe((changes) => page.evaluate((changes) => window.dispatchExtensionStorage?.(changes), changes).catch(() => {}));
+  page.on('close', unsubscribe);
   await page.goto(`https://nightshift.test/${name}`);
   return page;
 }
 
 function service(initial = {}) {
-  let settings = policy.normalizeSettings(initial);
-  return async (message) => {
-    if (message.type === 'updateSettings') settings = policy.applyChange(settings, message.change);
-    return settings;
-  };
+  const background = backgroundHarness.createHarness({ local: initial });
+  const request = (message) => message.type === 'updateSettings' ? background.update(message.change) : background.load();
+  return Object.assign(request, background);
 }
 
 async function expectExtensionAppearance(page, dark) {
@@ -110,6 +106,16 @@ test('popup supports keyboard mode changes, protected pages, and settings discov
   await expect.poll(() => page.evaluate(() => window.optionsOpened)).toBe('https://nightshift.test/options.html');
 });
 
+test('popup palette follows saved mode even when Safari retains a native popover color scheme', async ({ context }) => {
+  const page = await extensionPage(context, 'popup.html', service({ globalMode: 'dark' }));
+  await page.addStyleTag({ content: ':root { color-scheme: dark !important; }' });
+  await page.getByRole('radio', { name: /Always Light/ }).check();
+  await expectExtensionAppearance(page, false);
+  await page.addStyleTag({ content: ':root { color-scheme: light !important; }' });
+  await page.getByRole('radio', { name: /Always Dark/ }).check();
+  await expectExtensionAppearance(page, true);
+});
+
 test('settings separate all four layers, export only public manual sites, and handle false positives', async ({ context }) => {
   const shared = service({ disabledSites: ['www.samfriedman.art', 'localhost:3000', '192.168.50.249:8000'], autoDisabledSites: ['www.youtube.com', 'photopea.com', 'docs.google.com'] });
   const page = await extensionPage(context, 'options.html', shared);
@@ -161,7 +167,6 @@ test('excluded sites validate, normalize, persist across pages, and render addre
   await expect(reopened.locator('#excluded-sites .site-name')).toHaveText('example.com:8443');
   await reopened.getByRole('button', { name: 'Remove example.com:8443 from excluded websites' }).click();
   await expect(reopened.getByText('No manual exclusions')).toBeVisible();
-  await page.evaluate(() => window.dispatchEvent(new Event('focus')));
   await expect(page.getByText('No manual exclusions')).toBeVisible();
 });
 
@@ -180,12 +185,10 @@ test('settings appearance controls persist, share popup changes, and preserve we
   await popup.getByRole('radio', { name: /Always Light/ }).check();
   await expect(popup.getByRole('status')).toHaveText('Saved');
   await expectExtensionAppearance(popup, false);
-  await options.evaluate(() => window.dispatchEvent(new Event('focus')));
   await expect(options.getByRole('radio', { name: /Always Light/ })).toBeChecked();
   await expectExtensionAppearance(options, false);
   await options.getByRole('radio', { name: /Always Dark/ }).check();
   await expect(options.locator('#appearance-status')).toHaveText('Saved');
-  await popup.evaluate(() => window.dispatchEvent(new Event('focus')));
   await expect(popup.getByRole('radio', { name: /Always Dark/ })).toBeChecked();
   await expectExtensionAppearance(popup, true);
   await options.getByRole('radio', { name: /System/ }).check();
@@ -195,43 +198,59 @@ test('settings appearance controls persist, share popup changes, and preserve we
   await expect(reopened.locator('#excluded-sites .site-name')).toHaveText('saved.example');
 });
 
-test('an open profile refreshes another profile’s edits and retains keyboard focus on unchanged refresh', async ({ browser }) => {
-  const shared = service({ disabledSites: ['saved.example'] });
-  const first = await browser.newContext();
-  const second = await browser.newContext();
+test('Safari profiles remain independent while same-profile pages receive storage events', async ({ browser }) => {
+  const personalStorage = service({ disabledSites: ['saved.example'] });
+  const workStorage = service({ disabledSites: ['saved.example'] });
+  const personal = await browser.newContext();
+  const work = await browser.newContext();
   try {
-    const options = await extensionPage(first, 'options.html', shared);
+    const options = await extensionPage(personal, 'options.html', personalStorage);
     const remove = options.getByRole('button', { name: 'Remove saved.example from excluded websites' });
     await remove.focus();
-    await options.evaluate(() => window.dispatchEvent(new Event('focus')));
-    await expect(remove).toBeFocused();
-    const popup = await extensionPage(second, 'popup.html', shared);
-    await expect(popup.locator('#site-domain')).toHaveText('example.com');
+    const popup = await extensionPage(work, 'popup.html', workStorage);
     await popup.getByRole('checkbox', { name: /Enable on this website/ }).uncheck();
+    await popup.getByRole('radio', { name: /Always Light/ }).check();
     await expect(popup.getByRole('status')).toHaveText('Saved');
-    await options.evaluate(() => window.dispatchEvent(new Event('focus')));
+    await expect(options.locator('#excluded-sites .site-name')).toHaveText(['saved.example']);
+    await expect(options.getByRole('radio', { name: /System/ })).toBeChecked();
+    await expect(remove).toBeFocused();
+    const sameProfilePopup = await extensionPage(personal, 'popup.html', personalStorage);
+    await sameProfilePopup.getByRole('checkbox', { name: /Enable on this website/ }).uncheck();
     await expect(options.locator('#excluded-sites .site-name')).toHaveText(['example.com', 'saved.example']);
+    const reopenedWork = await extensionPage(work, 'options.html', workStorage);
+    await expect(reopenedWork.getByRole('radio', { name: /Always Light/ })).toBeChecked();
+    await expect(reopenedWork.locator('#excluded-sites .site-name')).toHaveText(['example.com', 'saved.example']);
   } finally {
-    await first.close();
-    await second.close();
+    await personal.close();
+    await work.close();
   }
 });
 
+test('removed Safari storage keys reset open controls to defaults', async ({ context }) => {
+  const storage = service({ globalMode: 'dark', disabledSites: ['saved.example'] });
+  const options = await extensionPage(context, 'options.html', storage);
+  await expect(options.getByRole('radio', { name: /Always Dark/ })).toBeChecked();
+  await storage.storage.remove(['globalMode', 'disabledSites']);
+  await expect(options.getByRole('radio', { name: /System/ })).toBeChecked();
+  await expect(options.getByText('No manual exclusions')).toBeVisible();
+});
+
 for (const name of ['popup.html', 'options.html']) {
-test(`${name} reports delayed cross-profile sync and recovers from appearance save errors`, async ({ context }) => {
-  let fail = false;
-  const page = await extensionPage(context, name, async (message) => {
-    if (fail && message.type === 'updateSettings') throw new Error('Storage unavailable');
-    return { ...policy.normalizeSettings({ globalMode: message.change?.mode }), syncPending: message.type === 'updateSettings' };
-  });
+test(`${name} reports failed storage writes without losing saved appearance`, async ({ context }) => {
+  const storage = service();
+  const page = await extensionPage(context, name, storage);
   const status = name === 'popup.html' ? page.getByRole('status') : page.locator('#appearance-status');
   await page.getByRole('radio', { name: /Always Dark/ }).check();
-  await expect(status).toContainText('sharing with other profiles will retry');
+  await expect(status).toHaveText('Saved');
   await expectExtensionAppearance(page, true);
-  fail = true;
+  storage.failWrites(true);
   await page.getByRole('radio', { name: /Always Light/ }).click();
   await expect(status).toContainText("Couldn't save");
   await expect(page.getByRole('radio', { name: /Always Dark/ })).toBeChecked();
   await expectExtensionAppearance(page, true);
+  storage.failWrites(false);
+  await page.getByRole('radio', { name: /Always Light/ }).click();
+  await expect(status).toHaveText('Saved');
+  await expectExtensionAppearance(page, false);
 });
 }

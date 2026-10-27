@@ -8,7 +8,7 @@ To review:
 5. Add Nightshift to Safari's toolbar if it is not already visible, then open its popup.
 6. Verify that Always Dark applies the dark theme, Always Light removes it, and System follows the Mac's current appearance.
 7. Turn off “Enable on this website” and verify that the current site and its embedded frames remain unchanged.
-8. Click “Manage excluded websites…” to add or remove site exclusions.
-9. Enable Nightshift separately in another Safari profile. Appearance and site settings are shared locally on this Mac, refresh when returning to a page or within 15 seconds while visible, and survive restarting Safari. There is no iCloud or cross-device preference sync.
+8. Click the settings cog at the top right of the popup to add or remove site exclusions.
+9. Enable Nightshift separately in another Safari profile. Appearance and manual exclusions are independent in each profile and persist through Safari restarts using browser.storage.local. Changes in one profile must not change another. No native messaging, custom cross-profile sync, or iCloud preference sync is used.
 
 Always Light means Nightshift is inactive; it does not force a website's own dark theme to become light. Safari internal pages and other protected browser pages are intentionally unavailable to extensions.

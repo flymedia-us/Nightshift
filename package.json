@@ -1,6 +1,6 @@
 {
   "name": "nightshift",
-  "version": "1.0.18",
+  "version": "1.0.20",
   "private": true,
   "scripts": {
     "check": "node --check 'Scripts/import-maintainer-exclusions.mjs' && node --check 'Nightshift Extension/Resources/exclusion-export.js' && node --check 'Scripts/generate-dark-site-registry.mjs' && node --check 'Nightshift Extension/Resources/theme-policy.js' && node --check 'Nightshift Extension/Resources/settings-store.js' && node --check 'Nightshift Extension/Resources/background.js' && node --check 'Nightshift Extension/Resources/manual-dark-sites.js' && node --check 'Nightshift Extension/Resources/known-dark-sites.js' && node --check 'Nightshift Extension/Resources/content.js' && node --check 'Nightshift Extension/Resources/popup.js' && node --check 'Nightshift Extension/Resources/options.js' && node --check 'Scripts/bundle-theme-engine.mjs' && node --check 'Nightshift Extension/Resources/darkreader.js' && node --check 'Nightshift Extension/Resources/theme-engine.js'",

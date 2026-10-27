@@ -70,9 +70,10 @@ def verify(package):
                     f"Bundled resource differs from current source: {source.name}")
         privacy = plistlib.loads((shipped / "PrivacyInfo.xcprivacy").read_bytes())
         require(not privacy["NSPrivacyTracking"] and not privacy["NSPrivacyCollectedDataTypes"], "Unexpected data collection declaration")
-        require(any(item["NSPrivacyAccessedAPIType"] == "NSPrivacyAccessedAPICategoryUserDefaults" and
-                    "CA92.1" in item["NSPrivacyAccessedAPITypeReasons"] for item in privacy["NSPrivacyAccessedAPITypes"]),
-                "The UserDefaults migration requires its approved privacy reason")
+        require(privacy["NSPrivacyAccessedAPITypes"] == [],
+                "The extension no longer calls native required-reason APIs")
+        require("nativeMessaging" not in json.loads((shipped / "manifest.json").read_text())["permissions"],
+                "The removed native preferences bridge must not request native messaging")
     print(f"Verified App Store package {version} ({build}): installer and app signatures, team, sandbox, universal binaries, OS requirement, privacy, and exact workspace resources")
 
 

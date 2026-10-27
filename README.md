@@ -7,7 +7,9 @@ Nightshift is a completely free, open-source Safari Web Extension for macOS that
 - Privacy policy: <https://apps.flymedia.us/nightshift/privacy/>
 - Report a bug or suggest a feature: <https://github.com/flymedia-us/Nightshift/issues>
 
-The current development and unsigned beta version is **1.0.18 (33)**. The popup and settings page follow Nightshift’s selected appearance and controls the global appearance and separates the four exclusion sources, the popup has a top-right settings icon and shows the domain for its website control, and public manual exclusions can be exported for explicit maintainer review. Its dynamic theme preserves background photos such as Gmail's theme image. This beta is not a notarized public release.
+Official public distribution is exclusively through the **Mac App Store**. The source remains public, and developers can build Nightshift themselves. Historical private maintainer testing builds are separate from the official distribution channel.
+
+The current source/development version is **1.0.20 (35)**. The popup and settings page follow Nightshift’s selected appearance. Settings controls the global appearance and separates the four exclusion sources. The popup has a top-right settings icon and shows the domain for its website control. Public manual exclusions can be exported for explicit maintainer review and included in a future App Store update. The dynamic theme preserves background photos such as Gmail's theme image.
 
 ## Appearance modes
 
@@ -15,7 +17,7 @@ The current development and unsigned beta version is **1.0.18 (33)**. The popup 
 - **Always Dark** applies Nightshift's dynamic dark theme at all times.
 - **System** applies Nightshift whenever macOS is using Dark Mode.
 
-Nightshift can also be disabled for individual sites from its Safari toolbar popup. Mode and site changes update open tabs immediately within a profile. Settings persist across Safari restarts and are shared across profiles on this Mac. Other profiles refresh when a page regains focus or becomes visible, and at most every 15 seconds while visible. Enable Nightshift and grant website access separately in each Safari profile.
+Nightshift can also be disabled for individual sites from its Safari toolbar popup. Mode and site changes update open tabs immediately within a profile. Preferences and manual exclusions persist in Safari’s `browser.storage.local` across restarts. Each Safari profile has its own independent settings. Enable Nightshift and grant website access separately in each Safari profile.
 
 When active, Nightshift excludes sites listed in its repo-owned compatibility registry, generated from the vendored Dark Reader snapshot plus the developer-maintained `Config/manual-dark-sites.config` additions. It does not infer native dark mode from arbitrary rendered colors, `color-scheme`, media rules, or controls. You can re-enable any listed site from the toolbar popup.
 
@@ -28,7 +30,7 @@ The maintainer's personal MacBook can export its public manual exclusions for ex
 - A bundled, pinned Dark Reader dynamic engine recolors CSS surfaces, text, and borders without page inversion. Background images and ordinary media keep their pixels. A host-scoped screen-only filter gives Google Docs text and Google Sheets cells light-on-gray contrast. Only the editor drawing tiles are filtered; graphics painted into those tiles share the treatment. Saved formatting, separate images, and other canvases are unchanged; the canvas filters apply only on screen. Sheets editing ink and color swatches are preserved because Sheets reads them back into saved formatting.
 - A Manifest V3 Safari Web Extension implements the toolbar popup, saved preferences, per-site policy, and page styling.
 - A small SwiftUI container app explains the extension and opens Safari's extension settings.
-- Each preference change is applied to the latest settings by a shared native store, protected by a file lock and atomic writes. Profile caches keep pending changes through native-service failures and worker restarts; sequence numbers prevent delayed retries from undoing newer edits. Existing exclusions migrate from previous builds.
+- Safari’s `browser.storage.local` is the only preference store. The profile’s background worker serializes individual changes to avoid lost updates from concurrent tabs. Standard storage events update the popup, settings, and pages in that profile. There is no native preference bridge, cross-profile sync, polling, or retry journal. Existing Safari preference keys are retained on upgrade.
 - Native dark-site registries regenerate during every Xcode build, and tests verify that the shipped lists match the imported and manually maintained source files.
 - Shared, framework-free JavaScript policy code is covered by Node's built-in test runner.
 - The Xcode project is generated from `project.yml` with XcodeGen and remains checked in for CI and contributors who do not have XcodeGen installed.
@@ -39,7 +41,7 @@ Nightshift requires macOS 13.7.7 or later and Safari 18.6 or later. This exclude
 
 Requirements:
 
-- macOS 26 or later for full application builds (the Icon Composer asset compiler crashes on macOS 15 build hosts; native storage tests still run there)
+- macOS 26 or later for full application builds (the Icon Composer asset compiler crashes on macOS 15 build hosts; storage/policy tests still run there)
 - Xcode 26 or later
 - Node.js 24 (see `.node-version`)
 - [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`)
@@ -56,7 +58,7 @@ Or run individual steps:
 
 ```sh
 make check          # JavaScript syntax checks
-make test           # JavaScript behavior and native persistence regression tests
+make test           # JavaScript behavior and Safari storage regression tests
 make smoke          # Live WebKit smoke tests for representative popular sites
 make build          # Regenerate and build the app without signing
 make analyze        # Run Xcode's static analyzer
@@ -77,7 +79,7 @@ To run Nightshift in Safari:
 4. In Safari, open **Settings → Extensions**, enable Nightshift, and grant website access.
 5. Use the Nightshift toolbar item to choose an appearance mode or disable Nightshift for the current site.
 
-When testing a change, install the freshly built app in `/Applications/Nightshift.app` and verify the version in Safari’s extension settings. Quit Safari before replacing the entire app bundle (copying over an old Debug bundle can leave extra binaries that invalidate the signature). Use Apple Development signing for local development. Developer ID distribution requires signing, notarization, and stapling before Safari verification. Keep unsigned analyzer builds out of the active app/extension registration.
+When testing a change, install the freshly built app in `/Applications/Nightshift.app` and verify the version in Safari’s extension settings. Quit Safari before replacing the entire app bundle (copying over an old Debug bundle can leave extra binaries that invalidate the signature). Use Apple Development signing for local development. Official public updates use the App Store signing/export workflow below. Keep unsigned analyzer builds out of the active app/extension registration.
 
 If Safari still shows a generic extension icon after rebuilding, quit Safari and run the newly built
 container app once. Safari caches registered extension bundles; each Nightshift build uses an incremented
@@ -87,15 +89,11 @@ bundle version so the current toolbar artwork replaces any previously registered
 
 Use `make app-store-archive` followed by `make app-store-export`. This exports a universal, App Store-signed package locally and verifies its exact bundled resources, versions, privacy manifests, signing team, sandbox, and architectures. It does not upload or submit. See [`AppStore/app-store-connect.md`](AppStore/app-store-connect.md) for account and listing requirements.
 
-## Builds for another Mac
+## Private maintainer testing
 
-Use `make beta` for an explicitly requested unsigned Safari testing build. The output is `.build/Beta/Nightshift.app`, with a matching `Nightshift.zip` for transfer. The ZIP contains a `Nightshift Beta` folder with the app, installation instructions, and `Repair Nightshift Safari Registration.command`. Both the app and extension are ad-hoc signed, sandboxed, and built for Apple Silicon and Intel. On the receiving Mac, extract the ZIP, replace the entire app in Applications, launch it, then enable **Safari → Settings → Developer → Allow unsigned extensions** and enable Nightshift under Extensions. Safari resets the unsigned permission every time it quits; enable it again after restarting Safari. An unnotarized Developer ID build is not the unsigned beta.
+Previous ad-hoc app/ZIP handoffs were private tests on the maintainer's own Macs. Prepare another such handoff only when explicitly requested. These artifacts are not an official public release channel. The retained Developer ID/notarization packaging utility is legacy tooling; public releases use the App Store workflow above. Local source builds remain supported by the development instructions.
 
-If the beta remains absent after allowing unsigned extensions, keep Safari open and double-click the included registration repair. Safari 27 can cache a failed signing lookup from before the unsigned setting was enabled; refreshing Nightshift's Launch Services and PlugInKit registration makes it discover the beta. The repair validates both ad-hoc signatures and touches only `/Applications/Nightshift.app` registration. It does not change Safari security settings. The sandboxed app cannot perform that refresh itself, so the repair remains a separate, inspectable script. Safari may also require you to click the extension's activation checkbox yourself when it detects automation.
-
-For a public release, configure a keychain credential profile with `xcrun notarytool store-credentials`, then run `NIGHTSHIFT_NOTARY_PROFILE=<profile-name> make release`. This signs with Fly Media's Developer ID identity, submits to Apple's notary service, staples the accepted ticket, and verifies both the signature and Gatekeeper acceptance. It refuses to produce a release without notarization access. The output is `.build/Distribution/Nightshift.app` and its transfer ZIP.
-
-Verify a deliverable with `python3 Scripts/package-nightshift.py --verify <app>`; add `--beta` when checking an unsigned beta. Persistent handoff requirements are recorded in `AGENTS.md`.
+Historical beta installation requirements are recorded in [`docs/beta-installation.txt`](docs/beta-installation.txt), including enabling unsigned extensions after each Safari restart and using the included registration repair if discovery fails. Existing backups and private test artifacts are retained.
 
 ## Website smoke tests
 
@@ -132,7 +130,7 @@ These checks compare rendered image pixels with Nightshift on and off, cover CSS
 - `Icon/Nightshift Icon.icon` — source-of-truth macOS app icon authored in Apple Icon Composer with Liquid Glass layers
 - `AppStore/` — versioned listing copy, App Store Connect handoff, review notes, and screenshot production guidance
 - `project.yml` — source of truth for Xcode targets and build settings
-- `.github/workflows/ci.yml` — JavaScript/WebKit tests, native storage tests on macOS 15/26 and the Xcode 27 preview runner, and full unsigned builds on macOS 26/Xcode 27
+- `.github/workflows/ci.yml` — JavaScript/WebKit tests, storage/policy tests on macOS 15/26 and the Xcode 27 preview runner, and full unsigned builds on macOS 26/Xcode 27
 
 ## Repository setup
 

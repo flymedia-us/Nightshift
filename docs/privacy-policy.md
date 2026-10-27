@@ -12,7 +12,7 @@ The Safari extension requires access to ordinary HTTP and HTTPS webpages so it c
 
 Nightshift bundles its theme engine locally. It does not download or execute remote JavaScript. The engine reads webpage styles and can retrieve stylesheets from the website or its stylesheet providers to recolor cross-origin CSS. Those cross-origin stylesheet requests omit cookies; they do not send browsing history or preferences to Fly Media. Background-image analysis and image inversion are disabled.
 
-Appearance mode and site preferences are stored on the Mac in a shared native settings store, with Safari extension storage caches for each profile. They are not sent to Fly Media.
+Appearance mode and site preferences are stored by Safari in the extension’s `browser.storage.local` area. Each Safari profile has independent preferences. Nightshift does not implement cross-profile or cross-device preference syncing. They are not sent to Fly Media.
 
 You can explicitly copy your public manual exclusions from settings. This export omits local names, IP addresses, and automatic exclusions. Copying does not transmit data. The maintainer separately reviews personal exports before adding domains to a bundled compatibility list; ordinary installations have no ability to update that list.
 

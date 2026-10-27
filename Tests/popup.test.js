@@ -28,7 +28,7 @@ function createInput(value = "") {
     };
 }
 
-function createHarness({ tabURL = "https://example.com/page", storedSettings = {} } = {}) {
+function createHarness({ tabURL = "https://example.com/page", storedSettings = {}, queryTab } = {}) {
     const modeInputs = [createInput("light"), createInput("dark"), createInput("system")];
     const siteEnabledInput = createInput();
     const siteName = { textContent: "" };
@@ -52,7 +52,7 @@ function createHarness({ tabURL = "https://example.com/page", storedSettings = {
         },
         runtime: { getURL: (path) => `safari-web-extension://profile-origin/${path}` },
         tabs: {
-            query: async () => [{ url: tabURL }],
+            query: queryTab ?? (async () => [{ url: tabURL }]),
             async create({ url }) {
                 assert.equal(url, "safari-web-extension://profile-origin/options.html");
                 openedSettings = true;
@@ -69,7 +69,7 @@ function createHarness({ tabURL = "https://example.com/page", storedSettings = {
         "#open-settings": openSettings,
     };
     const document = {
-        documentElement: { style: {} },
+        documentElement: { style: {}, dataset: {} },
         querySelectorAll: () => modeInputs,
         querySelector: (selector) => elements[selector],
     };
@@ -136,6 +136,21 @@ test("popup saves a new global mode", async () => {
         globalMode: "dark", disabledSites: [], autoDisabledSites: [], enabledSites: [],
     });
     assert.equal(harness.status.textContent, "Saved");
+});
+
+test("a slow active-tab lookup cannot undo a saved appearance change", async () => {
+    let finish;
+    const harness = createHarness({ queryTab: () => new Promise((resolve) => { finish = resolve; }) });
+    await harness.settle();
+    const dark = harness.modeInputs.find((input) => input.value === "dark");
+    dark.checked = true;
+    dark.dispatch("change");
+    await harness.settle();
+    finish([{ url: "https://example.com/page" }]);
+    await harness.settle();
+    assert.equal(harness.colorScheme(), "dark");
+    assert.equal(dark.checked, true);
+    assert.equal(harness.siteName.textContent, "example.com");
 });
 
 test("popup can disable and re-enable Nightshift for the active site", async () => {

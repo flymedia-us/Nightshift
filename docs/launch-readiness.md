@@ -1,3 +1,5 @@
+> Historical record: the native cross-profile storage and version details below were superseded on October 27. See [the current Safari storage verification](safari-storage-verification-2026-10-27.md) for 1.0.20 (35), completed tests, and remaining release gates.
+
 # Nightshift launch preparation — October 15, 2026
 
 Version **1.0.13 (28)** is built, signed for the Mac App Store, uploaded, processed, and attached to the new **Nightshift for Safari** record, Apple ID **6823064390**. Apple's **Add for Review** validation reports exactly one remaining submission requirement: **“You must upload at least one screenshot.”** The app remains **Prepare for Submission**, with **manual release** selected. No final screenshots were produced or uploaded, and the app was not submitted or released.

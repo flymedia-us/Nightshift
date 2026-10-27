@@ -12,7 +12,7 @@ const resources = path.join(__dirname, "..", "Nightshift Extension", "Resources"
 const { createHarness } = require("./helpers/background-harness.cjs");
 
 test("frame settings carry the embedding tab host from Safari's trusted sender", async () => {
-    const harness = createHarness({ native: () => ({ settings: policy.DEFAULT_SETTINGS }) });
+    const harness = createHarness();
     const frameSettings = await harness.load({ tab: { url: "https://EXAMPLE.com/page" }, url: "https://embed.example/frame" });
     assert.equal(frameSettings.tabHost, "example.com");
     assert.equal(frameSettings.tabURL, "https://EXAMPLE.com/page");
@@ -28,7 +28,6 @@ test("the theme can read CDN stylesheets without sending cookies or queuing behi
     } });
     const result = await harness.loadStylesheet("https://cdn.example.com/theme.css");
     assert.equal(result.css, "body { color: black; }");
-    assert.equal(harness.messages.length, 0);
 });
 
 test("theme requests reject non-web URLs, non-CSS responses, and failed requests", async () => {
@@ -44,101 +43,74 @@ test("theme requests reject non-web URLs, non-CSS responses, and failed requests
     assert.equal((await offline.loadStylesheet("https://example.com/theme.css")).error, "offline");
 });
 
-function sharedService(initial = {}) {
-    let settings = policy.normalizeSettings(initial);
-    const sequences = new Map();
-    const migratedClients = new Set();
-    return (message) => {
-        if (message.mergeFallback && !migratedClients.has(message.clientID)) {
-            for (const key of ["disabledSites", "autoDisabledSites", "enabledSites"]) {
-                settings[key] = [...new Set([...settings[key], ...message.fallback[key]])].sort();
-            }
-        }
-        migratedClients.add(message.clientID);
-        for (const change of message.changes) {
-            if (change.sequence <= (sequences.get(change.clientID) ?? 0)) continue;
-            settings = policy.applyChange(settings, change);
-            sequences.set(change.clientID, change.sequence);
-        }
-        return { settings: structuredClone(settings) };
-    };
-}
-
-test("concurrent tab changes preserve every manual exclusion and the global mode", async () => {
-    const harness = createHarness({ native: sharedService({ globalMode: "dark" }) });
-    await harness.load();
+test("concurrent same-profile tabs preserve every exclusion and the global mode", async () => {
+    const harness = createHarness({ local: { globalMode: "dark" } });
     await Promise.all([
-        harness.update({ type: "setSiteEnabled", host: "github.com", enabled: false }),
-        harness.update({ type: "setAutoDisabled", host: "photopea.com", excluded: true }),
-        harness.update({ type: "setSiteEnabled", host: "macrumors.com", enabled: false }),
+        ...Array.from({ length: 40 }, (_, index) => harness.update({ type: "setSiteEnabled", host: `site${index}.example`, enabled: false })),
+        harness.update({ type: "setAutoDisabled", host: "detected.example", excluded: true }),
         harness.update({ type: "setGlobalMode", mode: "system" }),
         harness.load(),
     ]);
-    assert.deepEqual(harness.cache.disabledSites, ["github.com", "macrumors.com"]);
-    assert.deepEqual(harness.cache.autoDisabledSites, ["photopea.com"]);
+    assert.equal(harness.cache.disabledSites.length, 40);
+    assert.deepEqual(harness.cache.autoDisabledSites, ["detected.example"]);
     assert.equal(harness.cache.globalMode, "system");
-    assert.deepEqual(harness.cache.pendingSettingsChanges, []);
+    assert.deepEqual(Object.keys(harness.cache).sort(), Object.keys(policy.DEFAULT_SETTINGS).filter((key) => key !== "enabledSites").sort());
 });
 
-test("native timeout preserves migrated status and a durable change across worker restart", async () => {
-    const offline = createHarness({ local: { globalMode: "dark", sharedSettingsMigrated: true } });
-    const result = await offline.update({ type: "setSiteEnabled", host: "github.com", enabled: false });
-    assert.deepEqual([...result.disabledSites], ["github.com"]);
-    assert.equal(offline.cache.sharedSettingsMigrated, true);
-    assert.equal(offline.cache.pendingSettingsChanges.length, 1);
-
-    const restarted = createHarness({ local: offline.cache, native: sharedService({ disabledSites: ["example.org"] }) });
-    await restarted.load();
-    assert.deepEqual(restarted.cache.disabledSites, ["example.org", "github.com"]);
-    assert.deepEqual(restarted.cache.pendingSettingsChanges, []);
-    assert.equal(restarted.messages[0].mergeFallback, false);
+test("saved Safari storage survives a background-worker restart without native services", async () => {
+    const first = createHarness({ local: { globalMode: "dark", disabledSites: ["saved.example"] } });
+    await first.update({ type: "setSiteEnabled", host: "second.example", enabled: false });
+    const restarted = createHarness({ local: first.cache });
+    const settings = await restarted.load();
+    assert.deepEqual([...settings.disabledSites], ["saved.example", "second.example"]);
+    assert.equal(settings.globalMode, "dark");
+    assert.equal(restarted.writes.length, 0, "Reading persisted preferences must not rewrite them");
 });
 
-test("a late native acknowledgement cannot replay an old disable after another profile re-enables it", async () => {
-    const native = sharedService();
-    const timedOut = createHarness({ native: (message) => {
-        native(message); // Native commits, but its acknowledgement is lost.
-        return new Promise(() => {});
-    } });
-    await timedOut.update({ type: "setSiteEnabled", host: "github.com", enabled: false });
-    const otherProfile = createHarness({ native });
-    await otherProfile.load();
-    await otherProfile.update({ type: "setSiteEnabled", host: "github.com", enabled: true });
-    const restarted = createHarness({ local: timedOut.cache, native });
-    await restarted.load();
-    assert.deepEqual(restarted.cache.disabledSites, []);
-    assert.deepEqual(restarted.cache.enabledSites, ["github.com"]);
+test("profiles have independent Safari storage even when their original snapshots match", async () => {
+    const initial = { globalMode: "dark", disabledSites: ["saved.example"] };
+    const personal = createHarness({ local: initial });
+    const work = createHarness({ local: initial });
+    await personal.update({ type: "setSiteEnabled", host: "personal.example", enabled: false });
+    await work.update({ type: "setGlobalMode", mode: "light" });
+    assert.deepEqual([...(await personal.load()).disabledSites], ["personal.example", "saved.example"]);
+    assert.equal((await personal.load()).globalMode, "dark");
+    assert.deepEqual([...(await work.load()).disabledSites], ["saved.example"]);
+    assert.equal((await work.load()).globalMode, "light");
 });
 
-test("different Safari profiles update shared settings without overwriting each other", async () => {
-    const native = sharedService({ globalMode: "dark" });
-    const a = createHarness({ native });
-    const b = createHarness({ native });
-    await Promise.all([a.load(), b.load()]);
-    await Promise.all([
-        a.update({ type: "setSiteEnabled", host: "github.com", enabled: false }),
-        b.update({ type: "setSiteEnabled", host: "macrumors.com", enabled: false }),
-    ]);
-    const restarted = createHarness({ local: a.cache, native });
-    await restarted.load();
-    assert.deepEqual(restarted.cache.disabledSites, ["github.com", "macrumors.com"]);
+test("upgrade retains profile preferences while ignoring the old sync journal", async () => {
+    const legacy = { globalMode: "dark", disabledSites: ["localhost:3000", "saved.example"],
+        enabledSites: ["explicit.example"], autoDisabledSites: ["detected.example"],
+        sharedSettingsMigrated: true, settingsClientID: "old-client", settingsSequence: 9,
+        pendingSettingsChanges: [{ type: "setGlobalMode", mode: "light", sequence: 9, clientID: "old-client" }] };
+    const harness = createHarness({ local: legacy });
+    assert.deepEqual(JSON.parse(JSON.stringify(await harness.load())), policy.normalizeSettings(legacy));
+    assert.deepEqual(harness.cache, legacy, "An upgrade read must not mutate or replay old data");
+    assert.equal(harness.writes.length, 0);
 });
 
-test("failed native writes keep pending changes rather than accepting an empty response", async () => {
-    const harness = createHarness({ native: () => ({ error: "Unable to persist shared settings" }) });
-    await harness.update({ type: "setSiteEnabled", host: "github.com", enabled: false });
-    assert.deepEqual(harness.cache.disabledSites, ["github.com"]);
-    assert.equal(harness.cache.pendingSettingsChanges.length, 1);
-    assert.equal(harness.cache.sharedSettingsMigrated, undefined);
+test("failed storage writes reject, preserve committed values, and don't poison later requests", async () => {
+    const harness = createHarness({ local: { globalMode: "dark", disabledSites: ["saved.example"] } });
+    harness.failWrites(true);
+    await assert.rejects(harness.update({ type: "setGlobalMode", mode: "light" }), /Storage unavailable/);
+    assert.equal((await harness.load()).globalMode, "dark");
+    assert.deepEqual(harness.cache.disabledSites, ["saved.example"]);
+    harness.failWrites(false);
+    await harness.update({ type: "setGlobalMode", mode: "light" });
+    assert.equal((await harness.load()).globalMode, "light");
+    await assert.rejects(harness.update({ type: "unknown", host: "saved.example" }), /Unknown settings change/);
+    await assert.rejects(harness.update(undefined), /Invalid website address/);
+    await harness.update({ type: "setGlobalMode", mode: "system" });
+    assert.equal((await harness.load()).globalMode, "system");
 });
 
-test("unavailable native storage coalesces frame reads and keeps toolbar saves responsive", async () => {
+test("storage reads surface failures and no-op changes avoid writes", async () => {
     const harness = createHarness();
-    await Promise.all(Array.from({ length: 20 }, () => harness.load()));
-    assert.equal(harness.messages.length, 1, "Concurrent frames must share one native read");
-    const result = await harness.update({ type: "setGlobalMode", mode: "dark" });
-    assert.equal(result.globalMode, "dark");
-    assert.equal(result.syncPending, true);
-    assert.equal(harness.messages.length, 1, "Native failure must back off without delaying durable saves");
-    assert.equal(harness.cache.pendingSettingsChanges.length, 1);
+    harness.failReads(true);
+    await assert.rejects(harness.load(), /Storage unavailable/);
+    harness.failReads(false);
+    await harness.update({ type: "setGlobalMode", mode: "system" });
+    assert.equal(harness.writes.length, 0);
+    assert.deepEqual(JSON.parse(JSON.stringify(await harness.load())), policy.normalizeSettings());
 });

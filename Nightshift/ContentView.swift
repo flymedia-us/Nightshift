@@ -20,7 +20,7 @@ struct ContentView: View {
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.secondary)
 
-                Text("Requires Safari 18.6 or later. Enable Nightshift in each Safari profile you use; appearance and website settings are shared on this Mac.")
+                Text("Requires Safari 18.6 or later. Enable Nightshift in each Safari profile you use; appearance and website settings are saved separately in each profile.")
                     .font(.footnote)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(.secondary)

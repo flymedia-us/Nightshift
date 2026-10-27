@@ -3,8 +3,22 @@
     font: -apple-system-body;
     --accent: rgb(88, 86, 214);
     --border: rgba(127, 127, 127, 0.25);
-    --secondary: color-mix(in srgb, CanvasText 65%, Canvas);
+    --canvas: #ffffff;
+    --ink: #000000;
+    --secondary: color-mix(in srgb, var(--ink) 65%, var(--canvas));
     --surface: rgba(127, 127, 127, 0.1);
+}
+
+:root[data-nightshift-mode="dark"] {
+    --canvas: #1e1e1e;
+    --ink: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-nightshift-mode="light"]) {
+        --canvas: #1e1e1e;
+        --ink: #ffffff;
+    }
 }
 
 * {
@@ -14,8 +28,8 @@
 body {
     margin: 0;
     min-width: 320px;
-    background: Canvas;
-    color: CanvasText;
+    background: var(--canvas);
+    color: var(--ink);
 }
 
 main {
@@ -65,7 +79,7 @@ small,
     border: 0;
     border-radius: 7px;
     background: transparent;
-    color: CanvasText;
+    color: var(--ink);
     font: inherit;
     cursor: pointer;
 }
@@ -125,7 +139,7 @@ label span {
 }
 
 .site-control label span { min-width: 0; }
-#site-domain { color: CanvasText; overflow-wrap: anywhere; }
+#site-domain { color: var(--ink); overflow-wrap: anywhere; }
 
 input {
     accent-color: var(--accent);

@@ -45,9 +45,9 @@ jobs:
         if: matrix.runner == 'macos-15'
         run: echo "DEVELOPER_DIR=/Applications/Xcode_26.2.app/Contents/Developer" >> "$GITHUB_ENV"
       - run: xcodebuild -version
-      - run: make test-native
+      - run: npm test
       # Apple’s Icon Composer asset compiler crashes on the macOS 15 host.
-      # Keep native runtime regressions there; build the full app on 26+.
+      # Run storage/policy regressions there; build the full app on 26+.
       - run: make build-project
         if: matrix.runner != 'macos-15'
 

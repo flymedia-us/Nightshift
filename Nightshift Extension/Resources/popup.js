@@ -21,6 +21,9 @@
     }
 
     function render() {
+        // Safari's toolbar popover can retain its opening native Canvas palette
+        // after color-scheme changes. Keep the visible palette explicit as well.
+        document.documentElement.dataset.nightshiftMode = settings.globalMode;
         // Match settings: explicit Nightshift modes override macOS, while
         // System lets native Canvas colors follow appearance changes live.
         document.documentElement.style.colorScheme = settings.globalMode === policy.MODES.SYSTEM
@@ -70,7 +73,7 @@
     async function saveSettings(change) {
         settings = await settingsStore.update(change);
         render();
-        setStatus(settings.syncPending ? "Saved in this profile; sharing with other profiles will retry." : "Saved");
+        setStatus("Saved");
     }
 
     async function loadCurrentHost() {
@@ -107,26 +110,17 @@
     }
     document.querySelector("#open-settings").addEventListener("click", openSettings);
 
-    settingsStore.watch((storedSettings) => {
-        settings = storedSettings;
-        render();
-    });
-
     extensionAPI.storage.onChanged.addListener((changes, areaName) => {
         if (areaName !== "local" || !Object.keys(policy.DEFAULT_SETTINGS).some((key) => key in changes)) return;
         settings = policy.normalizeSettings(Object.fromEntries(Object.keys(policy.DEFAULT_SETTINGS).map((key) =>
-            [key, changes[key]?.newValue ?? settings[key]])));
+            [key, key in changes ? changes[key].newValue : settings[key]])));
         render();
     });
 
     Promise.all([
-        settingsStore.load(),
-        loadCurrentHost(),
+        settingsStore.load().then((storedSettings) => { settings = storedSettings; render(); }),
+        loadCurrentHost().then(render),
     ])
-        .then(([storedSettings]) => {
-            settings = policy.normalizeSettings(storedSettings);
-            render();
-        })
         .catch((error) => {
             render();
             setStatus(`Couldn't load settings: ${error.message}`);
