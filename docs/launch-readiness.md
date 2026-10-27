@@ -1,3 +1,5 @@
+> Current submission status: see [October 27 App Store preparation](app-store-preparation-2026-10-27.md). Version 1.0.20 (35) replaced the draft’s old build; Apple now reports screenshots as the only missing submission requirement.
+
 > Historical record: the native cross-profile storage and version details below were superseded on October 27. See [the current Safari storage verification](safari-storage-verification-2026-10-27.md) for 1.0.20 (35), completed tests, and remaining release gates.
 
 # Nightshift launch preparation — October 15, 2026

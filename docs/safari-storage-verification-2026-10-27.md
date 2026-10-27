@@ -1,3 +1,5 @@
+> Follow-up: the user subsequently requested a private MacBook beta and approved App Store upload/draft updates. See [October 27 launch preparation](app-store-preparation-2026-10-27.md) for the resulting handoff and current draft status. The no-upload/no-beta statements below describe the earlier storage-verification task.
+
 # Safari-owned preference storage — October 27, 2026
 
 Current source and installed development app: **1.0.20 (35)**. Official public binaries remain Mac App Store only. Nothing from this session was uploaded or submitted to App Store Connect, and no private beta was produced.

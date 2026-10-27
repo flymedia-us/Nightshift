@@ -1,0 +1,10 @@
+Nightshift 1.0.20 (35) — pre-launch verification
+
+• Switch Always Light, Always Dark, and System from the Safari toolbar and settings page. Verify the popup and settings appearance follow the selected mode.
+• Add and remove manual website exclusions. Quit and relaunch Safari, then confirm the mode and exclusions persist.
+• Use two Safari profiles with different modes/exclusions. Preferences must stay independent, while open tabs in the same profile update immediately.
+• Check the four settings sections: your manual exclusions, site-marker detections, the Nightshift list, and the Dark Reader list. Try a website override and restore automatic rules.
+• Verify website photos/video keep their colors. Check existing and newly typed text in Google Docs/Sheets, and confirm text saved while Dark is active remains black when switched to Light.
+• Open settings using the popup's filled cog, and check the displayed website domain.
+
+Report macOS, Safari, and Nightshift versions, affected public URL, selected mode, and reproduction steps. Avoid private page contents in reports.

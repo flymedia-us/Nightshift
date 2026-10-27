@@ -150,7 +150,7 @@ def package(beta=False, profile=None, output=None):
                 "7. If Nightshift is missing, keep Safari open and double-click Repair Nightshift Safari Registration.command from the extracted folder. It refreshes only Nightshift's registration without changing any security settings. Then click the app's settings button again.\n"
                 "8. Select Nightshift in Safari Extensions and enable it for the desired profiles and websites. After each Safari restart, repeat step 5, and step 7 if needed.\n\n"
                 "This beta uses ad-hoc signatures on both the app and its embedded extension. It is intentionally not a Developer ID release.\n"
-                "A normal public release requires Developer ID signing, notarization, and a stapled ticket.\n"
+                "Official public releases are distributed exclusively through the Mac App Store. This private maintainer beta is separate from the App Store build.\n"
             )
             run("ditto", "-c", "-k", "--sequesterRsrc", "--keepParent", transfer, packaged_zip)
             shutil.copyfile(repair, output.parent / repair.name)

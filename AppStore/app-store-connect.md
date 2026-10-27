@@ -69,9 +69,17 @@ Preserve existing archives before rebuilding. The development-signed archive is 
 
 Nightshift requires macOS 13.7.7 or later and Safari 18.6 or later. This avoids offering an install to Monterey users whose Safari cannot load the extension. The required release-test matrix remains macOS 15, 26, and 27.
 
-## Current draft status — October 15, 2026
+## Current draft status — October 27, 2026
 
-Build 1.0.13 (28) uploaded successfully, finished processing, and is attached to the draft. Product metadata, App Review business contact, Utilities, 4+ age rating, Data Not Collected, policy URL, free pricing, all 175 territories, and manual release are saved. Apple's Add for Review validation reports only: “You must upload at least one screenshot.” The draft remains unsubmitted. See `../docs/launch-readiness.md` for exact QA coverage and its limits.
+The user approved the upload and draft updates. **1.0.20 (35)** uploaded successfully, completed Apple processing, and replaced **1.0.13 (28)** in the existing draft. The draft's marketing version is 1.0.20; the current description and App Review notes are saved. Build 28 remains in Apple's build history for recovery and is no longer selected for launch.
+
+Apple's Add for Review completeness check reports exactly one missing requirement: **“You must upload at least one screenshot.”** Screenshots are assigned to the user and remain untouched. The app is still **Prepare for Submission**, with **manual release** selected; it was not submitted or released.
+
+Build-specific TestFlight “What to Test” notes are saved from `metadata/en-US/testing_notes.txt`. No tester invitations or external beta-review submission were sent. The privacy declaration remains published as Data Not Collected, with the canonical policy URL.
+
+The public marketing/support/privacy corrections are deployed from `flymedia-us/apps` commit `bb49dc1`, including version 1.0.20, the settings cog, and independent profile storage. The coming-soon state remains until App Store availability is verified.
+
+Current artifacts: `.build/AppStoreStorage35/Nightshift.xcarchive` and `.build/AppStoreStorage35/Export/Nightshift.pkg`. Detailed handoff: `../docs/app-store-preparation-2026-10-27.md`. The October 15 preparation remains a historical record in `../docs/launch-readiness.md`.
 
 ## Pre-submit confirmations
 
