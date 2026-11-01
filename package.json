@@ -16,7 +16,7 @@
     "test:webkit": "playwright test --config Tests/smoke/playwright.config.js image-preservation.spec.js google-docs-rendering.spec.js settings-ui.spec.js embedded-content.spec.js exclusions-runtime.spec.js"
   },
   "devDependencies": {
-    "@playwright/test": "1.64.0",
+    "@playwright/test": "1.64.1",
     "darkreader": "4.9.133",
     "pngjs": "7.0.0"
   }
