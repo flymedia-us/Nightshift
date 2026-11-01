@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@playwright/test": "1.64.0",
-    "darkreader": "4.9.133",
+    "darkreader": "4.9.134",
     "pngjs": "7.0.0"
   }
 }
